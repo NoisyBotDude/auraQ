@@ -33,6 +33,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter var', 'system-ui', 'sans-serif'],
+        orbitron: ['Orbitron', 'sans-serif']
       },
       animation: {
         'bounce-slow': 'bounce 3s infinite',
