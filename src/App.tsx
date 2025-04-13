@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   AuthProvider,
@@ -12,11 +12,13 @@ import {
 import LandingPage from './pages/LandingPage';
 import QuizPlayPage from './pages/QuizPlayPage';
 import QuizCreationPage from './pages/QuizCreationPage';
+import WelcomeOverlay from './components/shared/WelcomeOverlay';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
 
 const App: React.FC = () => {
+  const [welcomeComplete, setWelcomeComplete] = useState(false);
   return (
     <Router>
       <AuthProvider>
@@ -25,6 +27,9 @@ const App: React.FC = () => {
             <NotificationProvider>
               <AudioProvider>
                 <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
+                {!welcomeComplete && (
+                  <WelcomeOverlay onComplete={() => setWelcomeComplete(true)} />
+                )}
                   <NavBar />
                   <Routes>
                     <Route path="/" element={<LandingPage />} />
