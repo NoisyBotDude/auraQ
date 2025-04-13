@@ -8,7 +8,7 @@ const NavBar: React.FC = () => {
 
   return (
     <motion.nav 
-      className="bg-primary-900 text-white p-4 shadow-lg"
+      className="text-white p-4 shadow-lg bg-gradient-to-r from-[--color-neon-blue] via-[--color-neon-purple] to-[--color-neon-pink]"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100 }}

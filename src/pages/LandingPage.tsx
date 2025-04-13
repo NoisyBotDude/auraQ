@@ -49,62 +49,47 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
+    <div className="min-h-screen  bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
       {/* Hero Section */}
       <motion.section
-        className="relative h-screen flex items-center justify-center overflow-hidden"
+        className="relative h-screen flex items-center justify-center overflow-hidden  before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.15)_0%,transparent_40%),radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.12)_0%,transparent_40%)] before:z-0"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        {/* Animated Background Elements */}
-        
+        {/* 🌌 Animated Nebula Background Blobs */}
         <motion.div
-          className="absolute w-64 h-64 bg-primary-200 rounded-full -top-20 -left-20 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          className="absolute w-96 h-96 bg-[--color-neon-blue]/30 rounded-full -top-32 -left-32 blur-[140px] z-0"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute w-96 h-96 bg-secondary-200 rounded-full -bottom-32 -right-32 blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [90, 0, 90]
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          className="absolute w-[28rem] h-[28rem] bg-[--color-neon-pink]/30 rounded-full -bottom-32 -right-32 blur-[160px] z-0"
+          animate={{ scale: [1.2, 1, 1.2], rotate: [90, 0, 90] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
 
+        {/* 🌠 Main Content */}
         <div className="container mx-auto px-4 text-center z-10">
           <motion.h1
-            className="text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-secondary-500 to-purple-500 drop-shadow-lg"
+            className="text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[--color-neon-blue] via-[--color-neon-purple] to-[--color-neon-pink] drop-shadow-[0_0_25px_var(--color-neon-glow)]"
             variants={itemVariants}
           >
             Welcome to QuizVerse
           </motion.h1>
+
           <motion.p
             className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
             variants={itemVariants}
           >
             Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.
           </motion.p>
-          <motion.div
-            className="flex justify-center gap-4"
-            variants={itemVariants}
-          >
+
+          <motion.div className="flex justify-center gap-4" variants={itemVariants}>
             {user ? (
               <Link
                 to="/explore"
-                className="px-8 py-3 bg-primary-500 text-white rounded-full text-lg font-semibold hover:bg-primary-600 transition-colors"
+                className="px-8 py-3 bg-[--color-neon-blue] text-white rounded-full text-lg font-semibold hover:bg-blue-600 transition-shadow shadow-[0_0_20px_#3b82f6]"
               >
                 Start Exploring
               </Link>
@@ -112,13 +97,13 @@ const LandingPage: React.FC = () => {
               <>
                 <Link
                   to="/register"
-                  className="px-8 py-3 bg-primary-500 text-white rounded-full text-lg font-semibold shadow-lg hover:bg-primary-600 transition-all duration-300 hover:shadow-[0_0_15px_#7f5af0]"
+                  className="px-8 py-3 bg-[--color-neon-purple] text-white rounded-full text-lg font-semibold shadow-lg hover:bg-purple-700 transition-all duration-300 hover:shadow-[0_0_20px_#a855f7]"
                 >
                   Join Now
                 </Link>
                 <Link
                   to="/login"
-                  className="px-8 py-3 border-2 border-primary-500 text-primary-500 rounded-full text-lg font-semibold hover:bg-primary-50 transition-colors"
+                  className="px-8 py-3 border-2 border-[--color-neon-purple] text-[--color-neon-purple] rounded-full text-lg font-semibold hover:bg-[--color-neon-purple]/10 transition-colors"
                 >
                   Login
                 </Link>
@@ -129,27 +114,42 @@ const LandingPage: React.FC = () => {
       </motion.section>
 
       {/* Featured Quizzes Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Featured Quizzes</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-20 text-white relative">
+        <div className="container mx-auto px-4 z-10 relative">
+          {/* Heading */}
+          <h2 className="text-4xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[--color-neon-blue] via-[--color-neon-purple] to-[--color-neon-pink] drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+            Featured Quizzes
+          </h2>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {featuredQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
+              <div
+                key={quiz.id}
+                className="bg-[#1c1f2e] p-6 rounded-xl shadow-lg hover:shadow-[0_0_20px_#7f5af0] transition-shadow duration-300 border border-white/10 hover:border-[--color-neon-purple]"
+              >
+                <QuizCard quiz={quiz} />
+              </div>
             ))}
           </div>
-          <div className="text-center mt-12">
+
+          {/* CTA Button */}
+          <div className="text-center mt-16">
             <Link
               to="/explore"
-              className="inline-block px-6 py-3 bg-primary-100 text-primary-600 rounded-lg hover:bg-primary-200 transition-colors"
+              className="inline-block px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-[--color-neon-purple] to-[--color-neon-blue] text-white shadow-md hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
             >
               Explore More Quizzes
             </Link>
           </div>
         </div>
+
+        {/* Optional glow or background element */}
+
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Why QuizVerse?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -26,11 +26,18 @@
   --color-secondary-700: #a21caf;
   --color-secondary-800: #86198f;
   --color-secondary-900: #701a75;
+
+  --color-space-dark: #0b0d17;
+  --color-neon-purple: #a855f7;
+  --color-neon-blue: #3b82f6;
+  --color-neon-pink: #ec4899;
+  --color-neon-glow: rgba(168, 85, 247, 0.6);
 }
 
 @layer base {
   body {
     @apply font-sans antialiased text-white bg-black;
+    @apply bg-[--color-space-dark] text-white font-sans;
     /* Add a starry background image */
     background-size: cover;
     background-repeat: no-repeat;
