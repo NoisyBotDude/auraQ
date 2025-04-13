@@ -1,26 +1,45 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  AuthProvider,
+  ThemeProvider,
+  QuizProvider,
+  NotificationProvider,
+  AudioProvider
+} from './contexts';
 
-function App() {
+// Pages
+import LandingPage from './pages/LandingPage';
+import QuizPlayPage from './pages/QuizPlayPage';
+import QuizCreationPage from './pages/QuizCreationPage';
+
+// Shared Components
+import NavBar from './components/shared/NavBar';
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <ThemeProvider>
+          <QuizProvider>
+            <NotificationProvider>
+              <AudioProvider>
+                <div className="min-h-screen bg-gray-50">
+                  <NavBar />
+                  <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/quiz/:quizId" element={<QuizPlayPage />} />
+                    <Route path="/create" element={<QuizCreationPage />} />
+                    {/* Add more routes as needed */}
+                  </Routes>
+                </div>
+              </AudioProvider>
+            </NotificationProvider>
+          </QuizProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </Router>
   );
-}
+};
 
 export default App;
