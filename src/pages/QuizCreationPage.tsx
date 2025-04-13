@@ -187,7 +187,7 @@ const QuizCreationPage: React.FC = () => {
           </div>
 
           <AnimatePresence mode="wait">
-            {step === 'info' ? (
+            {step === 'info' && (
               <motion.div
                 key="info"
                 initial={{ opacity: 0, x: -20 }}
@@ -300,7 +300,8 @@ const QuizCreationPage: React.FC = () => {
                   </button>
                 </div>
               </motion.div>
-            ) : (
+            )}
+            {step === 'questions' && (
               <motion.div
                 key="questions"
                 initial={{ opacity: 0, x: 20 }}
