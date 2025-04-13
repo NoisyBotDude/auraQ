@@ -49,22 +49,26 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
+    <div className="min-h-screen ">
       {/* Hero Section */}
       <motion.section
-        className="relative h-screen flex items-center justify-center overflow-hidden  before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.15)_0%,transparent_40%),radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.12)_0%,transparent_40%)] before:z-0"
+        className="relative h-screen flex items-center justify-center overflow-hidden 
+         before:content-[''] 
+         before:absolute before:inset-0 
+         radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.12)_0%,transparent_40%)] 
+         before:z-0"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         {/* 🌌 Animated Nebula Background Blobs */}
         <motion.div
-          className="absolute w-96 h-96 bg-[--color-neon-blue]/30 rounded-full -top-32 -left-32 blur-[140px] z-0"
+          className="absolute w-96 h-96  rounded-full -top-32 -left-32 blur-[140px] z-0"
           animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute w-[28rem] h-[28rem] bg-[--color-neon-pink]/30 rounded-full -bottom-32 -right-32 blur-[160px] z-0"
+          className="absolute w-[28rem] h-[28rem]  rounded-full -bottom-32 -right-32 blur-[160px] z-0"
           animate={{ scale: [1.2, 1, 1.2], rotate: [90, 0, 90] }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
@@ -117,7 +121,7 @@ const LandingPage: React.FC = () => {
       <section className="py-20 text-white relative">
         <div className="container mx-auto px-4 z-10 relative">
           {/* Heading */}
-          <h2 className="text-4xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[--color-neon-blue] via-[--color-neon-purple] to-[--color-neon-pink] drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          <h2 className="text-4xl font-extrabold text-center mb-12 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
             Featured Quizzes
           </h2>
 
@@ -137,7 +141,7 @@ const LandingPage: React.FC = () => {
           <div className="text-center mt-16">
             <Link
               to="/explore"
-              className="inline-block px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-[--color-neon-purple] to-[--color-neon-blue] text-white shadow-md hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
+              className="inline-block px-8 py-3 rounded-full text-lg font-semibold  text-white shadow-md hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
             >
               Explore More Quizzes
             </Link>
@@ -149,7 +153,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Why QuizVerse?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
