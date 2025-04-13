@@ -28,7 +28,7 @@ const App: React.FC = () => {
                   
                 </div>
                 <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
-                  <NavBar />
+                  {/* <NavBar /> */}
                   <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/quiz/:quizId" element={<QuizPlayPage />} />
