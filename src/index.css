@@ -36,8 +36,8 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-white bg-black;
-    @apply bg-[--color-space-dark] text-white font-sans;
+    @apply font-orbitron antialiased text-white bg-black;
+    @apply bg-[--color-space-dark] text-white font-orbitron;
     /* Add a starry background image */
     background-size: cover;
     background-repeat: no-repeat;

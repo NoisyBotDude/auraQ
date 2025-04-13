@@ -79,7 +79,7 @@ const LandingPage: React.FC = () => {
             className="text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[--color-neon-blue] via-[--color-neon-purple] to-[--color-neon-pink] drop-shadow-[0_0_25px_var(--color-neon-glow)]"
             variants={itemVariants}
           >
-            Welcome to QuizVerse
+            Welcome to AuraQ
           </motion.h1>
 
           <motion.p

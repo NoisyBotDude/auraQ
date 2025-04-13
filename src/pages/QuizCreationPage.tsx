@@ -135,7 +135,7 @@ const QuizCreationPage: React.FC = () => {
             <div className="flex items-center">
               <div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'info' ? 'bg-primary-500 text-white' : 'bg-primary-100 text-primary-500'
+                  step === 'info' ? 'bg-primary-500 text-black' : 'bg-primary-100 text-primary-500'
                 }`}
               >
                 1
@@ -143,7 +143,7 @@ const QuizCreationPage: React.FC = () => {
               <div className="w-20 h-1 bg-primary-100" />
               <div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'questions' ? 'bg-primary-500 text-white' : 'bg-primary-100 text-primary-500'
+                  step === 'questions' ? 'bg-primary-500 text-black' : 'bg-primary-100 text-primary-500'
                 }`}
               >
                 2

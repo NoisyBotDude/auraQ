@@ -88,7 +88,7 @@ const QuizPlayPage: React.FC = () => {
   const currentQuestionData = currentQuiz.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12 text-black">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Progress and Score */}
         <div className="flex justify-between items-center mb-8">
@@ -111,7 +111,7 @@ const QuizPlayPage: React.FC = () => {
             className={`h-full rounded-full transition-all duration-300 ${
               timeLeft > 10 ? 'bg-primary-500' : 'bg-red-500'
             }`}
-            style={{ width: `${(timeLeft / 30) * 100}%` }}
+            style={{ width: `100%` }}
           />
         </motion.div>
 
