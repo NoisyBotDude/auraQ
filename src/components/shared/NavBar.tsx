@@ -22,6 +22,7 @@ const NavBar: React.FC = () => {
           {user ? (
             <>
               <Link to="/explore" className="hover:opacity-80 transition-opacity duration-200">
+              
                 Explore
               </Link>
               <Link to="/create" className="hover:opacity-80 transition-opacity duration-200">

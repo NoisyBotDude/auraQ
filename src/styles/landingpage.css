@@ -1,0 +1,130 @@
+/* From Uiverse.io by adamgiebl */ 
+.get-started-button {
+    background: #a370f0;
+    color: white;
+    font-family: inherit;
+    padding: 0.35em;
+    padding-left: 1.2em;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 0.9em;
+    border: none;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 0 1.6em -0.6em #714da6;
+    overflow: hidden;
+    position: relative;
+    height: 2.8em;
+    padding-right: 3.3em;
+    cursor: pointer;
+  }
+  
+  .get-started-button .icon {
+    background: white;
+    margin-left: 1em;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.2em;
+    width: 2.2em;
+    border-radius: 0.7em;
+    box-shadow: 0.1em 0.1em 0.6em 0.2em #7b52b9;
+    right: 0.3em;
+    transition: all 0.3s;
+  }
+  
+  .get-started-button:hover .icon {
+    width: calc(100% - 0.6em);
+  }
+  
+  .get-started-button .icon svg {
+    width: 1.1em;
+    transition: transform 0.3s;
+    color: #7b52b9;
+  }
+  
+  .get-started-button:hover .icon svg {
+    transform: translateX(0.1em);
+  }
+  
+  .get-started-button:active .icon {
+    transform: scale(0.95);
+  }
+  /* From Uiverse.io by abhusha08 */ 
+.select-mode-button {
+    display: flex;
+    flex-direction: column;
+    background: rgba(211, 211, 211, 0);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .create-quiz-button {
+    width: 300px;
+    height: 150px;
+    margin: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    background: #020024;
+background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(25, 104, 120, 1) 100%);
+    color: white;
+    border: none;
+    border-radius: 0.625em;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .play-online-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    width: 300px;
+    height: 150px;
+    margin: 15px;
+    background: rgb(0, 8, 144);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 8, 144, 1) 0%,
+      rgba(16, 0, 255, 1) 22%,
+      rgba(86, 255, 247, 1) 100%
+    );
+    color: white;
+    border: none;
+    border-radius: 0.625em;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .create-play-online:hover {
+    color: rgb(0, 0, 0);
+  }
+  
+  .create-play-online:after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    left: -20%;
+    right: -20%;
+    top: 0;
+    bottom: 0;
+    transform: skewX(-45deg) scale(0, 1);
+    transition: all 0.5s;
+  }
+  
+  .create-play-online:hover:after {
+    transform: skewX(-45deg) scale(1, 1);
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+  }
+ 
