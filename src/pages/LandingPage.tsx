@@ -93,18 +93,20 @@ const LandingPage: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
+     
 
       {/* Hero Section */}
       <motion.section
-        className="relative h-screen flex items-center justify-center overflow-hidden"
+        className="relative h-screen flex items-center justify-center overflow-hidden "
         initial="hidden"
         animate="visible"
         variants={containerVariants}
+        
       >
         {/* Animated Nebula Background */}
         <motion.div
           className="absolute w-[40rem] h-[40rem] rounded-full -top-32 -left-32 blur-[140px] z-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent_70%)]"
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
             x: [-50, 50, -50],
@@ -114,7 +116,7 @@ const LandingPage: React.FC = () => {
         />
         <motion.div
           className="absolute w-[40rem] h-[40rem] rounded-full -bottom-32 -right-32 blur-[160px] z-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.2),transparent_70%)]"
-          animate={{ 
+          animate={{
             scale: [1.2, 1, 1.2],
             rotate: [90, 0, 90],
             x: [50, -50, 50],
@@ -122,7 +124,7 @@ const LandingPage: React.FC = () => {
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
-             
+
         {/* Main Content */}
         <div className="container mx-auto px-4 text-center z-10">
           <motion.h1
@@ -145,10 +147,29 @@ const LandingPage: React.FC = () => {
             {user ? (
               <Link
                 to="/explore"
-                className="px-8 py-3 bg-[#3b82f6] text-white rounded-full text-lg font-semibold hover:bg-blue-600 transition-all duration-300 shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6] relative overflow-hidden group"
+                className="  text-white rounded-full text-lg font-semibold hover:bg-blue-600 transition-all duration-300  shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6] relative overflow-hidden group"
               >
-                <span className="relative z-10">Start Exploring</span>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* <span className="relative z-10">Start Exploring</span>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" /> */}
+
+                <button className="get-started-button bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+                  Get started
+                  <div className="icon">
+                    <svg
+                      height="24"
+                      width="24"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                      <path
+                        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </div>
+                </button>
+
               </Link>
             ) : (
               <>
@@ -203,14 +224,23 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
+<section>
+  <div className="select-mode-button bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+    <button className="create-quiz-button create-play-online">
+      Create Quiz
+    </button>
+    <button className="play-online-button create-play-online">
+      Play Online
+    </button>
+  </div>
+</section>
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">Why QuizVerse?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group" 
+            <motion.div
+              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
               whileHover={{ y: -3, transition: { duration: 0.2 } }}
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -220,8 +250,8 @@ const LandingPage: React.FC = () => {
                 Transform learning into an adventure with our gamified approach to knowledge acquisition.
               </p>
             </motion.div>
-            <motion.div 
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group" 
+            <motion.div
+              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
               whileHover={{ y: -3, transition: { duration: 0.2 } }}
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -229,8 +259,8 @@ const LandingPage: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">Compete & Grow</h3>
               <p className="text-gray-300">Challenge friends, climb leaderboards, and track your progress across different knowledge realms.</p>
             </motion.div>
-            <motion.div 
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group" 
+            <motion.div
+              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
               whileHover={{ y: -3, transition: { duration: 0.2 } }}
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
