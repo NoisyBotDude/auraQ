@@ -23,14 +23,29 @@ const WelcomeOverlay: React.FC<{ onComplete: () => void }> = ({ onComplete }) =>
         >
           <div className="relative text-6xl md:text-8xl font-bold">
             {/* Welcome to text */}
-            <motion.span
+            {/* <motion.span
               className="block absolute"
               initial={{ opacity: 1, y: -100, x: -80}}
               animate={{ opacity: 0, y: -400 }}
               transition={{ duration: 1, delay: 1 }}
             >
               Welcome
-            </motion.span>
+            </motion.span> */}
+            <motion.span
+  className="block absolute"
+  initial={{ y: 300, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  exit={{ y: -400, opacity: 0 }}
+  transition={{
+    type: "spring",
+    stiffness: 100,
+    damping: 10,
+    duration: 0.8,
+    delay: 0.2,
+  }}
+>
+  Welcome
+</motion.span>
             <motion.span
               className="block absolute"
               initial={{ opacity: 1, y: -20, x: 80 }}
