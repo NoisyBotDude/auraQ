@@ -12,7 +12,26 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    id: '1',
+    username: 'testuser',
+    avatar: {
+      baseCharacter: 'default',
+      accessories: [],
+      colors: {},
+      unlocks: [],
+    },
+    stats: {
+      totalScore: 0,
+      quizzesTaken: 0,
+      winRate: 0,
+      categoryScores: {},
+      streakDays: 0,
+      achievements: [],
+    },
+    inventory: [],
+    friends: [],
+  });
 
   const login = async (credentials: { username: string; password: string }) => {
     // Implement login logic
@@ -66,7 +85,30 @@ interface QuizContextType {
 export const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>({
+    id: '1',
+    title: 'Test Quiz',
+    description: 'This is a test quiz',
+    category: 'Science',
+    difficulty: 'easy',
+    questions: [
+      {
+        id: '1',
+        text: 'What is the capital of France?',
+        type: 'multiple',
+        options: ['Paris', 'London', 'Berlin', 'Madrid'],
+        correctAnswer: 0,
+        timeLimit: 30,
+        points: 100,
+        explanation: 'Paris is the capital of France'
+      },
+    ],
+    creatorId: '1',
+    likes: 0,
+    plays: 0,
+    tags: [],
+    createdAt: new Date(),
+  });
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
 
