@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts';
-import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus } from 'react-icons/fa';
+import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
 
 const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -11,7 +11,6 @@ const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
 const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
-
 interface LandingPageProps {
   scrollTo?: string;
 }
