@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaCrown, FaMedal, FaTrophy } from 'react-icons/fa';
+import { useInView } from 'react-intersection-observer';
 import { mockGlobalLeaderboardData } from '../data/mockGlobalLeaderboard';
 
 const FaCrown1 = FaCrown as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -16,7 +17,24 @@ interface LeaderboardEntry {
   quizzesCompleted: number;
 }
 
+const BATCH_SIZE = 8;
+
 const LeaderboardPage: React.FC = () => {
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const { ref, inView } = useInView({
+    threshold: 0,   // triggers earlier
+    rootMargin: '200px', // loads before it's visible
+  });
+
+  React.useEffect(() => {
+    if (inView && visibleCount < mockGlobalLeaderboardData.length) {
+      // Use requestAnimationFrame for smoother frame syncing
+      window.requestAnimationFrame(() => {
+        setVisibleCount((prev) => prev + BATCH_SIZE);
+      });
+    }
+  }, [inView]);
+
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
@@ -30,12 +48,14 @@ const LeaderboardPage: React.FC = () => {
     }
   };
 
+  const visibleEntries = mockGlobalLeaderboardData.slice(0, visibleCount);
+
   return (
     <div className="min-h-screen bg-[#0a0a1a] relative overflow-hidden">
-      {/* Cosmic Background Elements */}
+      {/* Cosmic Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
-        <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
+        <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,...')] opacity-20" />
       </div>
 
       <div className="container mx-auto px-4 py-16 relative z-10">
@@ -43,7 +63,7 @@ const LeaderboardPage: React.FC = () => {
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 20 }}
           transition={{ duration: 0.8 }}
-          className="text-center "
+          className="text-center"
         >
           <h1 className="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
             Global Leaderboard
@@ -61,12 +81,12 @@ const LeaderboardPage: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              {mockGlobalLeaderboardData.map((entry, index) => (
+              {visibleEntries.map((entry, index) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
                   className={`grid grid-cols-4 gap-4 items-center p-4 rounded-lg ${
                     entry.rank <= 3
                       ? 'bg-gradient-to-r from-[#1c1f2e]/50 to-[#1c1f2e]/30 border border-white/10'
@@ -92,6 +112,8 @@ const LeaderboardPage: React.FC = () => {
                   </div>
                 </motion.div>
               ))}
+              {/* Load Trigger */}
+              <div ref={ref}></div>
             </div>
           </div>
         </div>
@@ -100,4 +122,4 @@ const LeaderboardPage: React.FC = () => {
   );
 };
 
-export default LeaderboardPage; 
+export default LeaderboardPage;
