@@ -25,7 +25,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
   useEffect(() => {
     if (scrollTo === 'featured' && featuredSectionRef.current) {
-      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
     }
   }, [scrollTo]);
 
@@ -54,7 +54,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
   const handleGetStarted = () => {
     if (modeSectionRef.current) {
-      modeSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      modeSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
@@ -251,7 +251,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">Why QuizVerse?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">Why AuraQ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
               className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"

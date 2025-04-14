@@ -74,9 +74,9 @@ const ProfilePage: React.FC = () => {
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 20 }}
+          transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
           <h1 className="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
@@ -85,7 +85,12 @@ const ProfilePage: React.FC = () => {
           <p className="text-gray-400">Manage your AuraQ profile</p>
         </motion.div>
 
-        <div className="max-w-md mx-auto">
+        <motion.div 
+          className="max-w-md mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/10">
             {/* Avatar Section */}
             <div className="flex flex-col items-center mb-8">
@@ -177,7 +182,7 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
