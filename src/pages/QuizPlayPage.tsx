@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuiz, useNotification, useAudio } from '../contexts';
+import { useQuiz, useNotification, useAudio } from '../contexts/index';
 import { mockQuizzes } from '../data/mockQuizzes';
 import QuizCompletionScreen from '../components/quiz/QuizCompletionScreen';
 

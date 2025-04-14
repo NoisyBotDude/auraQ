@@ -3,6 +3,82 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotification } from '../contexts';
 import { Quiz, Question } from '../types';
+import { 
+  FaRocket, 
+  FaCompass, 
+  FaPlus, 
+  FaTrophy, 
+  FaUser, 
+  FaCog, 
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
+  FaBars,
+  FaTimes,
+  FaHome,
+  FaStar,
+  FaClock,
+  FaTag,
+  FaList,
+  FaChevronDown,
+  FaChevronUp,
+  FaTrash,
+  FaEdit,
+  FaQuestion,
+  FaCheck,
+  FaTimesCircle,
+  FaGlobe,
+  FaBrain,
+  FaLightbulb,
+  FaBook,
+  FaGraduationCap,
+  FaAtom,
+  FaFlask,
+  FaCode,
+  FaMusic,
+  FaHistory,
+  FaLanguage,
+  FaRunning,
+  FaGamepad,
+  FaFilm,
+  FaPalette,
+  FaChartLine,
+  FaMicrochip,
+  FaRobot,
+  FaSpaceShuttle,
+  FaMeteor,
+  FaSatellite,
+  FaMoon,
+  FaSun,
+  FaGalacticRepublic
+} from 'react-icons/fa';
+
+
+const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
+const CompassIcon = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
+const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
+const TrophyIcon = FaTrophy as React.FC<React.SVGProps<SVGSVGElement>>;
+const UserIcon = FaUser as React.FC<React.SVGProps<SVGSVGElement>>;
+const CogIcon = FaCog as React.FC<React.SVGProps<SVGSVGElement>>;
+const GlobeIcon = FaGlobe as React.FC<React.SVGProps<SVGSVGElement>>;
+const BrainIcon = FaBrain as React.FC<React.SVGProps<SVGSVGElement>>;
+const TagIcon = FaTag as React.FC<React.SVGProps<SVGSVGElement>>;
+const ListIcon = FaList as React.FC<React.SVGProps<SVGSVGElement>>;
+const ClockIcon = FaClock as React.FC<React.SVGProps<SVGSVGElement>>;
+const StarIcon = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
+const QuestionIcon = FaQuestion as React.FC<React.SVGProps<SVGSVGElement>>;
+const TrashIcon = FaTrash as React.FC<React.SVGProps<SVGSVGElement>>;
+const EditIcon = FaEdit as React.FC<React.SVGProps<SVGSVGElement>>;
+const CheckIcon = FaCheck as React.FC<React.SVGProps<SVGSVGElement>>;
+const TimesCircleIcon = FaTimesCircle as React.FC<React.SVGProps<SVGSVGElement>>;
+const SatelliteIcon = FaSatellite as React.FC<React.SVGProps<SVGSVGElement>>;
+const SpaceShuttleIcon = FaSpaceShuttle as React.FC<React.SVGProps<SVGSVGElement>>;
+const MeteorIcon = FaMeteor as React.FC<React.SVGProps<SVGSVGElement>>;
+const MoonIcon = FaMoon as React.FC<React.SVGProps<SVGSVGElement>>;
+const SunIcon = FaSun as React.FC<React.SVGProps<SVGSVGElement>>;
+const GalacticRepublicIcon = FaGalacticRepublic as React.FC<React.SVGProps<SVGSVGElement>>;
+
+
 
 interface QuestionForm extends Omit<Question, 'id'> {
   id?: string;
@@ -164,25 +240,34 @@ const QuizCreationPage: React.FC = () => {
           Create New Quiz
         </motion.h1>
 
-        <div className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/10">
+        <motion.div 
+          className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           {/* Progress Steps */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center">
-              <div 
+              <motion.div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'info' ? 'bg-[#3b82f6] text-white' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
+                  step === 'info' ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
                 }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 1
-              </div>
+              </motion.div>
               <div className="w-20 h-1 bg-[#3b82f6]/20" />
-              <div 
+              <motion.div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'questions' ? 'bg-[#3b82f6] text-white' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
+                  step === 'questions' ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
                 }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 2
-              </div>
+              </motion.div>
             </div>
           </div>
 
@@ -195,112 +280,157 @@ const QuizCreationPage: React.FC = () => {
                 exit={{ opacity: 0, x: 20 }}
                 className="space-y-6"
               >
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <RocketIcon className="text-[#3b82f6]" />
                     Quiz Title
                   </label>
-                  <input
+                  <motion.input
                     type="text"
                     name="title"
                     value={quizData.title}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                     placeholder="Enter quiz title"
+                    whileHover={{ scale: 1.01 }}
                   />
-                </div>
+                </motion.div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <CompassIcon className="text-[#3b82f6]" />
                     Description
                   </label>
-                  <textarea
+                  <motion.textarea
                     name="description"
                     value={quizData.description}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                     rows={4}
                     placeholder="Enter quiz description"
+                    whileHover={{ scale: 1.01 }}
                   />
-                </div>
+                </motion.div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <GlobeIcon className="text-[#3b82f6]" />
                     Category
                   </label>
-                  <input
+                  <motion.input
                     type="text"
                     name="category"
                     value={quizData.category}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                     placeholder="Enter quiz category"
+                    whileHover={{ scale: 1.01 }}
                   />
-                </div>
+                </motion.div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <BrainIcon className="text-[#3b82f6]" />
                     Difficulty
                   </label>
-                  <select
-                    name="difficulty"
-                    value={quizData.difficulty}
-                    onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white"
-                  >
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
-                </div>
+                  <div className="flex items-center gap-4 overflow-x-auto pb-2">
+                    {(['easy', 'medium', 'hard'] as const).map((level) => (
+                      <motion.button
+                        key={level}
+                        className={`px-6 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                          quizData.difficulty === level
+                            ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]'
+                            : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#3b82f6]/20 hover:text-white'
+                        }`}
+                        onClick={() => setQuizData(prev => ({ ...prev, difficulty: level }))}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {level === 'easy' && <SatelliteIcon className="text-lg" />}
+                        {level === 'medium' && <SpaceShuttleIcon className="text-lg" />}
+                        {level === 'hard' && <MeteorIcon className="text-lg" />}
+                        {level.charAt(0).toUpperCase() + level.slice(1)}
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                    <TagIcon className="text-[#3b82f6]" />
                     Tags
                   </label>
                   <div className="flex gap-2 mb-2 flex-wrap">
                     {quizData.tags?.map(tag => (
-                      <span
+                      <motion.span
                         key={tag}
-                        className="px-2 py-1 bg-[#3b82f6]/20 text-[#3b82f6] rounded-full text-sm flex items-center"
+                        className="px-2 py-1 bg-[#3b82f6]/20 text-[#3b82f6] rounded-full text-sm flex items-center gap-2"
+                        whileHover={{ scale: 1.05, backgroundColor: '#3b82f6', color: 'white' }}
+                        transition={{ duration: 0.2 }}
                       >
+                        <StarIcon className="text-xs" />
                         {tag}
-                        <button
+                        <motion.button
                           onClick={() => handleRemoveTag(tag)}
                           className="ml-2 text-[#3b82f6] hover:text-white"
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                         >
                           ×
-                        </button>
-                      </span>
+                        </motion.button>
+                      </motion.span>
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <input
+                    <motion.input
                       type="text"
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                      className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                      className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                       placeholder="Add a tag"
+                      whileHover={{ scale: 1.01 }}
                     />
-                    <button
+                    <motion.button
                       onClick={handleAddTag}
-                      className="px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors"
+                      className="px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
+                      <PlusIcon />
                       Add
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
 
                 <div className="flex justify-end">
-                  <button
+                  <motion.button
                     onClick={() => setStep('questions')}
-                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors"
+                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6]"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     Next
-                  </button>
+                  </motion.button>
                 </div>
               </motion.div>
             )}
+
             {step === 'questions' && (
               <motion.div
                 key="questions"
@@ -310,39 +440,102 @@ const QuizCreationPage: React.FC = () => {
                 className="space-y-6"
               >
                 {/* Questions List */}
-                {quizData.questions?.map((question, index) => (
-                  <div key={question.id} className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10">
-                    <h3 className="font-medium text-gray-300">Question {index + 1}</h3>
-                    <p className="mt-2 text-gray-400">{question.text}</p>
-                  </div>
-                ))}
+                <div className="space-y-4">
+                  {quizData.questions?.map((question, index) => (
+                    <motion.div
+                      key={question.id}
+                      className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                      whileHover={{ y: -2 }}
+                    >
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="flex items-center gap-2">
+                          <QuestionIcon className="text-[#3b82f6]" />
+                          <h3 className="font-medium text-gray-300">Question {index + 1}</h3>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <motion.button
+                            onClick={() => {
+                              setQuizData(prev => ({
+                                ...prev,
+                                questions: prev.questions?.filter((_, i) => i !== index)
+                              }));
+                            }}
+                            className="text-red-500 hover:text-red-400"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <TrashIcon />
+                          </motion.button>
+                          <motion.button
+                            className="text-[#3b82f6] hover:text-[#3b82f6]/80"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <EditIcon />
+                          </motion.button>
+                        </div>
+                      </div>
+                      <AnimatePresence>
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <p className="text-gray-400 mb-4">{question.text}</p>
+                          <div className="space-y-2">
+                            {question.options.map((option, i) => (
+                              <div key={i} className="flex items-center gap-2">
+                                {i === question.correctAnswer ? (
+                                  <CheckIcon className="text-green-500" />
+                                ) : (
+                                  <TimesCircleIcon className="text-red-500" />
+                                )}
+                                <span className="text-gray-300">{option}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
 
                 {/* Add New Question */}
-                <div className="border-t border-white/10 pt-6">
-                  <h3 className="font-medium mb-4 text-gray-300">Add New Question</h3>
+                <motion.div
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  whileHover={{ y: -2 }}
+                >
+                  <h3 className="font-medium mb-4 text-gray-300 flex items-center gap-2">
+                    <PlusIcon className="text-[#3b82f6]" />
+                    Add New Question
+                  </h3>
                   
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <QuestionIcon className="text-[#3b82f6]" />
                         Question Text
                       </label>
-                      <textarea
+                      <motion.textarea
                         name="text"
                         value={currentQuestion.text}
                         onChange={handleQuestionChange}
-                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                         rows={3}
                         placeholder="Enter question text"
+                        whileHover={{ scale: 1.01 }}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <ListIcon className="text-[#3b82f6]" />
                         Options
                       </label>
                       {currentQuestion.options.map((option, index) => (
                         <div key={index} className="flex gap-2 mb-2">
-                          <input
+                          <motion.input
                             type="radio"
                             name="correctAnswer"
                             checked={currentQuestion.correctAnswer === index}
@@ -351,13 +544,15 @@ const QuizCreationPage: React.FC = () => {
                               correctAnswer: index
                             }))}
                             className="mt-3 accent-[#3b82f6]"
+                            whileHover={{ scale: 1.1 }}
                           />
-                          <input
+                          <motion.input
                             type="text"
                             value={option}
                             onChange={(e) => handleOptionChange(index, e.target.value)}
-                            className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400"
+                            className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
                             placeholder={`Option ${index + 1}`}
+                            whileHover={{ scale: 1.01 }}
                           />
                         </div>
                       ))}
@@ -365,58 +560,71 @@ const QuizCreationPage: React.FC = () => {
 
                     <div className="flex gap-4">
                       <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ClockIcon className="text-[#3b82f6]" />
                           Time Limit (seconds)
                         </label>
-                        <input
-                          type="number"
+                        <motion.input
+                          type="text"
                           name="timeLimit"
                           value={currentQuestion.timeLimit}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white transition-all duration-200 hover:border-[#3b82f6]/50 shadow-[0_0_10px_rgba(59,130,246,0.1)]"
+                          whileHover={{ scale: 1.01 }}
+                          whileFocus={{ scale: 1.02 }}
                         />
                       </div>
                       <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <StarIcon className="text-[#3b82f6]" />
                           Points
                         </label>
-                        <input
-                          type="number"
+                        <motion.input
+                          type="text"
                           name="points"
                           value={currentQuestion.points}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white transition-all duration-200 hover:border-[#3b82f6]/50 shadow-[0_0_10px_rgba(59,130,246,0.1)]"
+                          whileHover={{ scale: 1.01 }}
+                          whileFocus={{ scale: 1.02 }}
                         />
                       </div>
                     </div>
 
-                    <button
+                    <motion.button
                       onClick={handleAddQuestion}
-                      className="w-full px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors"
+                      className="w-full px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6] flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
+                      <PlusIcon />
                       Add Question
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
 
                 <div className="flex justify-between pt-6">
-                  <button
+                  <motion.button
                     onClick={() => setStep('info')}
                     className="px-6 py-2 border border-[#3b82f6] text-[#3b82f6] rounded-lg hover:bg-[#3b82f6]/10 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     Back
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={handleSubmit}
-                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors"
+                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6]"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     Create Quiz
-                  </button>
+                  </motion.button>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

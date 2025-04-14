@@ -129,5 +129,179 @@ export const mockQuizzes: Quiz[] = [
     createdAt: new Date(),
     plays: 3000,
     rating: 4.7
+  },
+  {
+    id: '4',
+    title: 'Space Technology',
+    description: 'Explore the engineering behind space exploration and satellite systems.',
+    category: 'Technology',
+    difficulty: 'hard',
+    questions: [
+      {
+        id: '1',
+        text: 'What was the first artificial satellite launched into space?',
+        type: 'multiple',
+        options: ['Explorer 1', 'Sputnik 1', 'Vanguard 1', 'Telstar 1'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'Which space telescope was launched in 1990?',
+        type: 'multiple',
+        options: ['James Webb', 'Hubble', 'Chandra', 'Spitzer'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'What is the main purpose of the International Space Station?',
+        type: 'multiple',
+        options: ['Space Tourism', 'Military Operations', 'Scientific Research', 'Satellite Repair'],
+        correctAnswer: 2,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
+    tags: ['space', 'technology', 'engineering'],
+    author: 'TechExplorer',
+    creatorId: '4',
+    likes: 150,
+    createdAt: new Date(),
+    plays: 1800,
+    rating: 4.6
+  },
+  {
+    id: '5',
+    title: 'Astronomy Basics',
+    description: 'Test your knowledge of fundamental astronomy concepts and celestial bodies.',
+    category: 'Science',
+    difficulty: 'medium',
+    questions: [
+      {
+        id: '1',
+        text: 'What is the closest star to Earth?',
+        type: 'multiple',
+        options: ['Alpha Centauri', 'Proxima Centauri', 'The Sun', 'Sirius'],
+        correctAnswer: 2,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'Which planet has the most moons in our solar system?',
+        type: 'multiple',
+        options: ['Jupiter', 'Saturn', 'Uranus', 'Neptune'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'What is a light-year?',
+        type: 'multiple',
+        options: ['Time measurement', 'Distance measurement', 'Speed measurement', 'Energy measurement'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
+    tags: ['astronomy', 'science', 'space'],
+    author: 'StarGazer',
+    creatorId: '5',
+    likes: 95,
+    createdAt: new Date(),
+    plays: 2200,
+    rating: 4.3
+  },
+  {
+    id: '6',
+    title: 'Cosmic Phenomena',
+    description: 'Learn about fascinating cosmic events and astronomical phenomena.',
+    category: 'Science',
+    difficulty: 'hard',
+    questions: [
+      {
+        id: '1',
+        text: 'What is a supernova?',
+        type: 'multiple',
+        options: ['A new star', 'A dying star explosion', 'A black hole', 'A galaxy'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'What causes a solar eclipse?',
+        type: 'multiple',
+        options: ['Earth blocking the Sun', 'Moon blocking the Sun', 'Mars blocking the Sun', 'Venus blocking the Sun'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'What is a quasar?',
+        type: 'multiple',
+        options: ['A type of star', 'A type of galaxy', 'A type of black hole', 'A type of nebula'],
+        correctAnswer: 2,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
+    tags: ['cosmic', 'science', 'phenomena'],
+    author: 'CosmicExplorer',
+    creatorId: '6',
+    likes: 180,
+    createdAt: new Date(),
+    plays: 1700,
+    rating: 4.7
+  },
+  {
+    id: '7',
+    title: 'Space History',
+    description: 'Test your knowledge about significant events in space exploration history.',
+    category: 'History',
+    difficulty: 'medium',
+    questions: [],
+    creatorId: '7',
+    author: 'HistoryBuff',
+    likes: 75,
+    plays: 1200,
+    rating: 4.4,
+    tags: ['space', 'history', 'exploration'],
+    createdAt: new Date()
+  },
+  {
+    id: '8',
+    title: 'Astrobiology',
+    description: 'Explore the fascinating field of life in the universe and extraterrestrial possibilities.',
+    category: 'Science',
+    difficulty: 'hard',
+    questions: [],
+    creatorId: '8',
+    author: 'BioExplorer',
+    likes: 95,
+    plays: 900,
+    rating: 4.6,
+    tags: ['space', 'biology', 'science'],
+    createdAt: new Date()
+  },
+  {
+    id: '9',
+    title: 'Space Photography',
+    description: 'Learn about capturing the beauty of space through astrophotography.',
+    category: 'Art',
+    difficulty: 'medium',
+    questions: [],
+    creatorId: '9',
+    author: 'PhotoArtist',
+    likes: 110,
+    plays: 1500,
+    rating: 4.7,
+    tags: ['space', 'photography', 'art'],
+    createdAt: new Date()
   }
 ]; 
