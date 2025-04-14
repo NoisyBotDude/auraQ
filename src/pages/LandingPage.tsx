@@ -83,7 +83,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
-     
+
 
       {/* Hero Section */}
       <motion.section
@@ -91,7 +91,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        
+
       >
         {/* Animated Nebula Background */}
         <motion.div
@@ -131,14 +131,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             variants={itemVariants}
             whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
           >
-            <span className="relative z-10">Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.</span>
-            <motion.span 
+            <span className="relative">Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.</span>
+            <motion.span
               className="absolute inset-0 bg-[#3b82f6]/20 rounded-lg opacity-0"
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
               style={{
-                background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
+                background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(109, 61, 181, 0.3) 0%, transparent 50%)',
               }}
             />
           </motion.p>
@@ -161,7 +161,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
                   >
                     <path d="M0 0h24v24H0z" fill="none"></path>
                     <path
-                      d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                      d="M13 16.172l5.364-5.364 1.414 1.414L12 20l-7.778-7.778 1.414-1.414L11 16.172V4h2z"
                       fill="currentColor"
                     ></path>
                   </svg>
@@ -215,7 +215,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       <section ref={modeSectionRef} className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center gap-8">
-            <motion.button 
+            <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
@@ -230,7 +230,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
               <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:border-white/40 transition-colors duration-300" />
             </motion.button>
 
-            <motion.button 
+            <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}

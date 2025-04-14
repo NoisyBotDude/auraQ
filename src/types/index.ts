@@ -74,3 +74,12 @@ export interface Player {
   rank: number;
   avatar: string;
 } 
+
+export interface GlobalLeaderboardEntry {
+  id: string;
+  username: string;
+  avatar: string;
+  score: number;
+  rank: number;
+  quizzesCompleted: number;
+}
