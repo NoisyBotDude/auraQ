@@ -2,28 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz, useNotification, useAudio } from '../contexts';
+import { mockQuizzes } from '../data/mockQuizzes';
+import QuizCompletionScreen from '../components/quiz/QuizCompletionScreen';
 
 const QuizPlayPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const navigate = useNavigate();
-  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore } = useQuiz();
+  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore, setQuiz, showCompletionScreen, setShowCompletionScreen } = useQuiz();
   const { addNotification } = useNotification();
   const { playSound } = useAudio();
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [timeLeft, setTimeLeft] = useState<number>(30); // Default time per question
+  const [timeLeft, setTimeLeft] = useState<number>(30);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
 
   useEffect(() => {
-    if (!currentQuiz) {
-      // Load quiz data here
-      // For now using mock data
-      addNotification({
-        message: 'Quiz loaded successfully!',
-        type: 'success'
-      });
+    if (quizId) {
+      const quiz = mockQuizzes.find(q => q.id === quizId);
+      if (quiz) {
+        setQuiz(quiz);
+        addNotification({
+          message: 'Quiz loaded successfully!',
+          type: 'success'
+        });
+      } else {
+        addNotification({
+          message: 'Quiz not found',
+          type: 'error'
+        });
+        navigate('/explore');
+      }
     }
-  }, [quizId]);
+  }, [quizId, setQuiz, addNotification, navigate]);
 
   useEffect(() => {
     if (!isAnswerRevealed && timeLeft > 0) {
@@ -62,12 +72,12 @@ const QuizPlayPage: React.FC = () => {
   };
 
   const calculateScore = () => {
-    return Math.round((timeLeft / 30) * 100); // Score based on time left
+    return Math.round((timeLeft / 30) * 100);
   };
 
   const handleNextQuestion = () => {
     if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
-      navigate('/results');
+      setShowCompletionScreen(true);
       return;
     }
 
@@ -79,8 +89,8 @@ const QuizPlayPage: React.FC = () => {
 
   if (!currentQuiz) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a1a]">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#3b82f6]"></div>
       </div>
     );
   }
@@ -88,28 +98,28 @@ const QuizPlayPage: React.FC = () => {
   const currentQuestionData = currentQuiz.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 text-black">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-[#0a0a1a] text-white">
+      <div className="container mx-auto px-4 max-w-4xl py-8">
         {/* Progress and Score */}
         <div className="flex justify-between items-center mb-8">
           <div className="text-lg font-semibold">
             Question {currentQuestion + 1}/{currentQuiz.questions.length}
           </div>
-          <div className="text-lg font-semibold text-primary-600">
+          <div className="text-lg font-semibold text-[#3b82f6]">
             Score: {score}
           </div>
         </div>
 
         {/* Timer */}
         <motion.div 
-          className="w-full h-2 bg-gray-200 rounded-full mb-8"
+          className="w-full h-2 bg-[#2d2f3d] rounded-full mb-8"
           initial={{ scaleX: 1 }}
           animate={{ scaleX: timeLeft / 30 }}
           transition={{ duration: 0.5 }}
         >
           <div 
             className={`h-full rounded-full transition-all duration-300 ${
-              timeLeft > 10 ? 'bg-primary-500' : 'bg-red-500'
+              timeLeft > 10 ? 'bg-[#3b82f6]' : 'bg-red-500'
             }`}
             style={{ width: `100%` }}
           />
@@ -122,7 +132,7 @@ const QuizPlayPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-white rounded-xl shadow-lg p-8 mb-8"
+            className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 mb-8 border border-white/10"
           >
             <h2 className="text-2xl font-bold mb-6">{currentQuestionData.text}</h2>
 
@@ -133,14 +143,14 @@ const QuizPlayPage: React.FC = () => {
                   className={`p-4 rounded-lg text-left transition-colors ${
                     isAnswerRevealed
                       ? index === currentQuestionData.correctAnswer
-                        ? 'bg-green-100 border-green-500'
+                        ? 'bg-green-500/20 border-green-500'
                         : index === selectedAnswer
-                        ? 'bg-red-100 border-red-500'
-                        : 'bg-gray-100'
+                        ? 'bg-red-500/20 border-red-500'
+                        : 'bg-[#2d2f3d] border-white/10'
                       : selectedAnswer === index
-                      ? 'bg-primary-100 border-primary-500'
-                      : 'bg-gray-100 hover:bg-gray-200'
-                  } border-2`}
+                      ? 'bg-[#3b82f6]/20 border-[#3b82f6]'
+                      : 'bg-[#2d2f3d] border-white/10 hover:bg-[#3b82f6]/10'
+                  } border`}
                   onClick={() => handleAnswerSelect(index)}
                   disabled={isAnswerRevealed}
                   whileHover={!isAnswerRevealed ? { scale: 1.02 } : {}}
@@ -162,13 +172,25 @@ const QuizPlayPage: React.FC = () => {
           >
             <button
               onClick={handleNextQuestion}
-              className="px-8 py-3 bg-primary-500 text-white rounded-full text-lg font-semibold hover:bg-primary-600 transition-colors"
+              className="px-8 py-3 bg-[#3b82f6] text-white rounded-full text-lg font-semibold hover:bg-[#3b82f6]/80 transition-colors"
             >
               {currentQuestion + 1 >= currentQuiz.questions.length ? 'Finish Quiz' : 'Next Question'}
             </button>
           </motion.div>
         )}
       </div>
+
+      <AnimatePresence>
+        {showCompletionScreen && (
+          <QuizCompletionScreen
+            score={score}
+            onClose={() => {
+              setShowCompletionScreen(false);
+              navigate('/explore');
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

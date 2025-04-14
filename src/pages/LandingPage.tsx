@@ -1,72 +1,62 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts';
-import { FaRocket, FaUsers, FaPenFancy } from 'react-icons/fa';
+import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus } from 'react-icons/fa';
+import { mockQuizzes } from '../data/mockQuizzes';
 
 const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
 const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
+const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
+const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
 
-const LandingPage: React.FC = () => {
-  // Mock data for featured quizzes - replace with real data later
-  const featuredQuizzes = [
-    {
-      id: '1',
-      title: 'Science Galaxy Explorer',
-      description: 'Embark on an adventure through space, physics, and chemistry!',
-      category: 'Science',
-      difficulty: 'medium' as const,
-      questions: Array(10).fill(null),
-      creatorId: 'SpaceMaster',
-      likes: 245,
-      plays: 1200,
-      tags: ['space', 'physics', 'chemistry'],
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      title: 'History Time Traveler',
-      description: 'Journey through ancient civilizations and pivotal moments in human history!',
-      category: 'History',
-      difficulty: 'medium' as const,
-      questions: Array(10).fill(null),
-      creatorId: 'TimeExplorer',
-      likes: 189,
-      plays: 950,
-      tags: ['ancient', 'civilizations', 'world-history'],
-      createdAt: new Date()
-    },
-    {
-      id: '3',
-      title: 'Math Universe Explorer',
-      description: 'Dive into the fascinating world of numbers, patterns, and mathematical concepts!',
-      category: 'Mathematics',
-      difficulty: 'hard' as const,
-      questions: Array(10).fill(null),
-      creatorId: 'MathWizard',
-      likes: 156,
-      plays: 780,
-      tags: ['algebra', 'geometry', 'calculus'],
-      createdAt: new Date()
-    },
-    {
-      id: '4',
-      title: 'Literature Odyssey',
-      description: 'Explore classic and contemporary literature from around the world!',
-      category: 'Literature',
-      difficulty: 'medium' as const,
-      questions: Array(10).fill(null),
-      creatorId: 'BookWorm',
-      likes: 203,
-      plays: 890,
-      tags: ['classics', 'poetry', 'novels'],
-      createdAt: new Date()
-    }
-  ];
+interface LandingPageProps {
+  scrollTo?: string;
+}
 
+const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
+  const featuredSectionRef = useRef<HTMLDivElement>(null);
+  const modeSectionRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (scrollTo === 'featured' && featuredSectionRef.current) {
+      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [scrollTo]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (descriptionRef.current) {
+        const rect = descriptionRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        descriptionRef.current.style.setProperty('--mouse-x', `${x}px`);
+        descriptionRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+    };
+
+    const descriptionElement = descriptionRef.current;
+    if (descriptionElement) {
+      descriptionElement.addEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => {
+      if (descriptionElement) {
+        descriptionElement.removeEventListener('mousemove', handleMouseMove);
+      }
+    };
+  }, []);
+
+  const handleGetStarted = () => {
+    if (modeSectionRef.current) {
+      modeSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -87,7 +77,7 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
       {/* Cosmic Background Elements */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
@@ -136,41 +126,47 @@ const LandingPage: React.FC = () => {
           </motion.h1>
 
           <motion.p
-            className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+            ref={descriptionRef}
+            className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto relative group"
             variants={itemVariants}
             whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
           >
-            Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.
+            <span className="relative z-10">Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.</span>
+            <motion.span 
+              className="absolute inset-0 bg-[#3b82f6]/20 rounded-lg opacity-0"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              style={{
+                background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
+              }}
+            />
           </motion.p>
 
           <motion.div className="flex justify-center gap-4" variants={itemVariants}>
             {user ? (
-              <Link
-                to="/explore"
-                className="  text-white rounded-full text-lg font-semibold hover:bg-blue-600 transition-all duration-300  shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6] relative overflow-hidden group"
+              <motion.button
+                onClick={handleGetStarted}
+                className="get-started-button bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] relative group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {/* <span className="relative z-10">Start Exploring</span>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" /> */}
-
-                <button className="get-started-button bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
-                  Get started
-                  <div className="icon">
-                    <svg
-                      height="24"
-                      width="24"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M0 0h24v24H0z" fill="none"></path>
-                      <path
-                        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </div>
-                </button>
-
-              </Link>
+                Get started
+                <div className="icon">
+                  <svg
+                    height="24"
+                    width="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                      d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+              </motion.button>
             ) : (
               <>
                 <Link
@@ -194,46 +190,64 @@ const LandingPage: React.FC = () => {
       </motion.section>
 
       {/* Featured Quizzes Section */}
-      <section className="py-20 text-white relative">
-        <div className="container mx-auto px-4 z-10 relative">
-          <h2 className="text-4xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] to-[#a855f7] drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-            Featured Quizzes
-          </h2>
+      <section ref={featuredSectionRef} className="py-16">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+              Featured Quizzes
+            </h2>
+            <p className="text-gray-400">Test your knowledge with our most popular quizzes</p>
+          </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {featuredQuizzes.map((quiz) => (
-              <motion.div
-                key={quiz.id}
-                className="bg-[#1c1f2e]/80 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-[0_0_15px_#7f5af0] transition-all duration-300 border border-white/10 hover:border-[#a855f7] relative overflow-hidden group"
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <QuizCard quiz={quiz} />
-              </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockQuizzes.map((quiz) => (
+              <QuizCard key={quiz.id} quiz={quiz} />
             ))}
-          </div>
-
-          <div className="text-center mt-16">
-            <Link
-              to="/explore"
-              className="inline-block px-8 py-3 rounded-full text-lg font-semibold text-white shadow-md hover:shadow-[0_0_25px_#a855f7] transition-all duration-300 relative overflow-hidden group"
-            >
-              <span className="relative z-10">Explore More Quizzes</span>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Link>
           </div>
         </div>
       </section>
-<section>
-  <div className="select-mode-button bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
-    <button className="create-quiz-button create-play-online">
-      Create Quiz
-    </button>
-    <button className="play-online-button create-play-online">
-      Play Online
-    </button>
-  </div>
-</section>
+
+      <section ref={modeSectionRef} className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            <motion.button 
+              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/create')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center gap-3">
+                <PlusIcon className="text-2xl" />
+                <span>Create Quiz</span>
+              </div>
+              <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:border-white/40 transition-colors duration-300" />
+            </motion.button>
+
+            <motion.button 
+              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/explore')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-[#ec4899] via-[#a855f7] to-[#3b82f6] opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex items-center gap-3">
+                <GameIcon className="text-2xl" />
+                <span>Play Online</span>
+              </div>
+              <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:border-white/40 transition-colors duration-300" />
+            </motion.button>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">

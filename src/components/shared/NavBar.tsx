@@ -1,10 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  FaCompass, 
+  FaPlus, 
+  FaTrophy, 
+  FaUser, 
+  FaCog, 
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
+  FaBars,
+  FaTimes
+} from 'react-icons/fa';
+
+const FaCompass1 = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaPlus1 = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaTrophy1 = FaTrophy as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaUser1 = FaUser as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaCog1 = FaCog as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaSignOutAlt1 = FaSignOutAlt as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaSignInAlt1 = FaSignInAlt as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaUserPlus1 = FaUserPlus as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaBars1 = FaBars as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaTimes1 = FaTimes as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const NavBar: React.FC = () => {
   const { user, logout } = useAuth();
+  const [isShrunk, setIsShrunk] = useState(false);
+
+  const toggleNav = () => {
+    setIsShrunk(!isShrunk);
+  };
 
   return (
     <motion.nav 
@@ -18,63 +46,89 @@ const NavBar: React.FC = () => {
           AuraQ
         </Link>
 
-        <div className="flex items-center space-x-6">
-          {user ? (
-            <>
-              <Link to="/explore" className="hover:opacity-80 transition-opacity duration-200">
-              
-                Explore
-              </Link>
-              <Link to="/create" className="hover:opacity-80 transition-opacity duration-200">
-                Create Quiz
-              </Link>
-              <Link to="/leaderboard" className="hover:opacity-80 transition-opacity duration-200">
-                Leaderboard
-              </Link>
-              <div className="relative group">
-                <img 
-                  src={user.avatar.baseCharacter} 
-                  alt="Profile" 
-                  className="w-8 h-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity duration-200"
-                />
-                <div className="absolute right-0 mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg py-2 invisible group-hover:visible transition-all duration-200">
-                  <Link 
-                    to="/profile" 
-                    className="block px-4 py-2 text-white hover:bg-white/10 transition-colors duration-200"
-                  >
-                    Profile
-                  </Link>
-                  <Link 
-                    to="/settings" 
-                    className="block px-4 py-2 text-white hover:bg-white/10 transition-colors duration-200"
-                  >
-                    Settings
-                  </Link>
-                  <button 
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-white hover:bg-white/10 transition-colors duration-200"
-                  >
-                    Logout
-                  </button>
+        <div className="flex items-center gap-4">
+          <motion.div
+            className="flex items-center space-x-6"
+            initial={{ opacity: 1, x: 0 }}
+            animate={{ 
+              opacity: isShrunk ? 0 : 1,
+              x: isShrunk ? 20 : 0
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            {user ? (
+              <>
+                <Link to="/explore" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
+                  <FaCompass1 className="text-lg" />
+                  <span>Explore</span>
+                </Link>
+                <Link to="/create" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
+                  <FaPlus1 className="text-lg" />
+                  <span>Create Quiz</span>
+                </Link>
+                <Link to="/leaderboard" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
+                  <FaTrophy1 className="text-lg" />
+                  <span>Leaderboard</span>
+                </Link>
+                <div className="relative group">
+                  <img 
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=AuraQUser" 
+                    alt="Profile" 
+                    className="w-8 h-8 rounded-full cursor-pointer hover:scale-110 hover:ring-2 hover:ring-[#3b82f6] transition-all duration-200"
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg py-2 invisible group-hover:visible transition-all duration-200">
+                    <Link 
+                      to="/profile" 
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
+                    >
+                      <FaUser1 className="text-sm" />
+                      <span>Profile</span>
+                    </Link>
+                    <Link 
+                      to="/settings" 
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
+                    >
+                      <FaCog1 className="text-sm" />
+                      <span>Settings</span>
+                    </Link>
+                    <button 
+                      onClick={logout}
+                      className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
+                    >
+                      <FaSignOutAlt1 className="text-sm" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <Link 
-                to="/login"
-                className="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 transition-all duration-200 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7]"
-              >
-                Login
-              </Link>
-              <Link 
-                to="/register"
-                className="px-4 py-2 rounded-lg border-2 border-primary-500 hover:bg-primary-500/10 transition-all duration-200"
-              >
-                Register
-              </Link>
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                <Link 
+                  to="/login"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 hover:scale-105 transition-all duration-200 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7]"
+                >
+                  <FaSignInAlt1 className="text-lg" />
+                  <span>Login</span>
+                </Link>
+                <Link 
+                  to="/register"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-primary-500 hover:bg-primary-500/10 hover:scale-105 transition-all duration-200"
+                >
+                  <FaUserPlus1 className="text-lg" />
+                  <span>Register</span>
+                </Link>
+              </>
+            )}
+          </motion.div>
+
+          <motion.button
+            onClick={toggleNav}
+            className="p-2 rounded-full hover:bg-white/10 hover:scale-110 transition-all duration-200"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            {isShrunk ? <FaBars1 className="text-xl" /> : <FaTimes1 className="text-xl" />}
+          </motion.button>
         </div>
       </div>
     </motion.nav>

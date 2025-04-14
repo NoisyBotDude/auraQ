@@ -1,90 +1,91 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Quiz } from '../../types';
+import { FaPlay, FaStar, FaUsers } from 'react-icons/fa';
+
+const FaPlay1 = FaPlay as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaStar1 = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaUsers1 = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface QuizCardProps {
-  quiz: Quiz;
-  showCreator?: boolean;
+  quiz: {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    tags: string[];
+    author: string;
+    plays: number;
+    rating: number;
+  };
 }
 
-const QuizCard: React.FC<QuizCardProps> = ({ quiz, showCreator = true }) => {
+const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy':
+        return 'text-green-400';
+      case 'medium':
+        return 'text-blue-400';
+      case 'hard':
+        return 'text-red-400';
+      default:
+        return 'text-gray-400';
+    }
+  };
+
   return (
     <motion.div
-      className="bg-white rounded-xl shadow-lg overflow-hidden"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/10 relative overflow-hidden group"
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className="p-6">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div className="relative z-10">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-gray-900">{quiz.title}</h3>
-          <span className={`px-3 py-1 rounded-full text-sm ${
-            quiz.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
-            quiz.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-red-100 text-red-800'
-          }`}>
+          <h3 className="text-xl font-bold text-white">{quiz.title}</h3>
+          <span className={`text-sm font-medium ${getDifficultyColor(quiz.difficulty)}`}>
             {quiz.difficulty}
           </span>
         </div>
 
-        <p className="text-gray-600 mb-4 line-clamp-2">{quiz.description}</p>
+        <p className="text-gray-400 mb-4">{quiz.description}</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {quiz.tags.map((tag, index) => (
-            <span 
+            <span
               key={index}
-              className="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-sm"
+              className="px-2 py-1 bg-[#2d2f3d]/50 text-gray-300 rounded-full text-xs"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="flex justify-between items-center text-sm text-gray-500">
-          <div className="flex items-center space-x-4">
-            <span>{quiz.questions.length} questions</span>
-            <span>•</span>
-            <span>{quiz.plays} plays</span>
-          </div>
-          <div className="flex items-center">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              className="mr-2"
-            >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5 text-red-500" 
-                viewBox="0 0 20 20" 
-                fill={quiz.likes > 0 ? "currentColor" : "none"}
-                stroke="currentColor"
-              >
-                <path 
-                  fillRule="evenodd" 
-                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" 
-                  clipRule="evenodd" 
-                />
-              </svg>
-            </motion.button>
-            <span>{quiz.likes}</span>
+        <div className="flex justify-between items-center text-sm text-gray-400 mb-4">
+          <span>By {quiz.author}</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
+              <FaUsers1 className="text-sm" />
+              <span>{quiz.plays}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <FaStar1 className="text-yellow-400" />
+              <span>{quiz.rating.toFixed(1)}</span>
+            </div>
           </div>
         </div>
 
-        <div className="mt-4 flex justify-between items-center">
-          {showCreator && (
-            <div className="text-sm text-gray-500">
-              Created by <span className="font-medium">{quiz.creatorId}</span>
-            </div>
-          )}
-          <Link
-            to={`/quiz/${quiz.id}`}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-          >
-            Start Quiz
-          </Link>
-        </div>
+        <Link
+          to={`/quiz/${quiz.id}`}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] text-white font-medium hover:opacity-90 transition-opacity duration-200"
+        >
+          <FaPlay1 className="text-sm" />
+          <span>Start Quiz</span>
+        </Link>
       </div>
     </motion.div>
   );

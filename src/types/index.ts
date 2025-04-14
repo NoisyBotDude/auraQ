@@ -48,8 +48,10 @@ export interface Quiz {
   difficulty: 'easy' | 'medium' | 'hard';
   questions: Question[];
   creatorId: string;
+  author: string;
   likes: number;
   plays: number;
+  rating: number;
   tags: string[];
   createdAt: Date;
 }
@@ -63,4 +65,12 @@ export interface Question {
   timeLimit: number;
   points: number;
   explanation?: string;
+}
+
+export interface Player {
+  id: string;
+  username: string;
+  score: number;
+  rank: number;
+  avatar: string;
 } 

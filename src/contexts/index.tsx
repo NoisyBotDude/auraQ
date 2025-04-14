@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (credentials: { username: string; password: string }) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,6 +34,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     friends: [],
   });
 
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      setUser({ ...user, ...userData });
+    }
+  };
+
   const login = async (credentials: { username: string; password: string }) => {
     // Implement login logic
   };
@@ -42,7 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -80,40 +87,29 @@ interface QuizContextType {
   setQuiz: (quiz: Quiz) => void;
   nextQuestion: () => void;
   updateScore: (points: number) => void;
+  showCompletionScreen: boolean;
+  setShowCompletionScreen: (show: boolean) => void;
 }
 
 export const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>({
-    id: '1',
-    title: 'Test Quiz',
-    description: 'This is a test quiz',
-    category: 'Science',
-    difficulty: 'easy',
-    questions: [
-      {
-        id: '1',
-        text: 'What is the capital of France?',
-        type: 'multiple',
-        options: ['Paris', 'London', 'Berlin', 'Madrid'],
-        correctAnswer: 0,
-        timeLimit: 30,
-        points: 100,
-        explanation: 'Paris is the capital of France'
-      },
-    ],
-    creatorId: '1',
-    likes: 0,
-    plays: 0,
-    tags: [],
-    createdAt: new Date(),
-  });
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
+  const [showCompletionScreen, setShowCompletionScreen] = useState(false);
 
-  const nextQuestion = () => setCurrentQuestion(prev => prev + 1);
-  const updateScore = (points: number) => setScore(prev => prev + points);
+  const nextQuestion = () => {
+    if (currentQuiz && currentQuestion < currentQuiz.questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else {
+      setShowCompletionScreen(true);
+    }
+  };
+
+  const updateScore = (points: number) => {
+    setScore(prev => prev + points);
+  };
 
   return (
     <QuizContext.Provider value={{
@@ -122,7 +118,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       score,
       setQuiz: setCurrentQuiz,
       nextQuestion,
-      updateScore
+      updateScore,
+      showCompletionScreen,
+      setShowCompletionScreen
     }}>
       {children}
     </QuizContext.Provider>
