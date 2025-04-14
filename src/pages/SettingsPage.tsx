@@ -36,23 +36,11 @@ const SettingsPage: React.FC = () => {
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
 
-      {/* Animated Nebula Background */}
-      <motion.div
-        className="absolute w-[40rem] h-[40rem] rounded-full -top-32 -left-32 blur-[140px] z-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent_70%)]"
-        animate={{ 
-          scale: [1, 1.2, 1],
-          rotate: [0, 90, 0],
-          x: [-50, 50, -50],
-          y: [-50, 50, -50]
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-
       <div className="container mx-auto px-4 py-16 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 20 }}
+          transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
           <h1 className="text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
@@ -61,7 +49,12 @@ const SettingsPage: React.FC = () => {
           <p className="text-gray-400">Customize your AuraQ experience</p>
         </motion.div>
 
-        <div className="max-w-md mx-auto">
+        <motion.div 
+          className="max-w-md mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/10">
             {/* Theme Toggle */}
             <div className="mb-8">
@@ -78,7 +71,7 @@ const SettingsPage: React.FC = () => {
                 >
                   <motion.div
                     className="absolute w-6 h-6 rounded-full bg-white flex items-center justify-center"
-                    initial={false}
+                    initial={{ y: -12 }}
                     animate={{ x: isDarkMode ? 32 : 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
@@ -105,7 +98,7 @@ const SettingsPage: React.FC = () => {
               </motion.button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

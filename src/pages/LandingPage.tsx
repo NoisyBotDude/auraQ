@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts';
-import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus } from 'react-icons/fa';
+import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
 
 const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -11,7 +11,6 @@ const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
 const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
-
 interface LandingPageProps {
   scrollTo?: string;
 }
@@ -25,7 +24,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
   useEffect(() => {
     if (scrollTo === 'featured' && featuredSectionRef.current) {
-      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
     }
   }, [scrollTo]);
 
@@ -54,7 +53,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
   const handleGetStarted = () => {
     if (modeSectionRef.current) {
-      modeSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+      modeSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
@@ -83,7 +82,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
-     
+
 
       {/* Hero Section */}
       <motion.section
@@ -91,7 +90,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        
+
       >
         {/* Animated Nebula Background */}
         <motion.div
@@ -131,14 +130,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             variants={itemVariants}
             whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
           >
-            <span className="relative z-10">Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.</span>
-            <motion.span 
+            <span className="relative">Embark on an epic journey through knowledge. Challenge yourself, compete with friends, and unlock achievements in our galactic learning universe.</span>
+            <motion.span
               className="absolute inset-0 bg-[#3b82f6]/20 rounded-lg opacity-0"
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
               style={{
-                background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
+                background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(109, 61, 181, 0.3) 0%, transparent 50%)',
               }}
             />
           </motion.p>
@@ -161,7 +160,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
                   >
                     <path d="M0 0h24v24H0z" fill="none"></path>
                     <path
-                      d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                      d="M13 16.172l5.364-5.364 1.414 1.414L12 20l-7.778-7.778 1.414-1.414L11 16.172V4h2z"
                       fill="currentColor"
                     ></path>
                   </svg>
@@ -215,7 +214,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       <section ref={modeSectionRef} className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center gap-8">
-            <motion.button 
+            <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
@@ -230,7 +229,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
               <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:border-white/40 transition-colors duration-300" />
             </motion.button>
 
-            <motion.button 
+            <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
@@ -251,7 +250,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">Why QuizVerse?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">Why AuraQ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
               className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
