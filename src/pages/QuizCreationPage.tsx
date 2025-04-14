@@ -232,7 +232,7 @@ const QuizCreationPage: React.FC = () => {
 
       <div className="container mx-auto px-4 max-w-3xl relative z-10 py-12">
         <motion.h1 
-          className="text-4xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+          className="text-4xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -251,17 +251,17 @@ const QuizCreationPage: React.FC = () => {
             <div className="flex items-center">
               <motion.div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'info' ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
+                  step === 'info' ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]' : 'bg-[#6366f1]/20 text-[#6366f1]'
                 }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
                 1
               </motion.div>
-              <div className="w-20 h-1 bg-[#3b82f6]/20" />
+              <div className="w-20 h-1 bg-gradient-to-r from-[#6366f1]/20 via-[#8b5cf6]/20 to-[#ec4899]/20" />
               <motion.div 
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step === 'questions' ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]' : 'bg-[#3b82f6]/20 text-[#3b82f6]'
+                  step === 'questions' ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]' : 'bg-[#6366f1]/20 text-[#6366f1]'
                 }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -281,11 +281,11 @@ const QuizCreationPage: React.FC = () => {
                 className="space-y-6"
               >
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                    <RocketIcon className="text-[#3b82f6]" />
+                    <RocketIcon className="text-[#6366f1]" />
                     Quiz Title
                   </label>
                   <motion.input
@@ -293,25 +293,25 @@ const QuizCreationPage: React.FC = () => {
                     name="title"
                     value={quizData.title}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                     placeholder="Enter quiz title"
                     whileHover={{ scale: 1.01 }}
                   />
                 </motion.div>
 
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                    <CompassIcon className="text-[#3b82f6]" />
+                    <CompassIcon className="text-[#6366f1]" />
                     Description
                   </label>
                   <motion.textarea
                     name="description"
                     value={quizData.description}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                     rows={4}
                     placeholder="Enter quiz description"
                     whileHover={{ scale: 1.01 }}
@@ -319,11 +319,11 @@ const QuizCreationPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                    <GlobeIcon className="text-[#3b82f6]" />
+                    <GlobeIcon className="text-[#6366f1]" />
                     Category
                   </label>
                   <motion.input
@@ -331,18 +331,18 @@ const QuizCreationPage: React.FC = () => {
                     name="category"
                     value={quizData.category}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                     placeholder="Enter quiz category"
                     whileHover={{ scale: 1.01 }}
                   />
                 </motion.div>
 
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                    <BrainIcon className="text-[#3b82f6]" />
+                    <BrainIcon className="text-[#6366f1]" />
                     Difficulty
                   </label>
                   <div className="flex items-center gap-4 overflow-x-auto pb-2">
@@ -351,8 +351,8 @@ const QuizCreationPage: React.FC = () => {
                         key={level}
                         className={`px-6 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
                           quizData.difficulty === level
-                            ? 'bg-[#3b82f6] text-white shadow-[0_0_10px_#3b82f6]'
-                            : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#3b82f6]/20 hover:text-white'
+                            ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]'
+                            : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
                         }`}
                         onClick={() => setQuizData(prev => ({ ...prev, difficulty: level }))}
                         whileHover={{ scale: 1.05 }}
@@ -368,26 +368,26 @@ const QuizCreationPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                    <TagIcon className="text-[#3b82f6]" />
+                    <TagIcon className="text-[#6366f1]" />
                     Tags
                   </label>
                   <div className="flex gap-2 mb-2 flex-wrap">
                     {quizData.tags?.map(tag => (
                       <motion.span
                         key={tag}
-                        className="px-2 py-1 bg-[#3b82f6]/20 text-[#3b82f6] rounded-full text-sm flex items-center gap-2"
-                        whileHover={{ scale: 1.05, backgroundColor: '#3b82f6', color: 'white' }}
+                        className="px-2 py-1 bg-[#6366f1]/20 text-[#6366f1] rounded-full text-sm flex items-center gap-2"
+                        whileHover={{ scale: 1.05, backgroundColor: '#6366f1', color: 'white' }}
                         transition={{ duration: 0.2 }}
                       >
                         <StarIcon className="text-xs" />
                         {tag}
                         <motion.button
                           onClick={() => handleRemoveTag(tag)}
-                          className="ml-2 text-[#3b82f6] hover:text-white"
+                          className="ml-2 text-[#6366f1] hover:text-white"
                           whileHover={{ scale: 1.2 }}
                           whileTap={{ scale: 0.9 }}
                         >
@@ -402,13 +402,13 @@ const QuizCreationPage: React.FC = () => {
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                      className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                      className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                       placeholder="Add a tag"
                       whileHover={{ scale: 1.01 }}
                     />
                     <motion.button
                       onClick={handleAddTag}
-                      className="px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] transition-colors flex items-center gap-2"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -421,7 +421,7 @@ const QuizCreationPage: React.FC = () => {
                 <div className="flex justify-end">
                   <motion.button
                     onClick={() => setStep('questions')}
-                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6]"
+                    className="px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -444,12 +444,12 @@ const QuizCreationPage: React.FC = () => {
                   {quizData.questions?.map((question, index) => (
                     <motion.div
                       key={question.id}
-                      className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                      className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                       whileHover={{ y: -2 }}
                     >
                       <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-2">
-                          <QuestionIcon className="text-[#3b82f6]" />
+                          <QuestionIcon className="text-[#6366f1]" />
                           <h3 className="font-medium text-gray-300">Question {index + 1}</h3>
                         </div>
                         <div className="flex items-center gap-2">
@@ -467,7 +467,7 @@ const QuizCreationPage: React.FC = () => {
                             <TrashIcon />
                           </motion.button>
                           <motion.button
-                            className="text-[#3b82f6] hover:text-[#3b82f6]/80"
+                            className="text-[#6366f1] hover:text-[#6366f1]/80"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >
@@ -503,25 +503,25 @@ const QuizCreationPage: React.FC = () => {
 
                 {/* Add New Question */}
                 <motion.div
-                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#3b82f6]/50 transition-all duration-300"
+                  className="p-6 bg-[#2d2f3d]/50 backdrop-blur-sm rounded-xl border border-white/10 hover:border-[#6366f1]/50 transition-all duration-300"
                   whileHover={{ y: -2 }}
                 >
                   <h3 className="font-medium mb-4 text-gray-300 flex items-center gap-2">
-                    <PlusIcon className="text-[#3b82f6]" />
+                    <PlusIcon className="text-[#6366f1]" />
                     Add New Question
                   </h3>
                   
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                        <QuestionIcon className="text-[#3b82f6]" />
+                        <QuestionIcon className="text-[#6366f1]" />
                         Question Text
                       </label>
                       <motion.textarea
                         name="text"
                         value={currentQuestion.text}
                         onChange={handleQuestionChange}
-                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                         rows={3}
                         placeholder="Enter question text"
                         whileHover={{ scale: 1.01 }}
@@ -530,7 +530,7 @@ const QuizCreationPage: React.FC = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                        <ListIcon className="text-[#3b82f6]" />
+                        <ListIcon className="text-[#6366f1]" />
                         Options
                       </label>
                       {currentQuestion.options.map((option, index) => (
@@ -543,14 +543,14 @@ const QuizCreationPage: React.FC = () => {
                               ...prev,
                               correctAnswer: index
                             }))}
-                            className="mt-3 accent-[#3b82f6]"
+                            className="mt-3 accent-[#6366f1]"
                             whileHover={{ scale: 1.1 }}
                           />
                           <motion.input
                             type="text"
                             value={option}
                             onChange={(e) => handleOptionChange(index, e.target.value)}
-                            className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#3b82f6]/50"
+                            className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                             placeholder={`Option ${index + 1}`}
                             whileHover={{ scale: 1.01 }}
                           />
@@ -561,7 +561,7 @@ const QuizCreationPage: React.FC = () => {
                     <div className="flex gap-4">
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                          <ClockIcon className="text-[#3b82f6]" />
+                          <ClockIcon className="text-[#6366f1]" />
                           Time Limit (seconds)
                         </label>
                         <motion.input
@@ -569,14 +569,14 @@ const QuizCreationPage: React.FC = () => {
                           name="timeLimit"
                           value={currentQuestion.timeLimit}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white transition-all duration-200 hover:border-[#3b82f6]/50 shadow-[0_0_10px_rgba(59,130,246,0.1)]"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                           whileHover={{ scale: 1.01 }}
                           whileFocus={{ scale: 1.02 }}
                         />
                       </div>
                       <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                          <StarIcon className="text-[#3b82f6]" />
+                          <StarIcon className="text-[#6366f1]" />
                           Points
                         </label>
                         <motion.input
@@ -584,7 +584,7 @@ const QuizCreationPage: React.FC = () => {
                           name="points"
                           value={currentQuestion.points}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#3b82f6] text-white transition-all duration-200 hover:border-[#3b82f6]/50 shadow-[0_0_10px_rgba(59,130,246,0.1)]"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                           whileHover={{ scale: 1.01 }}
                           whileFocus={{ scale: 1.02 }}
                         />
@@ -593,7 +593,7 @@ const QuizCreationPage: React.FC = () => {
 
                     <motion.button
                       onClick={handleAddQuestion}
-                      className="w-full px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6] flex items-center justify-center gap-2"
+                      className="w-full px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -606,7 +606,7 @@ const QuizCreationPage: React.FC = () => {
                 <div className="flex justify-between pt-6">
                   <motion.button
                     onClick={() => setStep('info')}
-                    className="px-6 py-2 border border-[#3b82f6] text-[#3b82f6] rounded-lg hover:bg-[#3b82f6]/10 transition-colors"
+                    className="px-6 py-2 border border-[#6366f1] text-[#6366f1] rounded-lg hover:bg-[#6366f1]/10 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -614,7 +614,7 @@ const QuizCreationPage: React.FC = () => {
                   </motion.button>
                   <motion.button
                     onClick={handleSubmit}
-                    className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors shadow-[0_0_10px_#3b82f6] hover:shadow-[0_0_15px_#3b82f6]"
+                    className="px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
