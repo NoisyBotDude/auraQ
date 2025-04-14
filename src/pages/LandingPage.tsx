@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
-import { useAuth } from '../contexts';
+import { useAuth } from '../contexts/index';
 import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
+import TypewriterText from '../components/shared/TypewriterText';
 
 const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
 const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -121,7 +122,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             variants={itemVariants}
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
-            Welcome to AuraQ
+            <TypewriterText text="Welcome to AuraQ" delay={0.1} />
           </motion.h1>
 
           <motion.p
@@ -215,7 +216,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center gap-8">
             <motion.button
-              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
+              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden backdrop-blur-md bg-white/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/create')}
@@ -230,10 +231,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             </motion.button>
 
             <motion.button
-              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden"
+              className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden backdrop-blur-md bg-white/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/explore')}
+              onClick={() => navigate('/play')}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-[#ec4899] via-[#a855f7] to-[#3b82f6] opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

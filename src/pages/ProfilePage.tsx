@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../contexts';
+import { useAuth } from '../contexts/index';
 import { FaUser, FaCamera, FaSave, FaTimes } from 'react-icons/fa';
 
 const FaUser1 = FaUser as React.FC<React.SVGProps<SVGSVGElement>>;
