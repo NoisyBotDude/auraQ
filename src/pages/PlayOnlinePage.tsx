@@ -27,7 +27,10 @@ import {
   FaSun,
   FaGalacticRepublic,
   FaSpinner,
-  FaSearch
+  FaSearch,
+  FaCompass,
+  FaHourglass,
+  FaStar
 } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
 
@@ -57,6 +60,9 @@ const SunIcon = FaSun as React.FC<React.SVGProps<SVGSVGElement>>;
 const GalacticIcon = FaGalacticRepublic as React.FC<React.SVGProps<SVGSVGElement>>;
 const SpinnerIcon = FaSpinner as React.FC<React.SVGProps<SVGSVGElement>>;
 const SearchIcon = FaSearch as React.FC<React.SVGProps<SVGSVGElement>>;
+const StarIcon = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
+const HourglassIcon = FaHourglass as React.FC<React.SVGProps<SVGSVGElement>>;
+const CompassIcon = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const getCategoryIcon = (category: string) => {
   switch (category.toLowerCase()) {
@@ -100,6 +106,14 @@ const PlayOnlinePage: React.FC = () => {
   const [loadingQuizId, setLoadingQuizId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedTime, setSelectedTime] = useState<string>('Any');
+  const [selectedRating, setSelectedRating] = useState<string>('Any');
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
+  const [isRatingOpen, setIsRatingOpen] = useState(false);
+
+  const timeRanges = ['Any', '0-5 min', '5-10 min', '10-15 min', '15+ min'];
+  const ratingRanges = ['Any', '4+ Stars', '3+ Stars', '2+ Stars'];
 
   const categories = useMemo(() => {
     const uniqueCategories = new Set(mockQuizzes.map(quiz => quiz.category));
@@ -111,9 +125,26 @@ const PlayOnlinePage: React.FC = () => {
       const matchesSearch = quiz.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           quiz.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || quiz.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      
+      // Time duration filter
+      const quizDuration = quiz.questions.length * 30; // Assuming 30 seconds per question
+      const matchesTime = selectedTime === 'Any' || (
+        selectedTime === '0-5 min' && quizDuration <= 300 ||
+        selectedTime === '5-10 min' && quizDuration > 300 && quizDuration <= 600 ||
+        selectedTime === '10-15 min' && quizDuration > 600 && quizDuration <= 900 ||
+        selectedTime === '15+ min' && quizDuration > 900
+      );
+
+      // Rating filter
+      const matchesRating = selectedRating === 'Any' || (
+        selectedRating === '4+ Stars' && quiz.rating >= 4 ||
+        selectedRating === '3+ Stars' && quiz.rating >= 3 ||
+        selectedRating === '2+ Stars' && quiz.rating >= 2
+      );
+
+      return matchesSearch && matchesCategory && matchesTime && matchesRating;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, selectedTime, selectedRating]);
 
   const handleJoinSession = (quizId: string) => {
     setLoadingQuizId(quizId);
@@ -199,21 +230,175 @@ const PlayOnlinePage: React.FC = () => {
             />
           </div>
 
-          {/* Category Filter */}
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-            {categories.map((category) => (
+          {/* Filter Buttons */}
+          <div className="flex gap-2">
+            {/* Categories Filter */}
+            <div className="relative">
               <button
-                key={category}
-                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-[#3b82f6] text-white'
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  selectedCategory === 'All'
+                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
                     : 'bg-black/40 text-gray-400 hover:bg-black/60'
                 }`}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => {
+                  setIsCategoryOpen(!isCategoryOpen);
+                  setIsTimeOpen(false);
+                  setIsRatingOpen(false);
+                }}
               >
-                {category}
+                <CompassIcon className="text-lg" />
+                {selectedCategory === 'All' ? 'Categories' : selectedCategory}
+                <motion.span
+                  animate={{ rotate: isCategoryOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  ▼
+                </motion.span>
               </button>
-            ))}
+              <AnimatePresence>
+                {isCategoryOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg overflow-hidden z-50"
+                  >
+                    <div className="max-h-60 overflow-y-auto">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
+                            selectedCategory === category
+                              ? 'bg-[#3b82f6] text-white'
+                              : 'text-gray-400 hover:bg-black/60'
+                          }`}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            setIsCategoryOpen(false);
+                          }}
+                        >
+                          {getCategoryIcon(category)}
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Time Duration Filter */}
+            <div className="relative">
+              <button
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  selectedTime === 'Any'
+                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                    : 'bg-black/40 text-gray-400 hover:bg-black/60'
+                }`}
+                onClick={() => {
+                  setIsTimeOpen(!isTimeOpen);
+                  setIsCategoryOpen(false);
+                  setIsRatingOpen(false);
+                }}
+              >
+                <HourglassIcon className="text-lg" />
+                {selectedTime === 'Any' ? 'Time' : selectedTime}
+                <motion.span
+                  animate={{ rotate: isTimeOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  ▼
+                </motion.span>
+              </button>
+              <AnimatePresence>
+                {isTimeOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg overflow-hidden z-50"
+                  >
+                    <div className="max-h-60 overflow-y-auto">
+                      {timeRanges.map((time) => (
+                        <button
+                          key={time}
+                          className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
+                            selectedTime === time
+                              ? 'bg-[#3b82f6] text-white'
+                              : 'text-gray-400 hover:bg-black/60'
+                          }`}
+                          onClick={() => {
+                            setSelectedTime(time);
+                            setIsTimeOpen(false);
+                          }}
+                        >
+                          <HourglassIcon className="text-lg" />
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Rating Filter */}
+            <div className="relative">
+              <button
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  selectedRating === 'Any'
+                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                    : 'bg-black/40 text-gray-400 hover:bg-black/60'
+                }`}
+                onClick={() => {
+                  setIsRatingOpen(!isRatingOpen);
+                  setIsCategoryOpen(false);
+                  setIsTimeOpen(false);
+                }}
+              >
+                <StarIcon className="text-lg" />
+                {selectedRating === 'Any' ? 'Rating' : selectedRating}
+                <motion.span
+                  animate={{ rotate: isRatingOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  ▼
+                </motion.span>
+              </button>
+              <AnimatePresence>
+                {isRatingOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg overflow-hidden z-50"
+                  >
+                    <div className="max-h-60 overflow-y-auto">
+                      {ratingRanges.map((rating) => (
+                        <button
+                          key={rating}
+                          className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
+                            selectedRating === rating
+                              ? 'bg-[#3b82f6] text-white'
+                              : 'text-gray-400 hover:bg-black/60'
+                          }`}
+                          onClick={() => {
+                            setSelectedRating(rating);
+                            setIsRatingOpen(false);
+                          }}
+                        >
+                          <StarIcon className="text-lg" />
+                          {rating}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </motion.div>
