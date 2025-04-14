@@ -201,7 +201,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
               Featured Quizzes
             </h2>
             <p className="text-gray-400">Test your knowledge with our most popular quizzes</p>
@@ -254,8 +254,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-white">Why AuraQ?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <h2 className="text-3xl font-bold text-center mb-12  bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">Why AuraQ?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
             <motion.div
               className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
               whileHover={{ y: -3, transition: { duration: 0.2 } }}

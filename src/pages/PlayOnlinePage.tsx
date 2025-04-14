@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../components/shared/BackButton';
 import { 
   FaRocket, 
   FaUsers, 
@@ -64,40 +65,43 @@ const StarIcon = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
 const HourglassIcon = FaHourglass as React.FC<React.SVGProps<SVGSVGElement>>;
 const CompassIcon = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
 
-const getCategoryIcon = (category: string) => {
+const getCategoryIcon = (category: string, selectedCategory: string) => {
+  const isSelected = category === selectedCategory;
+  const iconClass = `text-2xl ${isSelected ? 'text-[#8b5cf6] drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]' : 'text-[#8b5cf6]/60 hover:text-[#8b5cf6] transition-colors duration-300'}`;
+  
   switch (category.toLowerCase()) {
     case 'science':
-      return <FlaskIcon className="text-[#3b82f6] text-2xl" />;
+      return <FlaskIcon className={iconClass} />;
     case 'technology':
-      return <MicrochipIcon className="text-[#3b82f6] text-2xl" />;
+      return <MicrochipIcon className={iconClass} />;
     case 'space':
-      return <SpaceShuttleIcon className="text-[#3b82f6] text-2xl" />;
+      return <SpaceShuttleIcon className={iconClass} />;
     case 'astronomy':
-      return <GalacticIcon className="text-[#3b82f6] text-2xl" />;
+      return <GalacticIcon className={iconClass} />;
     case 'geography':
-      return <GlobeIcon className="text-[#3b82f6] text-2xl" />;
+      return <GlobeIcon className={iconClass} />;
     case 'entertainment':
-      return <FilmIcon className="text-[#3b82f6] text-2xl" />;
+      return <FilmIcon className={iconClass} />;
     case 'history':
-      return <HistoryIcon className="text-[#3b82f6] text-2xl" />;
+      return <HistoryIcon className={iconClass} />;
     case 'language':
-      return <LanguageIcon className="text-[#3b82f6] text-2xl" />;
+      return <LanguageIcon className={iconClass} />;
     case 'sports':
-      return <RunningIcon className="text-[#3b82f6] text-2xl" />;
+      return <RunningIcon className={iconClass} />;
     case 'gaming':
-      return <GameIcon className="text-[#3b82f6] text-2xl" />;
+      return <GameIcon className={iconClass} />;
     case 'art':
-      return <PaletteIcon className="text-[#3b82f6] text-2xl" />;
+      return <PaletteIcon className={iconClass} />;
     case 'business':
-      return <ChartIcon className="text-[#3b82f6] text-2xl" />;
+      return <ChartIcon className={iconClass} />;
     case 'music':
-      return <MusicIcon className="text-[#3b82f6] text-2xl" />;
+      return <MusicIcon className={iconClass} />;
     case 'programming':
-      return <CodeIcon className="text-[#3b82f6] text-2xl" />;
+      return <CodeIcon className={iconClass} />;
     case 'ai':
-      return <RobotIcon className="text-[#3b82f6] text-2xl" />;
+      return <RobotIcon className={iconClass} />;
     default:
-      return <RocketIcon className="text-[#3b82f6] text-2xl" />;
+      return <RocketIcon className={iconClass} />;
   }
 };
 
@@ -187,6 +191,7 @@ const PlayOnlinePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white py-16">
+      <BackButton />
       {/* Background Elements */}
       {/* <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
@@ -195,17 +200,18 @@ const PlayOnlinePage: React.FC = () => {
 
       {/* Header Section */}
       <motion.div
-        className="container mx-auto px-4 text-center mb-16"
+        className="container mx-auto px-4 text-center mb-16 group"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] group-hover:from-[#6366f1] group-hover:via-[#8b5cf6] group-hover:to-[#ec4899] transition-all duration-500">
           Join a Quiz Session
         </h1>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-lg group-hover:text-white transition-colors duration-300">
           Challenge yourself and compete with others in real-time
         </p>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </motion.div>
 
       {/* Search and Filter Section */}
@@ -219,12 +225,12 @@ const PlayOnlinePage: React.FC = () => {
           {/* Search Bar */}
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="text-gray-400" />
+              <SearchIcon className="text-white text-xl" />
             </div>
             <input
               type="text"
               placeholder="Search quizzes..."
-              className="w-full pl-10 pr-4 py-2 bg-black/40 backdrop-blur-md rounded-lg border border-white/20 focus:border-[#3b82f6] focus:ring-1 focus:ring-[#3b82f6] text-white placeholder-gray-400 transition-all duration-300"
+              className="w-full pl-10 pr-4 py-2 bg-black/60 rounded-lg border border-white/20 focus:border-[#6366f1] focus:ring-1 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-300"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -237,7 +243,7 @@ const PlayOnlinePage: React.FC = () => {
               <button
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedCategory === 'All'
-                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                    ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
                     : 'bg-black/40 text-gray-400 hover:bg-black/60'
                 }`}
                 onClick={() => {
@@ -270,15 +276,15 @@ const PlayOnlinePage: React.FC = () => {
                           key={category}
                           className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
                             selectedCategory === category
-                              ? 'bg-[#3b82f6] text-white'
-                              : 'text-gray-400 hover:bg-black/60'
+                              ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                              : 'text-gray-400 hover:bg-black/60 hover:text-white'
                           }`}
                           onClick={() => {
                             setSelectedCategory(category);
                             setIsCategoryOpen(false);
                           }}
                         >
-                          {getCategoryIcon(category)}
+                          {getCategoryIcon(category, selectedCategory)}
                           {category}
                         </button>
                       ))}
@@ -291,9 +297,10 @@ const PlayOnlinePage: React.FC = () => {
             {/* Time Duration Filter */}
             <div className="relative">
               <button
+                key={selectedTime}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedTime === 'Any'
-                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                      ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
                     : 'bg-black/40 text-gray-400 hover:bg-black/60'
                 }`}
                 onClick={() => {
@@ -326,8 +333,8 @@ const PlayOnlinePage: React.FC = () => {
                           key={time}
                           className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
                             selectedTime === time
-                              ? 'bg-[#3b82f6] text-white'
-                              : 'text-gray-400 hover:bg-black/60'
+                              ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                              : 'text-gray-400 hover:bg-black/60 hover:text-white'
                           }`}
                           onClick={() => {
                             setSelectedTime(time);
@@ -349,7 +356,7 @@ const PlayOnlinePage: React.FC = () => {
               <button
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedRating === 'Any'
-                    ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                    ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
                     : 'bg-black/40 text-gray-400 hover:bg-black/60'
                 }`}
                 onClick={() => {
@@ -382,8 +389,8 @@ const PlayOnlinePage: React.FC = () => {
                           key={rating}
                           className={`w-full px-4 py-2 text-left text-sm transition-all duration-300 flex items-center gap-2 ${
                             selectedRating === rating
-                              ? 'bg-[#3b82f6] text-white'
-                              : 'text-gray-400 hover:bg-black/60'
+                              ? 'bg-[#8b5cf6]/20 backdrop-blur-md border border-[#8b5cf6]/30 text-white shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                              : 'text-gray-400 hover:bg-black/60 hover:text-white'
                           }`}
                           onClick={() => {
                             setSelectedRating(rating);
@@ -429,7 +436,7 @@ const PlayOnlinePage: React.FC = () => {
                 {/* Card Content */}
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
-                    {getCategoryIcon(quiz.category)}
+                    {getCategoryIcon(quiz.category, selectedCategory)}
                     <h3 className="text-xl font-semibold">{quiz.title}</h3>
                   </div>
 

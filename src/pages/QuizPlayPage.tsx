@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz, useNotification, useAudio } from '../contexts/index';
 import { mockQuizzes } from '../data/mockQuizzes';
 import QuizCompletionScreen from '../components/quiz/QuizCompletionScreen';
+import BackButton from '../components/shared/BackButton';
 
 const QuizPlayPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
@@ -98,7 +99,8 @@ const QuizPlayPage: React.FC = () => {
   const currentQuestionData = currentQuiz.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white">
+    <div className="min-h-screen bg-[#0a0a1a] text-white relative overflow-hidden">
+      <BackButton />
       <div className="container mx-auto px-4 max-w-4xl py-8">
         {/* Progress and Score */}
         <div className="flex justify-between items-center mb-8">
