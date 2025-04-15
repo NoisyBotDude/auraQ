@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import {
   AuthProvider,
@@ -32,14 +32,31 @@ const AppContent: React.FC = () => {
                      !location.pathname.startsWith('/quiz/') && 
                      location.pathname !== '/explore' &&
                      location.pathname !== '/auth';
-  const [openSidebar, setOpenSidebar] = useState(true);
+  const [openSidebar, setOpenSidebar] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setOpenSidebar(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
       <ScrollToTop />
       {showNavbar && <NavBar />}
       {showSidebar && <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />}
-      <main className={`transition-all duration-300 ${showSidebar && openSidebar ? 'ml-20 md:ml-64' : ''}`}>
+      <main className={`transition-all duration-200 ${
+        showSidebar 
+          ? openSidebar 
+            ? 'ml-64'  // When sidebar is open
+            : 'ml-20'  // When sidebar is collapsed
+          : ''         // When sidebar is hidden
+      }`}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/quiz/:quizId" element={<QuizPlayPage />} />
