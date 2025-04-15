@@ -54,7 +54,6 @@ export interface Quiz {
   rating: number;
   tags: string[];
   createdAt: Date;
-  isFeatured?: boolean;
 }
 
 export interface Question {
