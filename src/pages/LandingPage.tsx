@@ -14,10 +14,46 @@ const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
 const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
 
-
 interface LandingPageProps {
   scrollTo?: string;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 10
+    }
+  }
+};
+
+const hoverVariants = {
+  hover: {
+    scale: 1.03,
+    y: -5,
+    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 20
+    }
+  }
+};
 
 const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
   const featuredSectionRef = useRef<HTMLDivElement>(null);
@@ -61,24 +97,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
       {/* Cosmic Background Elements */}
@@ -87,14 +105,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
 
-
       {/* Hero Section */}
       <motion.section
-        className="relative h-screen flex items-center justify-center overflow-hidden "
+        className="relative h-screen flex items-center justify-center overflow-hidden"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-
       >
         {/* Animated Nebula Background */}
         <motion.div
@@ -172,20 +188,30 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
               </motion.button>
             ) : (
               <>
-                <Link
-                  to="/register"
-                  className="px-8 py-3 bg-[#a855f7] text-white rounded-full text-lg font-semibold hover:bg-purple-700 transition-all duration-300 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7] relative overflow-hidden group"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <span className="relative z-10">Join Now</span>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Link>
-                <Link
-                  to="/login"
-                  className="px-8 py-3 border-2 border-[#a855f7] text-[#a855f7] rounded-full text-lg font-semibold hover:bg-[#a855f7]/10 transition-all duration-300 relative overflow-hidden group"
+                  <Link
+                    to="/register"
+                    className="px-8 py-3 bg-[#a855f7] text-white rounded-full text-lg font-semibold hover:bg-purple-700 transition-all duration-300 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7] relative overflow-hidden group"
+                  >
+                    <span className="relative z-10">Join Now</span>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <span className="relative z-10">Login</span>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Link>
+                  <Link
+                    to="/login"
+                    className="px-8 py-3 border-2 border-[#a855f7] text-[#a855f7] rounded-full text-lg font-semibold hover:bg-[#a855f7]/10 transition-all duration-300 relative overflow-hidden group"
+                  >
+                    <span className="relative z-10">Login</span>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </Link>
+                </motion.div>
               </>
             )}
           </motion.div>
@@ -207,20 +233,44 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             <p className="text-gray-400">Test your knowledge with our most popular quizzes</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {mockQuizzes.map((quiz, index) => (
+              <motion.div
+                key={quiz.id}
+                variants={{
+                  ...itemVariants,
+                  ...hoverVariants
+                }}
+                whileHover="hover"
+              >
+                <QuizCard quiz={quiz} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section ref={modeSectionRef} className="py-16">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-center gap-8">
+          <motion.div 
+            className="flex flex-col md:flex-row justify-center gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden backdrop-blur-md bg-white/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
-              whileHover={{ scale: 1.05, y: -5 }}
+              variants={itemVariants}
+              whileHover={{
+                scale: 1.05,
+                y: -5,
+                boxShadow: "0 15px 30px -5px rgba(59,130,246,0.3)"
+              }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/create')}
             >
@@ -235,7 +285,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
             <motion.button
               className="relative group px-8 py-4 rounded-xl text-white font-bold text-lg overflow-hidden backdrop-blur-md bg-white/10 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
-              whileHover={{ scale: 1.05, y: -5 }}
+              variants={itemVariants}
+              whileHover={{
+                scale: 1.05,
+                y: -5,
+                boxShadow: "0 15px 30px -5px rgba(59,130,246,0.3)"
+              }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/play')}
             >
@@ -247,45 +302,68 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
               </div>
               <div className="absolute inset-0 border border-white/20 rounded-xl group-hover:border-white/40 transition-colors duration-300" />
             </motion.button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12  bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">Why AuraQ?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
-            <motion.div
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <RocketIcon className="text-[#8b5cf6] text-3xl mb-4 group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300" />
-              <h3 className="text-xl font-semibold mb-2">Learn Through Play</h3>
-              <p className="text-gray-300">
-                Transform learning into an adventure with our gamified approach to knowledge acquisition.
-              </p>
-            </motion.div>
-            <motion.div
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <UsersIcon className="text-[#8b5cf6] text-3xl mb-4 group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300" />
-              <h3 className="text-xl font-semibold mb-2">Compete & Grow</h3>
-              <p className="text-gray-300">Challenge friends, climb leaderboards, and track your progress across different knowledge realms.</p>
-            </motion.div>
-            <motion.div
-              className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <PenIcon className="text-[#8b5cf6] text-3xl mb-4 group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300" />
-              <h3 className="text-xl font-semibold mb-2">Create & Share</h3>
-              <p className="text-gray-300">Design your own quizzes and share them with the community using our intuitive creation tools.</p>
-            </motion.div>
-          </div>
+          <motion.h2 
+            className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Why AuraQ?
+          </motion.h2>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {[
+              {
+                icon: RocketIcon,
+                title: "Learn Through Play",
+                description: "Transform learning into an adventure with our gamified approach to knowledge acquisition."
+              },
+              {
+                icon: UsersIcon,
+                title: "Compete & Grow",
+                description: "Challenge friends, climb leaderboards, and track your progress across different knowledge realms."
+              },
+              {
+                icon: PenIcon,
+                title: "Create & Share",
+                description: "Design your own quizzes and share them with the community using our intuitive creation tools."
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                className="p-6 bg-black/40 backdrop-blur-md rounded-xl shadow-lg text-white relative overflow-hidden group"
+                variants={itemVariants}
+                whileHover={{
+                  y: -5,
+                  scale: 1.02,
+                  boxShadow: "0 15px 30px -5px rgba(0, 0, 0, 0.3)"
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <motion.div
+                  className="text-[#8b5cf6] text-3xl mb-4"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <feature.icon className="group-hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]" />
+                </motion.div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-300">{feature.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 

@@ -20,6 +20,7 @@ import CommunityPage from './pages/CommunityPage';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
+import NotificationBell from './components/shared/NotificationBell';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -40,6 +41,7 @@ const AppContent: React.FC = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
       </Routes>
+      <NotificationBell />
     </div>
   );
 };

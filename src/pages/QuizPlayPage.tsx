@@ -16,6 +16,7 @@ const QuizPlayPage: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(30);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   useEffect(() => {
     if (quizId) {
@@ -165,21 +166,56 @@ const QuizPlayPage: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Next Question Button */}
-        {isAnswerRevealed && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center"
+        {/* Navigation Buttons */}
+        <div className="flex justify-between items-center gap-4">
+          <motion.button
+            onClick={() => {
+              if (currentQuestionIndex > 0) {
+                setSelectedAnswer(null);
+                setIsAnswerRevealed(false);
+                setTimeLeft(30);
+                setCurrentQuestionIndex((prev: number) => prev - 1);
+              }
+            }}
+            disabled={currentQuestionIndex === 0}
+            className={`px-6 py-3 rounded-lg text-white font-semibold transition-all duration-300 flex items-center gap-2 ${
+              currentQuestionIndex === 0
+                ? 'bg-[#2d2f3d] text-gray-500 cursor-not-allowed'
+                : 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30 backdrop-blur-sm border border-[#3b82f6]/30'
+            }`}
+            whileHover={currentQuestionIndex > 0 ? { scale: 1.05 } : {}}
+            whileTap={currentQuestionIndex > 0 ? { scale: 0.95 } : {}}
           >
-            <button
-              onClick={handleNextQuestion}
-              className="px-8 py-3 bg-[#3b82f6] text-white rounded-full text-lg font-semibold hover:bg-[#3b82f6]/80 transition-colors"
-            >
-              {currentQuestion + 1 >= currentQuiz.questions.length ? 'Finish Quiz' : 'Next Question'}
-            </button>
-          </motion.div>
-        )}
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Previous
+          </motion.button>
+
+          <motion.button
+            onClick={() => {
+              if (currentQuestionIndex < (currentQuiz?.questions.length || 0) - 1) {
+                setSelectedAnswer(null);
+                setIsAnswerRevealed(false);
+                setTimeLeft(30);
+                setCurrentQuestionIndex((prev: number) => prev + 1);
+              }
+            }}
+            disabled={currentQuestion === currentQuiz.questions.length - 1}
+            className={`px-6 py-3 rounded-lg text-white font-semibold transition-all duration-300 flex items-center gap-2 ${
+              currentQuestion === currentQuiz.questions.length - 1
+                ? 'bg-[#2d2f3d] text-gray-500 cursor-not-allowed'
+                : 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30 backdrop-blur-sm border border-[#3b82f6]/30'
+            }`}
+            whileHover={currentQuestion < currentQuiz.questions.length - 1 ? { scale: 1.05 } : {}}
+            whileTap={currentQuestion < currentQuiz.questions.length - 1 ? { scale: 0.95 } : {}}
+          >
+            Next
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </motion.button>
+        </div>
       </div>
 
       <AnimatePresence>
