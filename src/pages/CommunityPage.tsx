@@ -12,7 +12,6 @@ const HashtagIcon = FaHashtag as React.FC<React.SVGProps<SVGSVGElement>>;
 const CommunityPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a1a] relative overflow-hidden">
-      <BackButton />
       
       {/* Cosmic Background */}
       <div className="fixed inset-0 z-0">

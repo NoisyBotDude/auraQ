@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import {
   AuthProvider,
@@ -28,14 +28,18 @@ const AppContent: React.FC = () => {
   const location = useLocation();
   const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community', '/auth'].includes(location.pathname) && 
                     !location.pathname.startsWith('/quiz/');
-  const showSidebar = location.pathname !== '/';
+  const showSidebar = location.pathname !== '/' && 
+                     !location.pathname.startsWith('/quiz/') && 
+                     location.pathname !== '/explore';
+  const [openSidebar, setOpenSidebar] = useState(true);
+  // const showSidebar = false;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
       <ScrollToTop />
       {showNavbar && <NavBar />}
-      {showSidebar && <Sidebar />}
-      <div className={showSidebar ? 'ml-64' : ''}>
+      {showSidebar && <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />}
+      <main className={`transition-all duration-300 ${showSidebar && openSidebar ? 'ml-20 md:ml-64' : ''}`}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/quiz/:quizId" element={<QuizPlayPage />} />
@@ -48,7 +52,7 @@ const AppContent: React.FC = () => {
           <Route path="/community" element={<CommunityPage />} />
           {/* <Route path="/auth" element={<AuthenticationPage />} /> */}
         </Routes>
-      </div>
+      </main>
     </div>
   );
 };

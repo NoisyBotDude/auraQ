@@ -295,7 +295,6 @@ const QuizCreationPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] relative overflow-hidden">
-      <BackButton />
       {/* Cosmic Background Elements */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
