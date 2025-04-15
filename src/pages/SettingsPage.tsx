@@ -209,7 +209,7 @@ const SettingsPage: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <FaSignOutAlt1 className="text-lg group-hover:rotate-12 transition-transform duration-300" />
+                <FaSignOutAlt1 className="text-lg group-hover:rotate-0 transition-transform duration-300" />
                 <span>Logout</span>
               </motion.button>
             </div>

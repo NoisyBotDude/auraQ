@@ -265,7 +265,35 @@ export const mockQuizzes: Quiz[] = [
     description: 'Test your knowledge about significant events in space exploration history.',
     category: 'History',
     difficulty: 'medium',
-    questions: [],
+    questions: [
+      {
+        id: '1',
+        text: 'Which country launched the first artificial satellite?',
+        type: 'multiple',
+        options: ['United States', 'Soviet Union', 'China', 'United Kingdom'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'Who was the first human to walk on the Moon?',
+        type: 'multiple',
+        options: ['Neil Armstrong', 'Buzz Aldrin', 'Yuri Gagarin', 'Alan Shepard'],
+        correctAnswer: 0,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'In which year was the International Space Station launched?',
+        type: 'multiple',
+        options: ['1995', '1998', '2001', '2005'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
     creatorId: '7',
     author: 'HistoryBuff',
     likes: 75,
@@ -280,7 +308,35 @@ export const mockQuizzes: Quiz[] = [
     description: 'Explore the fascinating field of life in the universe and extraterrestrial possibilities.',
     category: 'Science',
     difficulty: 'hard',
-    questions: [],
+    questions: [
+      {
+        id: '1',
+        text: 'What is the study of life in the universe called?',
+        type: 'multiple',
+        options: ['Astrobiology', 'Exobiology', 'Xenobiology', 'All of the above'],
+        correctAnswer: 3,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'Which planet in our solar system is most likely to have microbial life?',
+        type: 'multiple',
+        options: ['Mars', 'Europa', 'Titan', 'Venus'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'What is the Drake Equation used for?',
+        type: 'multiple',
+        options: ['Calculating rocket trajectories', 'Estimating the number of extraterrestrial civilizations', 'Measuring star distances', 'Predicting asteroid impacts'],
+        correctAnswer: 1,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
     creatorId: '8',
     author: 'BioExplorer',
     likes: 95,
@@ -295,7 +351,35 @@ export const mockQuizzes: Quiz[] = [
     description: 'Learn about capturing the beauty of space through astrophotography.',
     category: 'Art',
     difficulty: 'medium',
-    questions: [],
+    questions: [
+      {
+        id: '1',
+        text: 'What is the most important factor in astrophotography?',
+        type: 'multiple',
+        options: ['Camera type', 'Telescope size', 'Light pollution', 'All of the above'],
+        correctAnswer: 3,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '2',
+        text: 'Which type of photography captures star trails?',
+        type: 'multiple',
+        options: ['Long exposure', 'Short exposure', 'Time-lapse', 'High-speed'],
+        correctAnswer: 0,
+        timeLimit: 30,
+        points: 100
+      },
+      {
+        id: '3',
+        text: 'What is the best time to photograph the Milky Way?',
+        type: 'multiple',
+        options: ['Noon', 'Sunset', 'Midnight', 'Dawn'],
+        correctAnswer: 2,
+        timeLimit: 30,
+        points: 100
+      }
+    ],
     creatorId: '9',
     author: 'PhotoArtist',
     likes: 110,
