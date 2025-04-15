@@ -12,7 +12,8 @@ import {
   FaSignInAlt,
   FaUserPlus,
   FaBars,
-  FaTimes
+  FaTimes,
+  FaUsers
 } from 'react-icons/fa';
 
 const FaCompass1 = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -25,6 +26,7 @@ const FaSignInAlt1 = FaSignInAlt as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaUserPlus1 = FaUserPlus as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaBars1 = FaBars as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaTimes1 = FaTimes as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaUsers1 = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const NavBar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -42,7 +44,8 @@ const NavBar: React.FC = () => {
       transition={{ type: 'spring', stiffness: 100 }}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold hover:opacity-80 transition-opacity duration-200">
+        <Link to="/" className="flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity duration-200">
+          <img src="/auraq1.png" alt="AuraQ Logo" className="w-8 h-8" />
           AuraQ
         </Link>
 
@@ -69,6 +72,10 @@ const NavBar: React.FC = () => {
                 <Link to="/leaderboard" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
                   <FaTrophy1 className="text-lg" />
                   <span>Leaderboard</span>
+                </Link>
+                <Link to="/community" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
+                  <FaUsers1 className="text-lg" />
+                  <span>Community</span>
                 </Link>
                 <div className="relative group">
                   <img 
