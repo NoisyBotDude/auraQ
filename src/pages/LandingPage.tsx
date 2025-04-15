@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts/index';
@@ -21,10 +21,17 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
   const featuredSectionRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+  const row3Ref = useRef<HTMLDivElement>(null);
   const modeSectionRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const isRow1InView = useInView(row1Ref, { once: true, margin: "-100px" });
+  const isRow2InView = useInView(row2Ref, { once: true, margin: "-100px" });
+  const isRow3InView = useInView(row3Ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
     if (scrollTo === 'featured' && featuredSectionRef.current) {
@@ -197,7 +204,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isRow1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
@@ -208,9 +215,104 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
-            ))}
+            {/* First Row */}
+            <div ref={row1Ref} className="col-span-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(0, 3).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow1InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Second Row */}
+            <div ref={row2Ref} className="col-span-full mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(3, 6).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow2InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Third Row */}
+            <div ref={row3Ref} className="col-span-full mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(6, 9).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow3InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
