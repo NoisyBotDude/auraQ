@@ -17,7 +17,7 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PlayOnlinePage from './pages/PlayOnlinePage';
 import CommunityPage from './pages/CommunityPage';
-// import AuthenticationPage from './pages/AuthenticationPage';
+import AuthenticationPage from './pages/AuthenticationPage';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
@@ -30,9 +30,9 @@ const AppContent: React.FC = () => {
                     !location.pathname.startsWith('/quiz/');
   const showSidebar = location.pathname !== '/' && 
                      !location.pathname.startsWith('/quiz/') && 
-                     location.pathname !== '/explore';
+                     location.pathname !== '/explore' &&
+                     location.pathname !== '/auth';
   const [openSidebar, setOpenSidebar] = useState(true);
-  // const showSidebar = false;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
@@ -50,7 +50,7 @@ const AppContent: React.FC = () => {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/community" element={<CommunityPage />} />
-          {/* <Route path="/auth" element={<AuthenticationPage />} /> */}
+          <Route path="/auth" element={<AuthenticationPage />} />
         </Routes>
       </main>
     </div>

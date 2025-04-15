@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -29,8 +29,15 @@ const FaTimes1 = FaTimes as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaUsers1 = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const NavBar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isShrunk, setIsShrunk] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/auth');
+  };
 
   const toggleNav = () => {
     setIsShrunk(!isShrunk);
@@ -59,7 +66,7 @@ const NavBar: React.FC = () => {
             }}
             transition={{ duration: 0.2 }}
           >
-            {user ? (
+            {isAuthenticated ? (
               <>
                 <Link to="/explore" className="flex items-center gap-2 hover:scale-105 hover:text-[#3b82f6] transition-all duration-200">
                   <FaCompass1 className="text-lg" />
@@ -99,7 +106,7 @@ const NavBar: React.FC = () => {
                       <span>Settings</span>
                     </Link>
                     <button 
-                      onClick={logout}
+                      onClick={handleLogout}
                       className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
                     >
                       <FaSignOutAlt1 className="text-sm" />
@@ -138,6 +145,41 @@ const NavBar: React.FC = () => {
           </motion.button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isProfileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 mt-2 w-48 bg-[#0f0c29]/90 backdrop-blur-md rounded-lg shadow-lg border border-purple-500/20"
+          >
+            <div className="py-1">
+              <Link
+                to="/profile"
+                className="block px-4 py-2 text-sm text-white hover:bg-purple-500/20 transition-colors duration-150"
+                onClick={() => setIsProfileOpen(false)}
+              >
+                Profile
+              </Link>
+              <Link
+                to="/settings"
+                className="block px-4 py-2 text-sm text-white hover:bg-purple-500/20 transition-colors duration-150"
+                onClick={() => setIsProfileOpen(false)}
+              >
+                Settings
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-500/20 transition-colors duration-150"
+              >
+                Logout
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };
