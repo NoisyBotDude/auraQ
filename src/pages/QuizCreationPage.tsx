@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotification } from '../contexts';
 import { Quiz, Question } from '../types';
+import { mockQuizzes } from '../data/mockQuizzes';
 import { 
   FaRocket, 
   FaCompass, 
@@ -50,7 +51,8 @@ import {
   FaSatellite,
   FaMoon,
   FaSun,
-  FaGalacticRepublic
+  FaGalacticRepublic,
+  FaCheckCircle
 } from 'react-icons/fa';
 import BackButton from '../components/shared/BackButton';
 
@@ -78,7 +80,9 @@ const MeteorIcon = FaMeteor as React.FC<React.SVGProps<SVGSVGElement>>;
 const MoonIcon = FaMoon as React.FC<React.SVGProps<SVGSVGElement>>;
 const SunIcon = FaSun as React.FC<React.SVGProps<SVGSVGElement>>;
 const GalacticRepublicIcon = FaGalacticRepublic as React.FC<React.SVGProps<SVGSVGElement>>;
-
+const ChevronUpIcon = FaChevronUp as React.FC<React.SVGProps<SVGSVGElement>>;
+const ChevronDownIcon = FaChevronDown as React.FC<React.SVGProps<SVGSVGElement>>;
+const CheckCircleIcon = FaCheckCircle as React.FC<React.SVGProps<SVGSVGElement>>; 
 
 
 interface QuestionForm extends Omit<Question, 'id'> {
@@ -109,6 +113,11 @@ const QuizCreationPage: React.FC = () => {
 
   const [step, setStep] = useState<'info' | 'questions'>('info');
   const [tagInput, setTagInput] = useState('');
+  const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [createdQuizId, setCreatedQuizId] = useState<string | null>(null);
 
   const handleQuizInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setQuizData(prev => ({
@@ -151,20 +160,46 @@ const QuizCreationPage: React.FC = () => {
   };
 
   const handleAddQuestion = () => {
-    if (!currentQuestion.text || currentQuestion.options.some(opt => !opt)) {
+    if (!currentQuestion.text.trim()) {
       addNotification({
-        message: 'Please fill in all question fields',
+        message: 'Please enter a question text',
         type: 'error'
       });
       return;
     }
 
+    if (currentQuestion.options.some(opt => !opt.trim())) {
+      addNotification({
+        message: 'Please fill in all options',
+        type: 'error'
+      });
+      return;
+    }
+
+    if (currentQuestion.timeLimit <= 0) {
+      addNotification({
+        message: 'Time limit must be greater than 0',
+        type: 'error'
+      });
+      return;
+    }
+
+    if (currentQuestion.points <= 0) {
+      addNotification({
+        message: 'Points must be greater than 0',
+        type: 'error'
+      });
+      return;
+    }
+
+    const newQuestion = {
+      ...currentQuestion,
+      id: Math.random().toString(36).substr(2, 9)
+    };
+
     setQuizData(prev => ({
       ...prev,
-      questions: [
-        ...(prev.questions || []),
-        { ...currentQuestion, id: Math.random().toString(36).substr(2, 9) }
-      ]
+      questions: [...(prev.questions || []), newQuestion]
     }));
 
     setCurrentQuestion({
@@ -175,29 +210,86 @@ const QuizCreationPage: React.FC = () => {
       timeLimit: 30,
       points: 100
     });
+
+    addNotification({
+      message: 'Question added successfully!',
+      type: 'success'
+    });
+  };
+
+  const validateQuizInfo = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!quizData.title?.trim()) {
+      errors.title = 'Quiz title is required';
+    }
+    
+    if (!quizData.description?.trim()) {
+      errors.description = 'Quiz description is required';
+    }
+    
+    if (!quizData.category?.trim()) {
+      errors.category = 'Quiz category is required';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateQuizData = () => {
+    const errors: Record<string, string> = {};
+
+    if (!quizData.title?.trim()) {
+      errors.title = 'Quiz title is required';
+    }
+
+    if (!quizData.description?.trim()) {
+      errors.description = 'Quiz description is required';
+    }
+
+    if (!quizData.category?.trim()) {
+      errors.category = 'Quiz category is required';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async () => {
-    if (!quizData.title || !quizData.description || !quizData.questions?.length) {
-      addNotification({
-        message: 'Please fill in all required fields',
-        type: 'error'
-      });
+    if (!validateQuizData()) {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      // Here you would typically make an API call to save the quiz
-      addNotification({
-        message: 'Quiz created successfully!',
-        type: 'success'
-      });
-      navigate('/explore');
+      const newQuiz: Quiz = {
+        id: Math.random().toString(36).substr(2, 9),
+        title: quizData.title || '',
+        description: quizData.description || '',
+        category: quizData.category || '',
+        difficulty: quizData.difficulty || 'medium',
+        questions: quizData.questions || [],
+        creatorId: 'current-user-id',
+        author: 'Current User',
+        likes: 0,
+        plays: 0,
+        rating: 0,
+        tags: quizData.tags || [],
+        createdAt: new Date()
+      };
+
+      mockQuizzes.push(newQuiz);
+      setCreatedQuizId(newQuiz.id);
+      setShowSuccessPopup(true);
     } catch (error) {
+      console.error('Error creating quiz:', error);
       addNotification({
-        message: 'Failed to create quiz',
+        message: 'Failed to create quiz. Please try again.',
         type: 'error'
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -295,10 +387,15 @@ const QuizCreationPage: React.FC = () => {
                     name="title"
                     value={quizData.title}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                    className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
+                      validationErrors.title ? 'border-red-500' : 'border-white/10'
+                    } rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]`}
                     placeholder="Enter quiz title"
                     whileHover={{ scale: 1.01 }}
                   />
+                  {validationErrors.title && (
+                    <p className="text-red-500 text-sm mt-1">{validationErrors.title}</p>
+                  )}
                 </motion.div>
 
                 <motion.div
@@ -313,11 +410,16 @@ const QuizCreationPage: React.FC = () => {
                     name="description"
                     value={quizData.description}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                    className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
+                      validationErrors.description ? 'border-red-500' : 'border-white/10'
+                    } rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]`}
                     rows={4}
                     placeholder="Enter quiz description"
                     whileHover={{ scale: 1.01 }}
                   />
+                  {validationErrors.description && (
+                    <p className="text-red-500 text-sm mt-1">{validationErrors.description}</p>
+                  )}
                 </motion.div>
 
                 <motion.div
@@ -333,10 +435,15 @@ const QuizCreationPage: React.FC = () => {
                     name="category"
                     value={quizData.category}
                     onChange={handleQuizInfoChange}
-                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                    className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
+                      validationErrors.category ? 'border-red-500' : 'border-white/10'
+                    } rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]`}
                     placeholder="Enter quiz category"
                     whileHover={{ scale: 1.01 }}
                   />
+                  {validationErrors.category && (
+                    <p className="text-red-500 text-sm mt-1">{validationErrors.category}</p>
+                  )}
                 </motion.div>
 
                 <motion.div
@@ -422,7 +529,12 @@ const QuizCreationPage: React.FC = () => {
 
                 <div className="flex justify-end">
                   <motion.button
-                    onClick={() => setStep('questions')}
+                    onClick={() => {
+                      if (validateQuizInfo()) {
+                        setStep('questions');
+                        setValidationErrors({}); // Clear validation errors when moving to next step
+                      }
+                    }}
                     className="px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -456,6 +568,14 @@ const QuizCreationPage: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-2">
                           <motion.button
+                            onClick={() => setExpandedQuestion(expandedQuestion === question.id ? null : question.id)}
+                            className="text-[#6366f1] hover:text-[#8b5cf6] transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            {expandedQuestion === question.id ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                          </motion.button>
+                          <motion.button
                             onClick={() => {
                               setQuizData(prev => ({
                                 ...prev,
@@ -468,36 +588,43 @@ const QuizCreationPage: React.FC = () => {
                           >
                             <TrashIcon />
                           </motion.button>
-                          <motion.button
-                            className="text-[#6366f1] hover:text-[#6366f1]/80"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <EditIcon />
-                          </motion.button>
                         </div>
                       </div>
+
                       <AnimatePresence>
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <p className="text-gray-400 mb-4">{question.text}</p>
-                          <div className="space-y-2">
-                            {question.options.map((option, i) => (
-                              <div key={i} className="flex items-center gap-2">
-                                {i === question.correctAnswer ? (
-                                  <CheckIcon className="text-green-500" />
-                                ) : (
-                                  <TimesCircleIcon className="text-red-500" />
-                                )}
-                                <span className="text-gray-300">{option}</span>
+                        {expandedQuestion === question.id && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <p className="text-gray-400 mb-4">{question.text}</p>
+                            <div className="space-y-2">
+                              {question.options.map((option, i) => (
+                                <div key={i} className="flex items-center gap-2">
+                                  {i === question.correctAnswer ? (
+                                    <CheckIcon className="text-green-500" />
+                                  ) : (
+                                    <TimesCircleIcon className="text-red-500" />
+                                  )}
+                                  <span className="text-gray-300">{option}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
+                              <div className="flex items-center gap-2">
+                                <ClockIcon className="text-[#6366f1]" />
+                                <span>{question.timeLimit}s</span>
                               </div>
-                            ))}
-                          </div>
-                        </motion.div>
+                              <div className="flex items-center gap-2">
+                                <StarIcon className="text-[#6366f1]" />
+                                <span>{question.points} points</span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
                       </AnimatePresence>
                     </motion.div>
                   ))}
@@ -616,11 +743,14 @@ const QuizCreationPage: React.FC = () => {
                   </motion.button>
                   <motion.button
                     onClick={handleSubmit}
-                    className="px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                    className={`px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] ${
+                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    disabled={isSubmitting}
                   >
-                    Create Quiz
+                    {isSubmitting ? 'Creating...' : 'Create Quiz'}
                   </motion.button>
                 </div>
               </motion.div>
@@ -628,6 +758,58 @@ const QuizCreationPage: React.FC = () => {
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 flex items-center justify-center z-50"
+          >
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+            <motion.div
+              className="relative bg-[#1c1f2e]/90 backdrop-blur-md p-8 rounded-xl border border-white/10 shadow-lg max-w-md w-full mx-4"
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircleIcon className="text-green-500 text-3xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Quiz Created Successfully!</h3>
+                <p className="text-gray-400">Your quiz has been created and is ready to play.</p>
+                <div className="flex gap-4 justify-center mt-6">
+                  <motion.button
+                    onClick={() => {
+                      setShowSuccessPopup(false);
+                      navigate(`/quiz/${createdQuizId}`);
+                    }}
+                    className="px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Play Quiz
+                  </motion.button>
+                  <motion.button
+                    onClick={() => {
+                      setShowSuccessPopup(false);
+                      navigate('/explore');
+                    }}
+                    className="px-6 py-2 border border-white/20 text-white rounded-lg hover:bg-white/10 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Explore
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

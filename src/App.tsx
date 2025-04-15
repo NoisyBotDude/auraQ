@@ -16,13 +16,14 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PlayOnlinePage from './pages/PlayOnlinePage';
+import CommunityPage from './pages/CommunityPage';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play'].includes(location.pathname) && 
+  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community'].includes(location.pathname) && 
                     !location.pathname.startsWith('/quiz/');
 
   return (
@@ -37,6 +38,7 @@ const AppContent: React.FC = () => {
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/community" element={<CommunityPage />} />
       </Routes>
     </div>
   );
