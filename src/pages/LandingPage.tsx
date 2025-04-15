@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts/index';
-import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome, FaGithub, FaTwitter, FaLinkedin, FaDiscord } from 'react-icons/fa';
+import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome, FaGithub, FaTwitter, FaLinkedin, FaDiscord, FaBell } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
 import TypewriterText from '../components/shared/TypewriterText';
 import Footer from '../components/shared/Footer';
@@ -13,6 +13,7 @@ const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
 const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
+const BellIcon = FaBell as React.FC<React.SVGProps<SVGSVGElement>>;
 
 
 interface LandingPageProps {
@@ -28,6 +29,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications] = useState([
+    { id: 1, message: "New quiz available: Space Exploration", time: "2 hours ago" },
+    { id: 2, message: "Your friend completed a quiz", time: "5 hours ago" },
+    { id: 3, message: "Weekly leaderboard updated", time: "1 day ago" }
+  ]);
 
   const isRow1InView = useInView(row1Ref, { once: true, margin: "-100px" });
   const isRow2InView = useInView(row2Ref, { once: true, margin: "-100px" });
@@ -390,6 +397,56 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
           </div>
         </div>
       </section>
+
+      {/* Notification Bell Button */}
+      <motion.div 
+        className="fixed bottom-8 right-8 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 200, damping: 20 }}
+      >
+        <motion.button
+          onClick={() => setShowNotifications(!showNotifications)}
+          className="relative p-4 rounded-full bg-[#1a1a2e]/50 backdrop-blur-md border border-white/10 shadow-lg hover:bg-[#2a2a3a]/50 transition-colors duration-200"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <BellIcon className="text-xl text-white" />
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs">
+            3
+          </span>
+        </motion.button>
+
+        <AnimatePresence>
+          {showNotifications && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-16 right-0 w-80 bg-[#1a1a2e]/80 backdrop-blur-md rounded-xl border border-white/10 shadow-xl overflow-hidden"
+            >
+              <div className="p-4 border-b border-white/10">
+                <h3 className="text-lg font-semibold text-white">Notifications</h3>
+              </div>
+              <div className="max-h-96 overflow-y-auto">
+                {notifications.map((notification) => (
+                  <motion.div
+                    key={notification.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="p-4 hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+                  >
+                    <p className="text-white">{notification.message}</p>
+                    <p className="text-sm text-gray-400 mt-1">{notification.time}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       <Footer />
     </div>
