@@ -1,12 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/index';
-import { FaUser, FaCamera, FaSave, FaTimes } from 'react-icons/fa';
+import { FaUser, FaCamera, FaSave, FaTimes, FaTrophy, FaStar } from 'react-icons/fa';
+import BackButton from '../components/shared/BackButton';
 
 const FaUser1 = FaUser as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaCamera1 = FaCamera as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaSave1 = FaSave as React.FC<React.SVGProps<SVGSVGElement>>;
 const FaTimes1 = FaTimes as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaTrophy1 = FaTrophy as React.FC<React.SVGProps<SVGSVGElement>>;
+const FaStar1 = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
+
+
 
 const ProfilePage: React.FC = () => {
   const { user, updateUser } = useAuth();
@@ -54,6 +59,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] relative overflow-hidden">
+      <BackButton />
       {/* Cosmic Background Elements */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
@@ -128,8 +134,33 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
 
+            {/* Stats Section */}
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <motion.div 
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">42</div>
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Quizzes</div>
+              </motion.div>
+              <motion.div 
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">1,250</div>
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Points</div>
+              </motion.div>
+              <motion.div 
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">#15</div>
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Rank</div>
+              </motion.div>
+            </div>
+
             {/* Username Section */}
-            <div className="space-y-4">
+            <div className="mb-8">
               <div className="flex items-center gap-3 p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10">
                 <FaUser1 className="text-gray-400" />
                 {isEditing ? (
@@ -144,42 +175,73 @@ const ProfilePage: React.FC = () => {
                   <span className="text-white">{user?.username}</span>
                 )}
               </div>
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex justify-end gap-4 pt-4 border-t border-white/10">
-                {isEditing ? (
-                  <>
-                    <motion.button
-                      onClick={handleCancel}
-                      className="px-4 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-colors duration-200 flex items-center gap-2"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <FaTimes1 />
-                      <span>Cancel</span>
-                    </motion.button>
-                    <motion.button
-                      onClick={handleSave}
-                      className="px-4 py-2 rounded-lg bg-[#3b82f6] text-white hover:bg-[#3b82f6]/80 transition-colors duration-200 flex items-center gap-2"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <FaSave1 />
-                      <span>Save</span>
-                    </motion.button>
-                  </>
-                ) : (
+            {/* Achievements Section */}
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-white mb-4">Recent Achievements</h3>
+              <div className="space-y-3">
+                <motion.div 
+                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group"
+                  whileHover={{ scale: 1.01 }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
+                    <FaTrophy1 className="text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300" />
+                  </div>
+                  <div>
+                    <div className="text-white group-hover:text-[#8b5cf6] transition-colors duration-300">Quiz Master</div>
+                    <div className="text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Completed 10 quizzes</div>
+                  </div>
+                </motion.div>
+                <motion.div 
+                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group"
+                  whileHover={{ scale: 1.01 }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
+                    <FaStar1 className="text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300" />
+                  </div>
+                  <div>
+                    <div className="text-white group-hover:text-[#8b5cf6] transition-colors duration-300">Perfect Score</div>
+                    <div className="text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Scored 100% in a quiz</div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4 pt-4 border-t border-white/10">
+              {isEditing ? (
+                <>
                   <motion.button
-                    onClick={() => setIsEditing(true)}
+                    onClick={handleCancel}
+                    className="px-4 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-colors duration-200 flex items-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <FaTimes1 />
+                    <span>Cancel</span>
+                  </motion.button>
+                  <motion.button
+                    onClick={handleSave}
                     className="px-4 py-2 rounded-lg bg-[#3b82f6] text-white hover:bg-[#3b82f6]/80 transition-colors duration-200 flex items-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <FaUser1 />
-                    <span>Edit Profile</span>
+                    <FaSave1 />
+                    <span>Save</span>
                   </motion.button>
-                )}
-              </div>
+                </>
+              ) : (
+                <motion.button
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 rounded-lg bg-[#3b82f6] text-white hover:bg-[#3b82f6]/80 transition-colors duration-200 flex items-center gap-2"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <FaUser1 />
+                  <span>Edit Profile</span>
+                </motion.button>
+              )}
             </div>
           </div>
         </motion.div>
