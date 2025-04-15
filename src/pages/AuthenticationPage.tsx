@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaGoogle, FaEnvelope, FaLock } from 'react-icons/fa';
 
+const GoogleIcon = FaGoogle as React.FC<React.SVGProps<SVGSVGElement>>;
+const EnvelopeIcon = FaEnvelope as React.FC<React.SVGProps<SVGSVGElement>>;
+const LockIcon = FaLock as React.FC<React.SVGProps<SVGSVGElement>>;
+
 const AuthenticationPage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -41,7 +45,7 @@ const AuthenticationPage: React.FC = () => {
             onClick={handleGoogleSignIn}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 mb-6 transition-all duration-200"
           >
-            <FaGoogle className="text-xl" />
+            <GoogleIcon className="text-xl" />
             <span>Continue with Google</span>
           </motion.button>
 
@@ -57,7 +61,7 @@ const AuthenticationPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaEnvelope className="text-gray-400" />
+                <EnvelopeIcon className="text-gray-400" />
               </div>
               <input
                 type="email"
@@ -70,7 +74,7 @@ const AuthenticationPage: React.FC = () => {
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="text-gray-400" />
+                <LockIcon className="text-gray-400" />
               </div>
               <input
                 type="password"
