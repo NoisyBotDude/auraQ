@@ -17,17 +17,20 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PlayOnlinePage from './pages/PlayOnlinePage';
 import CommunityPage from './pages/CommunityPage';
+// import AuthenticationPage from './pages/AuthenticationPage';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
+import ScrollToTop from './components/shared/ScrollToTop';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community'].includes(location.pathname) && 
+  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community', '/auth'].includes(location.pathname) && 
                     !location.pathname.startsWith('/quiz/');
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
+      <ScrollToTop />
       {showNavbar && <NavBar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -39,6 +42,7 @@ const AppContent: React.FC = () => {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
+        {/* <Route path="/auth" element={<AuthenticationPage />} /> */}
       </Routes>
     </div>
   );

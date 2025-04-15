@@ -28,7 +28,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
 
   useEffect(() => {
     if (scrollTo === 'featured' && featuredSectionRef.current) {
-      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
+      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start'});
     }
   }, [scrollTo]);
 
