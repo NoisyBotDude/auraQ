@@ -453,7 +453,7 @@ const QuizCreationPage: React.FC = () => {
                     <BrainIcon className="text-[#6366f1]" />
                     Difficulty
                   </label>
-                  <div className="flex items-center gap-4 overflow-x-auto pb-2">
+                  <div className="flex items-center gap-4">
                     {(['easy', 'medium', 'hard'] as const).map((level) => (
                       <motion.button
                         key={level}
