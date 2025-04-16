@@ -70,6 +70,11 @@ const QuizCompletionScreen: React.FC<QuizCompletionScreenProps> = ({ score, onCl
     }
   };
 
+  const handleBackToExplore = () => {
+    onClose();
+    navigate('/', { replace: true });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -157,7 +162,7 @@ const QuizCompletionScreen: React.FC<QuizCompletionScreenProps> = ({ score, onCl
 
         <div className="mt-8 flex justify-center">
           <button
-            onClick={onClose}
+            onClick={handleBackToExplore}
             className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#3b82f6]/80 transition-colors"
           >
             Back to Explore
