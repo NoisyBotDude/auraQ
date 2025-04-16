@@ -162,16 +162,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white overflow-x-hidden">
       {/* Cosmic Background Elements */}
       <motion.div 
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-0 overflow-hidden"
         variants={backgroundVariants}
         initial="hidden"
         animate="visible"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
-        <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
+        <div className="absolute inset-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
         
         {/* Easter Egg: Hidden Constellation */}
         <AnimatePresence>
@@ -180,7 +180,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none overflow-hidden"
             >
               {[...Array(20)].map((_, i) => (
                 <motion.div
@@ -219,7 +219,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       >
         {/* Animated Nebula Background */}
         <motion.div
-          className="absolute w-[40rem] h-[40rem] rounded-full -top-32 -left-32 blur-[140px] z-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent_70%)]"
+          className="absolute w-[40rem] h-[40rem] rounded-full -top-32 -left-32 blur-[140px] z-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent_70%)] overflow-hidden"
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
@@ -229,7 +229,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
           transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute w-[40rem] h-[40rem] rounded-full -bottom-32 -right-32 blur-[160px] z-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.2),transparent_70%)]"
+          className="absolute w-[40rem] h-[40rem] rounded-full -bottom-32 -right-32 blur-[160px] z-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.2),transparent_70%)] overflow-hidden"
           animate={{
             scale: [1.2, 1, 1.2],
             rotate: [90, 0, 90],
