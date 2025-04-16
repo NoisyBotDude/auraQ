@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -31,6 +31,7 @@ const FaUsers1 = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const NavBar: React.FC = () => {
   const { user, logout } = useAuth();
   const [isShrunk, setIsShrunk] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const toggleNav = () => {
     setIsShrunk(!isShrunk);
@@ -77,35 +78,50 @@ const NavBar: React.FC = () => {
                   <FaUsers1 className="text-lg" />
                   <span>Community</span>
                 </Link>
-                <div className="relative group">
-                  <img 
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=AuraQUser" 
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full cursor-pointer hover:scale-110 hover:ring-2 hover:ring-[#3b82f6] transition-all duration-200"
-                  />
-                  <div className="absolute right-0 mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg py-2 invisible group-hover:visible transition-all duration-200">
-                    <Link 
-                      to="/profile" 
-                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
-                    >
-                      <FaUser1 className="text-sm" />
-                      <span>Profile</span>
-                    </Link>
-                    <Link 
-                      to="/settings" 
-                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
-                    >
-                      <FaCog1 className="text-sm" />
-                      <span>Settings</span>
-                    </Link>
-                    <button 
-                      onClick={logout}
-                      className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-all duration-200"
-                    >
-                      <FaSignOutAlt1 className="text-sm" />
-                      <span>Logout</span>
-                    </button>
-                  </div>
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
+                  >
+                    <img 
+                      src="https://api.dicebear.com/7.x/avataaars/svg?seed=AuraQUser" 
+                      alt="Profile" 
+                      className="w-8 h-8 rounded-full cursor-pointer hover:ring-2 hover:ring-[#3b82f6] transition-all duration-200"
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {isProfileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-48 bg-black/80 backdrop-blur-md rounded-lg shadow-lg py-2"
+                      >
+                        <Link 
+                          to="/profile" 
+                          className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-colors duration-150"
+                        >
+                          <FaUser1 className="text-sm" />
+                          <span>Profile</span>
+                        </Link>
+                        <Link 
+                          to="/settings" 
+                          className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-colors duration-150"
+                        >
+                          <FaCog1 className="text-sm" />
+                          <span>Settings</span>
+                        </Link>
+                        <button 
+                          onClick={logout}
+                          className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-white/10 hover:text-[#3b82f6] transition-colors duration-150"
+                        >
+                          <FaSignOutAlt1 className="text-sm" />
+                          <span>Logout</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </>
             ) : (

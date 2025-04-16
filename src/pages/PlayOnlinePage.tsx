@@ -191,7 +191,6 @@ const PlayOnlinePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white py-16">
-      <BackButton />
       {/* Background Elements */}
       {/* <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />

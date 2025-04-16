@@ -57,7 +57,6 @@ const SettingsPage: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-4 py-16 relative z-10">
-        <BackButton />
 
         <motion.div
           initial={{ opacity: 0, y: 0 }}

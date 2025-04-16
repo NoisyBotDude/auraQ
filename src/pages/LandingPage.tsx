@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import QuizCard from '../components/shared/QuizCard';
 import { useAuth } from '../contexts/index';
-import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome, FaGithub, FaTwitter, FaLinkedin, FaDiscord } from 'react-icons/fa';
+import { FaRocket, FaUsers, FaPenFancy, FaGamepad, FaPlus, FaHome, FaGithub, FaTwitter, FaLinkedin, FaDiscord, FaBell } from 'react-icons/fa';
 import { mockQuizzes } from '../data/mockQuizzes';
 import TypewriterText from '../components/shared/TypewriterText';
 import Footer from '../components/shared/Footer';
@@ -13,6 +13,8 @@ const UsersIcon = FaUsers as React.FC<React.SVGProps<SVGSVGElement>>;
 const PenIcon = FaPenFancy as React.FC<React.SVGProps<SVGSVGElement>>;
 const GameIcon = FaGamepad as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
+const BellIcon = FaBell as React.FC<React.SVGProps<SVGSVGElement>>;
+
 
 interface LandingPageProps {
   scrollTo?: string;
@@ -57,14 +59,29 @@ const hoverVariants = {
 
 const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
   const featuredSectionRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+  const row3Ref = useRef<HTMLDivElement>(null);
   const modeSectionRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications] = useState([
+    { id: 1, message: "New quiz available: Space Exploration", time: "2 hours ago" },
+    { id: 2, message: "Your friend completed a quiz", time: "5 hours ago" },
+    { id: 3, message: "Weekly leaderboard updated", time: "1 day ago" }
+  ]);
+  const [secretCode, setSecretCode] = useState<string[]>([]);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+
+  const isRow1InView = useInView(row1Ref, { once: true, margin: "-100px" });
+  const isRow2InView = useInView(row2Ref, { once: true, margin: "-100px" });
+  const isRow3InView = useInView(row3Ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
     if (scrollTo === 'featured' && featuredSectionRef.current) {
-      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center'});
+      featuredSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start'});
     }
   }, [scrollTo]);
 
@@ -91,6 +108,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
     };
   }, []);
 
+  // Easter egg code: "AURA"
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const newCode = [...secretCode, e.key.toUpperCase()].slice(-4);
+      setSecretCode(newCode);
+      
+      if (newCode.join('') === 'AURA') {
+        setShowEasterEgg(true);
+        setTimeout(() => setShowEasterEgg(false), 5000);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [secretCode]);
+
   const handleGetStarted = () => {
     if (modeSectionRef.current) {
       modeSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -103,6 +136,42 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
+        
+        {/* Easter Egg: Hidden Constellation */}
+        <AnimatePresence>
+          {showEasterEgg && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none"
+            >
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                    x: [0, Math.random() * 100 - 50],
+                    y: [0, Math.random() * 100 - 50]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute w-1 h-1 bg-white rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Hero Section */}
@@ -216,6 +285,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             )}
           </motion.div>
         </div>
+
+        {/* Easter Egg: Secret Message */}
+        <AnimatePresence>
+          {showEasterEgg && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-[#1a1a2e]/80 backdrop-blur-sm p-4 rounded-lg border border-white/10"
+            >
+              <motion.p
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                className="text-white text-center"
+              >
+                You found the secret constellation! ✨
+              </motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.section>
 
       {/* Featured Quizzes Section */}
@@ -223,7 +312,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isRow1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
@@ -233,25 +322,106 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             <p className="text-gray-400">Test your knowledge with our most popular quizzes</p>
           </motion.div>
 
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {mockQuizzes.map((quiz, index) => (
-              <motion.div
-                key={quiz.id}
-                variants={{
-                  ...itemVariants,
-                  ...hoverVariants
-                }}
-                whileHover="hover"
-              >
-                <QuizCard quiz={quiz} />
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* First Row */}
+            <div ref={row1Ref} className="col-span-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(0, 3).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow1InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Second Row */}
+            <div ref={row2Ref} className="col-span-full mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(3, 6).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow2InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Third Row */}
+            <div ref={row3Ref} className="col-span-full mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockQuizzes.slice(6, 9).map((quiz, index) => {
+                  let initialX = 0;
+                  let initialY = 0;
+                  
+                  if (index % 3 === 0) { // Left card
+                    initialX = -100;
+                  } else if (index % 3 === 2) { // Right card
+                    initialX = 100;
+                  } else { // Center card
+                    initialY = 100;
+                  }
+
+                  return (
+                    <motion.div
+                      key={quiz.id}
+                      initial={{ opacity: 0, x: initialX, y: initialY }}
+                      animate={isRow3InView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: initialX, y: initialY }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }}
+                    >
+                      <QuizCard quiz={quiz} />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -367,9 +537,85 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         </div>
       </section>
 
+      {/* Notification Bell Button */}
+
+      {/* Notification Bell Button */}
+      <motion.div 
+        className="fixed bottom-8 right-8 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 200, damping: 20 }}
+      >
+        <motion.button
+          onClick={() => setShowNotifications(!showNotifications)}
+          className="relative p-4 rounded-full bg-[#1a1a2e]/50 backdrop-blur-md border border-white/10 shadow-lg hover:bg-[#2a2a3a]/50 transition-colors duration-200"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <BellIcon className="text-xl text-white" />
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs">
+            3
+          </span>
+        </motion.button>
+
+        <AnimatePresence>
+          {showNotifications && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-16 right-0 w-80 bg-[#1a1a2e]/80 backdrop-blur-md rounded-xl border border-white/10 shadow-xl overflow-hidden"
+            >
+              <div className="p-4 border-b border-white/10">
+                <h3 className="text-lg font-semibold text-white">Notifications</h3>
+              </div>
+              <div className="max-h-96 overflow-y-auto">
+                {notifications.map((notification) => (
+                  <motion.div
+                    key={notification.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="p-4 hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+                  >
+                    <p className="text-white">{notification.message}</p>
+                    <p className="text-sm text-gray-400 mt-1">{notification.time}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Easter Egg: Hidden Button Animation */}
+      <motion.div
+        className="fixed bottom-4 left-4 z-50"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          setShowEasterEgg(true);
+          setTimeout(() => setShowEasterEgg(false), 5000);
+        }}
+      >
+        <motion.div
+          className="w-2 h-2 rounded-full bg-white/20 cursor-pointer"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+
       <Footer />
     </div>
   );
 };
 
-export default LandingPage; 
+export default LandingPage;

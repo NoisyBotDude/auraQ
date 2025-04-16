@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import {
   AuthProvider,
@@ -17,18 +17,38 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import PlayOnlinePage from './pages/PlayOnlinePage';
 import CommunityPage from './pages/CommunityPage';
+import AuthenticationPage from './pages/AuthenticationPage';
 
 // Shared Components
 import NavBar from './components/shared/NavBar';
 import NotificationBell from './components/shared/NotificationBell';
+import ScrollToTop from './components/shared/ScrollToTop';
+import Sidebar from './components/shared/Sidebar';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community'].includes(location.pathname) && 
+  const showNavbar = !['/profile', '/settings', '/create', '/quiz', '/leaderboard', '/play', '/community', '/auth'].includes(location.pathname) && 
                     !location.pathname.startsWith('/quiz/');
+  const showSidebar = location.pathname !== '/' && 
+                     !location.pathname.startsWith('/quiz/') && 
+                     location.pathname !== '/explore' &&
+                     location.pathname !== '/auth';
+  const [openSidebar, setOpenSidebar] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setOpenSidebar(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
+      <ScrollToTop />
       {showNavbar && <NavBar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
