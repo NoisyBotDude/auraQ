@@ -65,6 +65,7 @@ export interface Question {
   timeLimit: number;
   points: number;
   explanation?: string;
+  hint?: string;
 }
 
 export interface Player {
