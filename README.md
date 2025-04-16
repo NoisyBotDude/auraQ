@@ -32,12 +32,6 @@ AuraQ is a modern, interactive quiz application with a beautiful space-themed in
 - Like and favorite quizzes
 - Play count tracking
 
-### 🎵 Enhanced Experience
-- Background music and sound effects
-- Notification system for important events
-- Smooth animations and transitions
-- Interactive UI elements
-- Responsive feedback system
 
 ## Tech Stack 🛠️
 
@@ -103,10 +97,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments 🙏
 
