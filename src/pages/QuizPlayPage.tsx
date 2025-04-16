@@ -47,7 +47,7 @@ const QuizPlayPage: React.FC = () => {
       }
       setIsLoading(false);
     }
-  }, [quizId, setQuiz, addNotification, navigate]);
+  }, [quizId]);
 
   useEffect(() => {
     if (!isAnswerRevealed && timeLeft > 0) {
