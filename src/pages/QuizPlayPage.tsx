@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz, useNotification, useAudio } from '../contexts/index';
 import { mockQuizzes } from '../data/mockQuizzes';
 import QuizCompletionScreen from '../components/quiz/QuizCompletionScreen';
 import BackButton from '../components/shared/BackButton';
+import { Question } from '../types';
+import ConfirmationDialog from '../components/shared/ConfirmationDialog';
 
 const QuizPlayPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
@@ -26,58 +28,89 @@ const QuizPlayPage: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
+  const [activePowerUp, setActivePowerUp] = useState<string | null>(null);
 
+  // Memoize current question data
+  const currentQuestionData: Question | undefined = useMemo(() => 
+    currentQuiz?.questions[currentQuestion], 
+    [currentQuiz, currentQuestion]
+  );
+
+  // Load quiz data
   useEffect(() => {
     if (quizId) {
       setIsLoading(true);
-      const quiz = mockQuizzes.find(q => q.id === quizId);
-      if (quiz) {
-        setQuiz(quiz);
-        setTimeLeft(quiz.questions[0]?.timeLimit || 30);
+      try {
+        const quiz = mockQuizzes.find(q => q.id === quizId);
+        if (quiz) {
+          setQuiz(quiz);
+          setTimeLeft(quiz.questions[0]?.timeLimit || 30);
+          addNotification({
+            message: 'Quiz loaded successfully!',
+            type: 'success'
+          });
+        } else {
+          throw new Error('Quiz not found');
+        }
+      } catch (error) {
         addNotification({
-          message: 'Quiz loaded successfully!',
-          type: 'success'
-        });
-      } else {
-        addNotification({
-          message: 'Quiz not found',
+          message: error instanceof Error ? error.message : 'Failed to load quiz',
           type: 'error'
         });
-        navigate('/explore');
+        navigate('/');
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }
   }, [quizId]);
 
+  // Timer effect with proper dependencies
   useEffect(() => {
-    if (!isAnswerRevealed && timeLeft > 0) {
+    if (!isAnswerRevealed && timeLeft > 0 && currentQuestionData) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft(prev => {
+          if (prev <= 0) {
+            clearInterval(timer);
+            handleTimeUp();
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
 
       return () => clearInterval(timer);
-    } else if (timeLeft === 0 && !isAnswerRevealed) {
-      handleTimeUp();
     }
-  }, [timeLeft, isAnswerRevealed]);
+  }, [isAnswerRevealed, timeLeft, currentQuestionData]);
 
-  const handleTimeUp = () => {
+  // Reset timer when question changes
+  useEffect(() => {
+    if (currentQuestionData) {
+      setTimeLeft(currentQuestionData.timeLimit);
+    }
+  }, [currentQuestionData]);
+
+  const handleTimeUp = useCallback(() => {
     setIsAnswerRevealed(true);
     playSound('timeUp');
     addNotification({
       message: 'Time\'s up!',
       type: 'info'
     });
-  };
+  }, [playSound, addNotification]);
 
-  const handleAnswerSelect = (answerIndex: number) => {
-    if (isAnswerRevealed) return;
+  const calculateScore = useCallback(() => {
+    if (!currentQuestionData) return 0;
+    return Math.round((timeLeft / currentQuestionData.timeLimit) * 100);
+  }, [timeLeft, currentQuestionData]);
+
+  const handleAnswerSelect = useCallback((answerIndex: number) => {
+    if (isAnswerRevealed || !currentQuestionData) return;
     
     setSelectedAnswer(answerIndex);
     setIsAnswerRevealed(true);
     
-    const currentQuestionData = currentQuiz?.questions[currentQuestion];
-    if (currentQuestionData && answerIndex === currentQuestionData.correctAnswer) {
+    if (answerIndex === currentQuestionData.correctAnswer) {
       playSound('correct');
       updateScore(calculateScore());
       setStreak(prev => prev + 1);
@@ -87,11 +120,7 @@ const QuizPlayPage: React.FC = () => {
       playSound('incorrect');
       setStreak(0);
     }
-  };
-
-  const calculateScore = () => {
-    return Math.round((timeLeft / 30) * 100);
-  };
+  }, [isAnswerRevealed, currentQuestionData, playSound, updateScore, calculateScore]);
 
   const handleNextQuestion = () => {
     if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
@@ -127,7 +156,27 @@ const QuizPlayPage: React.FC = () => {
     }
   };
 
-  if (isLoading || !currentQuiz) {
+  const handleBackClick = useCallback(() => {
+    setShowExitConfirmation(true);
+  }, []);
+
+  const handleExitConfirm = useCallback(() => {
+    navigate('/', { replace: true });
+  }, [navigate]);
+
+  const handleExitCancel = useCallback(() => {
+    setShowExitConfirmation(false);
+  }, []);
+
+  const handlePowerUpClick = useCallback((powerUp: string) => {
+    setActivePowerUp(powerUp);
+    // Add power-up logic here
+    setTimeout(() => {
+      setActivePowerUp(null);
+    }, 2000);
+  }, []);
+
+  if (isLoading || !currentQuiz || !currentQuestionData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a1a]">
         <motion.div
@@ -139,10 +188,19 @@ const QuizPlayPage: React.FC = () => {
     );
   }
 
-  const currentQuestionData = currentQuiz.questions[currentQuestion];
-
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white relative overflow-hidden">
+      <div className="absolute top-4 left-4 z-10">
+        <button
+          onClick={handleBackClick}
+          className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-lg text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+          </svg>
+          Back
+        </button>
+      </div>
       <div className="container mx-auto px-4 max-w-4xl py-8">
         {/* Enhanced Progress and Score Section */}
         <div className="flex justify-between items-center mb-8">
@@ -173,22 +231,9 @@ const QuizPlayPage: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleSkipQuestion}
-            disabled={powerUps.skip === 0}
+            onClick={() => handlePowerUpClick('hint')}
             className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              powerUps.skip > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
-            }`}
-          >
-            <span>⏭️</span>
-            <span className="text-sm">Skip ({powerUps.skip})</span>
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleShowHint}
-            disabled={powerUps.hint === 0}
-            className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              powerUps.hint > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+              activePowerUp === 'hint' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
             }`}
           >
             <span>💡</span>
@@ -197,10 +242,20 @@ const QuizPlayPage: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleAddTime}
-            disabled={powerUps.time === 0}
+            onClick={() => handlePowerUpClick('skip')}
             className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              powerUps.time > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+              activePowerUp === 'skip' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+            }`}
+          >
+            <span>⏭️</span>
+            <span className="text-sm">Skip ({powerUps.skip})</span>
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handlePowerUpClick('time')}
+            className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
+              activePowerUp === 'time' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
             }`}
           >
             <span>⏱️</span>
@@ -211,15 +266,14 @@ const QuizPlayPage: React.FC = () => {
         {/* Enhanced Timer */}
         <motion.div 
           className="w-full h-2 bg-[#2d2f3d] rounded-full mb-8 relative overflow-hidden"
-          initial={{ scaleX: 1 }}
-          animate={{ scaleX: timeLeft / 30 }}
-          transition={{ duration: 0.5 }}
         >
-          <div 
-            className={`h-full rounded-full transition-all duration-300 ${
+          <motion.div 
+            className={`h-full rounded-full ${
               timeLeft > 10 ? 'bg-[#3b82f6]' : 'bg-red-500'
             }`}
-            style={{ width: `100%` }}
+            initial={{ width: '100%' }}
+            animate={{ width: `${(timeLeft / (currentQuestionData?.timeLimit || 30)) * 100}%` }}
+            transition={{ duration: 0.1 }}
           />
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
@@ -256,7 +310,7 @@ const QuizPlayPage: React.FC = () => {
             )}
 
             <div className="grid gap-4">
-              {currentQuestionData.options.map((option, index) => (
+              {currentQuestionData.options.map((option: string, index: number) => (
                 <motion.button
                   key={index}
                   className={`p-4 rounded-lg text-left transition-colors ${
@@ -315,8 +369,19 @@ const QuizPlayPage: React.FC = () => {
             score={score}
             onClose={() => {
               setShowCompletionScreen(false);
-              navigate('/explore');
+              navigate('/', { replace: true });
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showExitConfirmation && (
+          <ConfirmationDialog
+            title="Leave Quiz?"
+            message="Are you sure you want to leave? Your progress will be lost."
+            onConfirm={handleExitConfirm}
+            onCancel={handleExitCancel}
           />
         )}
       </AnimatePresence>
