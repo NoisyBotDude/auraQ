@@ -89,6 +89,8 @@ interface QuizContextType {
   updateScore: (points: number) => void;
   showCompletionScreen: boolean;
   setShowCompletionScreen: (show: boolean) => void;
+  setCurrentQuestion: (questionNumber: number) => void;
+  setScore: (score: number) => void;
 }
 
 export const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -120,7 +122,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       nextQuestion,
       updateScore,
       showCompletionScreen,
-      setShowCompletionScreen
+      setShowCompletionScreen,
+      setCurrentQuestion,
+      setScore
     }}>
       {children}
     </QuizContext.Provider>

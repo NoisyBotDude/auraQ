@@ -11,7 +11,7 @@ import ConfirmationDialog from '../components/shared/ConfirmationDialog';
 const QuizPlayPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const navigate = useNavigate();
-  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore, setQuiz, showCompletionScreen, setShowCompletionScreen } = useQuiz();
+  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore, setQuiz, showCompletionScreen, setShowCompletionScreen, setCurrentQuestion, setScore } = useQuiz();
   const { addNotification } = useNotification();
   const { playSound } = useAudio();
 
@@ -44,8 +44,22 @@ const QuizPlayPage: React.FC = () => {
       try {
         const quiz = mockQuizzes.find(q => q.id === quizId);
         if (quiz) {
+          // Reset all quiz state
           setQuiz(quiz);
+          setCurrentQuestion(0);
+          setScore(0);
           setTimeLeft(quiz.questions[0]?.timeLimit || 30);
+          setSelectedAnswer(null);
+          setIsAnswerRevealed(false);
+          setShowHint(false);
+          setStreak(0);
+          setShowStreak(false);
+          setPowerUps({
+            skip: 1,
+            hint: 2,
+            time: 1
+          });
+          setShowCompletionScreen(false);
           addNotification({
             message: 'Quiz loaded successfully!',
             type: 'success'
