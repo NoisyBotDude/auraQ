@@ -50,6 +50,14 @@ const AppContent: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]">
       <ScrollToTop />
       {showNavbar && <NavBar />}
+      {showSidebar && <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />}
+      <main className={`transition-all duration-200 ${
+        showSidebar 
+          ? openSidebar 
+            ? 'ml-64'  // When sidebar is open
+            : 'ml-20'  // When sidebar is collapsed
+          : ''         // When sidebar is hidden
+      }`}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/quiz/:quizId" element={<QuizPlayPage />} />
@@ -61,7 +69,7 @@ const AppContent: React.FC = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
       </Routes>
-      <NotificationBell />
+      </main>
     </div>
   );
 };
