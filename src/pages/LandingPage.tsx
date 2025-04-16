@@ -159,26 +159,29 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         <motion.div
           className="absolute inset-0 pointer-events-none overflow-hidden"
         >
-          {[...Array(20)].map((_, i) => (
+          {[...Array(30)].map((_, i) => (
             <motion.div
               key={i}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 1, 0.5],
-                x: [0, Math.random() * 100 - 50],
-                y: [0, Math.random() * 100 - 50]
+                scale: [1, Math.random() * 1.5 + 0.5, 1],
+                opacity: [0.3, Math.random() * 0.7 + 0.3, 0.3],
+                x: [0, Math.random() * 200 - 100],
+                y: [0, Math.random() * 200 - 100]
               }}
               transition={{
-                duration: 2,
+                duration: Math.random() * 8 + 4, // Random duration between 4-12 seconds
                 repeat: Infinity,
-                delay: i * 0.1,
-                ease: "easeInOut"
+                delay: Math.random() * 5, // Random initial delay between 0-5 seconds
+                ease: "easeInOut",
+                repeatType: "reverse"
               }}
               className="absolute w-1 h-1 bg-white rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.5 + 0.3, // Random base opacity
+                transform: `scale(${Math.random() * 0.5 + 0.5})`, // Random base scale
               }}
             />
           ))}
@@ -192,28 +195,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         animate="visible"
         variants={containerVariants}
       >
-        {/* Animated Nebula Background */}
-        <motion.div
-          className="absolute w-[40rem] h-[40rem] rounded-full -top-32 -left-32 blur-[140px] z-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.2),transparent_70%)] overflow-hidden"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-            x: [-50, 50, -50],
-            y: [-50, 50, -50]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute w-[40rem] h-[40rem] rounded-full -bottom-32 -right-32 blur-[160px] z-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.2),transparent_70%)] overflow-hidden"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [90, 0, 90],
-            x: [50, -50, 50],
-            y: [50, -50, 50]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-
         {/* Main Content */}
         <div className="container mx-auto px-4 text-center z-10">
           <motion.h1
