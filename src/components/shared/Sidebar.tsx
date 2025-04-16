@@ -82,15 +82,22 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
           <div className="p-4 flex items-center justify-between">
             <AnimatePresence mode="wait">
               {openSidebar && (
-                <motion.h1 
+                <motion.div 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.15 }}
-                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]"
+                  className="flex items-center gap-2"
                 >
-                  AuraQ
-                </motion.h1>
+                  <img 
+                    src="/auraq1.png" 
+                    alt="AuraQ Logo" 
+                    className="h-8 w-auto"
+                  />
+                  <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899]">
+                    AuraQ
+                  </h1>
+                </motion.div>
               )}
             </AnimatePresence>
             {!isMobile && (

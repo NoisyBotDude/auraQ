@@ -273,7 +273,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link
-                    to="/register"
+                    to="/auth"
                     className="px-8 py-3 bg-[#a855f7] text-white rounded-full text-lg font-semibold hover:bg-purple-700 transition-all duration-300 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7] relative overflow-hidden group"
                   >
                     <span className="relative z-10">Join Now</span>
@@ -285,7 +285,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link
-                    to="/login"
+                    to="/auth"
                     className="px-8 py-3 border-2 border-[#a855f7] text-[#a855f7] rounded-full text-lg font-semibold hover:bg-[#a855f7]/10 transition-all duration-300 relative overflow-hidden group"
                   >
                     <span className="relative z-10">Login</span>

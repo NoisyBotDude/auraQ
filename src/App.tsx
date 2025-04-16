@@ -68,6 +68,7 @@ const AppContent: React.FC = () => {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/auth" element={<AuthenticationPage />} />
       </Routes>
       </main>
     </div>
