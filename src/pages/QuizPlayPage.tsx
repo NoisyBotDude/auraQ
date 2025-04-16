@@ -231,31 +231,34 @@ const QuizPlayPage: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => handlePowerUpClick('hint')}
+            onClick={handleShowHint}
+            disabled={powerUps.hint === 0}
             className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              activePowerUp === 'hint' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+              powerUps.hint > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
             }`}
           >
             <span>💡</span>
             <span className="text-sm">Hint ({powerUps.hint})</span>
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handlePowerUpClick('skip')}
-            className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              activePowerUp === 'skip' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
-            }`}
-          >
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSkipQuestion}
+              disabled={powerUps.skip === 0}
+              className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
+                powerUps.skip > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+              }`}
+            >
             <span>⏭️</span>
             <span className="text-sm">Skip ({powerUps.skip})</span>
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => handlePowerUpClick('time')}
+            onClick={handleAddTime}
+            disabled={powerUps.time === 0}
             className={`flex items-center gap-2 px-3 py-1 rounded-lg ${
-              activePowerUp === 'time' ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
+              powerUps.time > 0 ? 'bg-[#3b82f6]/20 hover:bg-[#3b82f6]/30' : 'bg-gray-700/50 cursor-not-allowed'
             }`}
           >
             <span>⏱️</span>
@@ -265,26 +268,16 @@ const QuizPlayPage: React.FC = () => {
 
         {/* Enhanced Timer */}
         <motion.div 
-          className="w-full h-2 bg-[#2d2f3d] rounded-full mb-8 relative overflow-hidden"
+          className="w-full h-2 bg-[#2d2f3d] rounded-full mb-8"
+          initial={{ scaleX: 1 }}
+          animate={{ scaleX: timeLeft / 30 }}
+          transition={{ duration: 0.5 }}
         >
-          <motion.div 
-            className={`h-full rounded-full ${
+          <div 
+            className={`h-full rounded-full transition-all duration-300 ${
               timeLeft > 10 ? 'bg-[#3b82f6]' : 'bg-red-500'
             }`}
-            initial={{ width: '100%' }}
-            animate={{ width: `${(timeLeft / (currentQuestionData?.timeLimit || 30)) * 100}%` }}
-            transition={{ duration: 0.1 }}
-          />
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            animate={{
-              x: ['-100%', '100%'],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
+            style={{ width: `100%` }}
           />
         </motion.div>
 
