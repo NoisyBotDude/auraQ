@@ -19,6 +19,8 @@ const ProfilePage: React.FC = () => {
   const [newUsername, setNewUsername] = useState(user?.username || '');
   const [avatarPreview, setAvatarPreview] = useState("https://api.dicebear.com/7.x/avataaars/svg?seed=AuraQUser");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [followers, setFollowers] = useState(128);
+  const [following, setFollowing] = useState(64);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -79,8 +81,8 @@ const ProfilePage: React.FC = () => {
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 20 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
@@ -99,7 +101,11 @@ const ProfilePage: React.FC = () => {
           <div className="bg-[#1c1f2e]/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/10">
             {/* Avatar Section */}
             <div className="flex flex-col items-center mb-8">
-              <div className="relative group">
+              <motion.div 
+                className="relative group"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <motion.div
                   className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 relative"
                   whileHover={{ scale: 1.05 }}
@@ -130,38 +136,66 @@ const ProfilePage: React.FC = () => {
                   accept="image/*"
                   className="hidden"
                 />
-              </div>
+              </motion.div>
             </div>
 
             {/* Stats Section */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               <motion.div 
-                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
-                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">42</div>
                 <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Quizzes</div>
               </motion.div>
               <motion.div 
-                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
-                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">1,250</div>
                 <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Points</div>
               </motion.div>
               <motion.div 
-                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group"
-                whileHover={{ scale: 1.02 }}
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">#15</div>
                 <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Rank</div>
               </motion.div>
             </div>
 
+            {/* Following/Followers Section */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <motion.div 
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">{followers}</div>
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Followers</div>
+              </motion.div>
+              <motion.div 
+                className="p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 text-center group relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="text-2xl font-bold text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300">{following}</div>
+                <div className="text-gray-400 group-hover:text-white transition-colors duration-300">Following</div>
+              </motion.div>
+            </div>
+
             {/* Username Section */}
             <div className="mb-8">
-              <div className="flex items-center gap-3 p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10">
-                <FaUser1 className="text-gray-400" />
+              <div className="flex items-center gap-3 p-4 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group">
+                <FaUser1 className="text-gray-400 group-hover:text-[#8b5cf6] transition-colors duration-300" />
                 {isEditing ? (
                   <input
                     type="text"
@@ -171,7 +205,7 @@ const ProfilePage: React.FC = () => {
                     placeholder="Enter new username"
                   />
                 ) : (
-                  <span className="text-white">{user?.username}</span>
+                  <span className="text-white group-hover:text-[#8b5cf6] transition-colors duration-300">{user?.username}</span>
                 )}
               </div>
             </div>
@@ -181,9 +215,11 @@ const ProfilePage: React.FC = () => {
               <h3 className="text-xl font-semibold text-white mb-4">Recent Achievements</h3>
               <div className="space-y-3">
                 <motion.div 
-                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group"
-                  whileHover={{ scale: 1.01 }}
+                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group relative overflow-hidden"
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                   <div className="w-8 h-8 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
                     <FaTrophy1 className="text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300" />
                   </div>
@@ -193,9 +229,11 @@ const ProfilePage: React.FC = () => {
                   </div>
                 </motion.div>
                 <motion.div 
-                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group"
-                  whileHover={{ scale: 1.01 }}
+                  className="flex items-center gap-3 p-3 bg-[#2d2f3d]/50 rounded-lg border border-white/10 group relative overflow-hidden"
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                   <div className="w-8 h-8 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
                     <FaStar1 className="text-[#3b82f6] group-hover:text-[#8b5cf6] transition-colors duration-300" />
                   </div>
@@ -222,7 +260,7 @@ const ProfilePage: React.FC = () => {
                   </motion.button>
                   <motion.button
                     onClick={handleSave}
-                    className="px-4 py-2 rounded-lg bg-[#3b82f6] text-white hover:bg-[#3b82f6]/80 transition-colors duration-200 flex items-center gap-2"
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] text-white hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -233,7 +271,7 @@ const ProfilePage: React.FC = () => {
               ) : (
                 <motion.button
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 rounded-lg bg-[#3b82f6] text-white hover:bg-[#3b82f6]/80 transition-colors duration-200 flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#ec4899] text-white hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

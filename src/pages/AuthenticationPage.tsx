@@ -20,9 +20,9 @@ const AuthenticationPage: React.FC = () => {
     setError('');
     
     try {
-      // Mock authentication - redirect to landing page
+      // Accept any credentials and redirect to main landing page
       await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (err) {
       setError('Authentication failed. Please try again.');
     } finally {
@@ -35,9 +35,9 @@ const AuthenticationPage: React.FC = () => {
     setError('');
     
     try {
-      // Mock Google sign-in - redirect to landing page
+      // Accept any Google sign-in and redirect to main landing page
       await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (err) {
       setError('Google sign-in failed. Please try again.');
     } finally {
