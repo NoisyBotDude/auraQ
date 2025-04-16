@@ -95,8 +95,8 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
             </AnimatePresence>
             {!isMobile && (
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileTap={{ scale: 0.95, rotate: -5 }}
                 onClick={handleToggleSidebar}
                 className={`p-2 rounded-lg hover:bg-[#2a2a3a] transition-colors duration-150 ${!openSidebar ? 'mx-auto' : ''}`}
                 aria-label={openSidebar ? "Collapse sidebar" : "Expand sidebar"}
@@ -113,18 +113,36 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                 const isActive = location.pathname === item.path;
                 
                 return (
-                  <motion.li key={item.path} whileHover={{ scale: 1.02 }}>
+                  <motion.li 
+                    key={item.path} 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <Link
                       to={item.path}
-                      className={`flex items-center ${!openSidebar ? 'justify-center' : 'px-4'} py-3 rounded-lg transition-colors duration-150 ${
+                      className={`group flex items-center ${!openSidebar ? 'justify-center' : 'px-4'} py-3 rounded-lg transition-all duration-200 ${
                         isActive
-                          ? 'bg-[#2a2a3a] text-white shadow-lg shadow-[#2a2a3a]/50'
+                          ? 'bg-gradient-to-r from-[#2a2a3a] to-[#3a3a4a] text-white shadow-lg shadow-[#2a2a3a]/50'
                           : 'text-gray-400 hover:bg-[#2a2a3a] hover:text-white'
                       }`}
                       title={!openSidebar ? item.label : undefined}
                       aria-label={item.label}
                     >
-                      <Icon className={`w-5 h-5 ${isActive ? 'text-[#3b82f6]' : ''}`} />
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className={`relative ${isActive ? 'text-[#3b82f6]' : ''}`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        {isActive && (
+                          <motion.div
+                            className="absolute -inset-1 bg-[#3b82f6]/20 rounded-full blur-sm"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                          />
+                        )}
+                      </motion.div>
                       <AnimatePresence mode="wait">
                         {openSidebar && (
                           <motion.span 
@@ -132,7 +150,7 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
                             transition={{ duration: 0.15 }}
-                            className="ml-3"
+                            className="ml-3 group-hover:translate-x-1 transition-transform duration-200"
                           >
                             {item.label}
                           </motion.span>
@@ -148,14 +166,23 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
           {user && (
             <div className="p-4 border-t border-[#2a2a3a]">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, x: 5 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={logout}
-                className={`flex items-center w-full ${!openSidebar ? 'justify-center' : 'px-4'} py-3 text-red-400 hover:bg-[#2a2a3a] rounded-lg transition-colors duration-150`}
+                className={`group flex items-center w-full ${!openSidebar ? 'justify-center' : 'px-4'} py-3 text-red-400 hover:bg-[#2a2a3a] rounded-lg transition-all duration-200`}
                 title={!openSidebar ? "Logout" : undefined}
                 aria-label="Logout"
               >
-                <LogoutIcon className="w-5 h-5" />
+                <motion.div
+                  whileHover={{ rotate: 180 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative"
+                >
+                  <LogoutIcon className="w-5 h-5" />
+                  <motion.div
+                    className="absolute -inset-1 bg-red-500/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  />
+                </motion.div>
                 <AnimatePresence mode="wait">
                   {openSidebar && (
                     <motion.span 
@@ -163,7 +190,7 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
                       transition={{ duration: 0.15 }}
-                      className="ml-3"
+                      className="ml-3 group-hover:translate-x-1 transition-transform duration-200"
                     >
                       Logout
                     </motion.span>

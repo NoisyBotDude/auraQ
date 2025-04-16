@@ -35,6 +35,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
     { id: 2, message: "Your friend completed a quiz", time: "5 hours ago" },
     { id: 3, message: "Weekly leaderboard updated", time: "1 day ago" }
   ]);
+  const [secretCode, setSecretCode] = useState<string[]>([]);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const isRow1InView = useInView(row1Ref, { once: true, margin: "-100px" });
   const isRow2InView = useInView(row2Ref, { once: true, margin: "-100px" });
@@ -69,6 +71,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
     };
   }, []);
 
+  // Easter egg code: "AURA"
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const newCode = [...secretCode, e.key.toUpperCase()].slice(-4);
+      setSecretCode(newCode);
+      
+      if (newCode.join('') === 'AURA') {
+        setShowEasterEgg(true);
+        setTimeout(() => setShowEasterEgg(false), 5000);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [secretCode]);
+
   const handleGetStarted = () => {
     if (modeSectionRef.current) {
       modeSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -99,16 +117,50 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiA4YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjEiLz48L2c+PC9zdmc+')] opacity-20" />
+        
+        {/* Easter Egg: Hidden Constellation */}
+        <AnimatePresence>
+          {showEasterEgg && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none"
+            >
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                    x: [0, Math.random() * 100 - 50],
+                    y: [0, Math.random() * 100 - 50]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute w-1 h-1 bg-white rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-
 
       {/* Hero Section */}
       <motion.section
-        className="relative h-screen flex items-center justify-center overflow-hidden "
+        className="relative h-screen flex items-center justify-center overflow-hidden"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-
       >
         {/* Animated Nebula Background */}
         <motion.div
@@ -204,6 +256,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
             )}
           </motion.div>
         </div>
+
+        {/* Easter Egg: Secret Message */}
+        <AnimatePresence>
+          {showEasterEgg && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-[#1a1a2e]/80 backdrop-blur-sm p-4 rounded-lg border border-white/10"
+            >
+              <motion.p
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                className="text-white text-center"
+              >
+                You found the secret constellation! ✨
+              </motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.section>
 
       {/* Featured Quizzes Section */}
@@ -448,9 +520,33 @@ const LandingPage: React.FC<LandingPageProps> = ({ scrollTo }) => {
         </AnimatePresence>
       </motion.div>
 
+      {/* Easter Egg: Hidden Button Animation */}
+      <motion.div
+        className="fixed bottom-4 left-4 z-50"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          setShowEasterEgg(true);
+          setTimeout(() => setShowEasterEgg(false), 5000);
+        }}
+      >
+        <motion.div
+          className="w-2 h-2 rounded-full bg-white/20 cursor-pointer"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+
       <Footer />
     </div>
   );
 };
 
-export default LandingPage; 
+export default LandingPage;
