@@ -22,7 +22,6 @@ AuraQ is a modern, interactive quiz application with a beautiful space-themed in
 - Responsive design that works on all devices
 - Animated UI elements using Framer Motion
 - Custom icons and visual feedback
-- Dark mode support with theme switching!
 
   [Screenshot_20250417_082951_Chrome](https://github.com/user-attachments/assets/a081797e-24ea-4931-ae5e-2d6f55e3558a)
 
