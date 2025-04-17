@@ -40,6 +40,22 @@ export interface Achievement {
   unlockedAt: Date;
 }
 
+export type QuestionType = 'single' | 'multiple' | 'dropdown' | 'scale' | 'truefalse' | 'matching';
+
+export interface Question {
+  id: string;
+  text: string;
+  type: QuestionType;
+  options: string[];
+  correctAnswer: number | number[];
+  timeLimit: number;
+  points: number;
+  explanation?: string;
+  hint?: string;
+  matchingPairs?: { left: string; right: string }[];
+  scaleRange?: { min: number; max: number; labels?: { start: string; end: string } };
+}
+
 export interface Quiz {
   id: string;
   title: string;
@@ -54,18 +70,6 @@ export interface Quiz {
   rating: number;
   tags: string[];
   createdAt: Date;
-}
-
-export interface Question {
-  id: string;
-  text: string;
-  type: 'multiple' | 'boolean' | 'image';
-  options: string[];
-  correctAnswer: number | number[];
-  timeLimit: number;
-  points: number;
-  explanation?: string;
-  hint?: string;
 }
 
 export interface Player {
@@ -83,4 +87,11 @@ export interface GlobalLeaderboardEntry {
   score: number;
   rank: number;
   quizzesCompleted: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
 }

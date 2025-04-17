@@ -2,21 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotification } from '../contexts';
-import { Quiz, Question } from '../types';
+import { Quiz, Question, QuestionType, Category } from '../types';
 import { mockQuizzes } from '../data/mockQuizzes';
+import { mockCategories } from '../data/mockCategories';
+import DifficultySlider from '../components/DifficultySlider';
+import TimeLimitSelector from '../components/TimeLimitSelector';
+import CategoryModal from '../components/CategoryModal';
 import { 
   FaRocket, 
   FaCompass, 
   FaPlus, 
-  FaTrophy, 
-  FaUser, 
-  FaCog, 
-  FaSignOutAlt,
-  FaSignInAlt,
-  FaUserPlus,
-  FaBars,
-  FaTimes,
-  FaHome,
   FaStar,
   FaClock,
   FaTag,
@@ -30,29 +25,11 @@ import {
   FaTimesCircle,
   FaGlobe,
   FaBrain,
-  FaLightbulb,
-  FaBook,
-  FaGraduationCap,
-  FaAtom,
-  FaFlask,
-  FaCode,
-  FaMusic,
-  FaHistory,
-  FaLanguage,
-  FaRunning,
-  FaGamepad,
-  FaFilm,
-  FaPalette,
   FaChartLine,
-  FaMicrochip,
-  FaRobot,
-  FaSpaceShuttle,
-  FaMeteor,
-  FaSatellite,
-  FaMoon,
-  FaSun,
-  FaGalacticRepublic,
-  FaCheckCircle
+  FaCheckCircle,
+  FaCaretDown,
+  FaSort,
+  FaLightbulb,
 } from 'react-icons/fa';
 import BackButton from '../components/shared/BackButton';
 
@@ -60,9 +37,6 @@ import BackButton from '../components/shared/BackButton';
 const RocketIcon = FaRocket as React.FC<React.SVGProps<SVGSVGElement>>;
 const CompassIcon = FaCompass as React.FC<React.SVGProps<SVGSVGElement>>;
 const PlusIcon = FaPlus as React.FC<React.SVGProps<SVGSVGElement>>;
-const TrophyIcon = FaTrophy as React.FC<React.SVGProps<SVGSVGElement>>;
-const UserIcon = FaUser as React.FC<React.SVGProps<SVGSVGElement>>;
-const CogIcon = FaCog as React.FC<React.SVGProps<SVGSVGElement>>;
 const GlobeIcon = FaGlobe as React.FC<React.SVGProps<SVGSVGElement>>;
 const BrainIcon = FaBrain as React.FC<React.SVGProps<SVGSVGElement>>;
 const TagIcon = FaTag as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -71,19 +45,14 @@ const ClockIcon = FaClock as React.FC<React.SVGProps<SVGSVGElement>>;
 const StarIcon = FaStar as React.FC<React.SVGProps<SVGSVGElement>>;
 const QuestionIcon = FaQuestion as React.FC<React.SVGProps<SVGSVGElement>>;
 const TrashIcon = FaTrash as React.FC<React.SVGProps<SVGSVGElement>>;
-const EditIcon = FaEdit as React.FC<React.SVGProps<SVGSVGElement>>;
 const CheckIcon = FaCheck as React.FC<React.SVGProps<SVGSVGElement>>;
 const TimesCircleIcon = FaTimesCircle as React.FC<React.SVGProps<SVGSVGElement>>;
-const SatelliteIcon = FaSatellite as React.FC<React.SVGProps<SVGSVGElement>>;
-const SpaceShuttleIcon = FaSpaceShuttle as React.FC<React.SVGProps<SVGSVGElement>>;
-const MeteorIcon = FaMeteor as React.FC<React.SVGProps<SVGSVGElement>>;
-const MoonIcon = FaMoon as React.FC<React.SVGProps<SVGSVGElement>>;
-const SunIcon = FaSun as React.FC<React.SVGProps<SVGSVGElement>>;
-const GalacticRepublicIcon = FaGalacticRepublic as React.FC<React.SVGProps<SVGSVGElement>>;
 const ChevronUpIcon = FaChevronUp as React.FC<React.SVGProps<SVGSVGElement>>;
 const ChevronDownIcon = FaChevronDown as React.FC<React.SVGProps<SVGSVGElement>>;
 const CheckCircleIcon = FaCheckCircle as React.FC<React.SVGProps<SVGSVGElement>>; 
-
+const CaretDownIcon = FaCaretDown as React.FC<React.SVGProps<SVGSVGElement>>; 
+const EditIcon = FaEdit as React.FC<React.SVGProps<SVGSVGElement>>;
+const LightbulbIcon = FaLightbulb as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface QuestionForm extends Omit<Question, 'id'> {
   id?: string;
@@ -104,11 +73,12 @@ const QuizCreationPage: React.FC = () => {
 
   const [currentQuestion, setCurrentQuestion] = useState<QuestionForm>({
     text: '',
-    type: 'multiple',
+    type: 'single',
     options: ['', '', '', ''],
     correctAnswer: 0,
     timeLimit: 30,
-    points: 100
+    points: 100,
+    hint: ''
   });
 
   const [step, setStep] = useState<'info' | 'questions'>('info');
@@ -118,6 +88,18 @@ const QuizCreationPage: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [createdQuizId, setCreatedQuizId] = useState<string | null>(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [isQuestionFormOpen, setIsQuestionFormOpen] = useState(true);
+
+  const questionTypes: { value: QuestionType; label: string; icon: typeof FaCheckCircle }[] = [
+    { value: 'single', label: 'Single Choice', icon: FaCheckCircle },
+    { value: 'multiple', label: 'Multiple Choice', icon: FaList },
+    { value: 'dropdown', label: 'Dropdown', icon: FaCaretDown },
+    { value: 'scale', label: 'Linear Scale', icon: FaChartLine },
+    { value: 'truefalse', label: 'True/False', icon: FaCheck },
+    { value: 'matching', label: 'Matching', icon: FaSort }
+  ];
 
   const handleQuizInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setQuizData(prev => ({
@@ -159,6 +141,62 @@ const QuizCreationPage: React.FC = () => {
     }));
   };
 
+  const handleQuestionTypeChange = (type: QuestionType) => {
+    setCurrentQuestion(prev => {
+      const newQuestion = { ...prev, type };
+      
+      switch (type) {
+        case 'truefalse':
+          newQuestion.options = ['True', 'False'];
+          break;
+        case 'scale':
+          newQuestion.options = ['1', '2', '3', '4', '5'];
+          newQuestion.scaleRange = { min: 1, max: 5, labels: { start: 'Poor', end: 'Excellent' } };
+          break;
+        case 'matching':
+          newQuestion.matchingPairs = [{ left: '', right: '' }];
+          newQuestion.options = [];
+          break;
+        default:
+          if (!newQuestion.options.length) {
+            newQuestion.options = ['', '', '', ''];
+          }
+      }
+      
+      return newQuestion;
+    });
+  };
+
+  const handleEditQuestion = (questionId: string) => {
+    const question = quizData.questions?.find(q => q.id === questionId);
+    if (question) {
+      setCurrentQuestion(question);
+      setEditingQuestionId(questionId);
+      setIsQuestionFormOpen(true);
+      setExpandedQuestion(null);
+    }
+  };
+
+  const handleDeleteQuestion = (questionId: string) => {
+    setQuizData(prev => ({
+      ...prev,
+      questions: prev.questions?.filter(q => q.id !== questionId) || []
+    }));
+    if (editingQuestionId === questionId) {
+      setEditingQuestionId(null);
+      setIsQuestionFormOpen(true);
+      setCurrentQuestion({
+        text: '',
+        type: 'single',
+        options: ['', '', '', ''],
+        correctAnswer: 0,
+        timeLimit: 30,
+        points: 100,
+        hint: ''
+      });
+    }
+  };
+
   const handleAddQuestion = () => {
     if (!currentQuestion.text.trim()) {
       addNotification({
@@ -168,7 +206,7 @@ const QuizCreationPage: React.FC = () => {
       return;
     }
 
-    if (currentQuestion.options.some(opt => !opt.trim())) {
+    if (currentQuestion.type !== 'matching' && currentQuestion.options.some(opt => !opt.trim())) {
       addNotification({
         message: 'Please fill in all options',
         type: 'error'
@@ -194,25 +232,30 @@ const QuizCreationPage: React.FC = () => {
 
     const newQuestion = {
       ...currentQuestion,
-      id: Math.random().toString(36).substr(2, 9)
+      id: editingQuestionId || Math.random().toString(36).substr(2, 9)
     };
 
     setQuizData(prev => ({
       ...prev,
-      questions: [...(prev.questions || []), newQuestion]
+      questions: editingQuestionId
+        ? prev.questions?.map(q => q.id === editingQuestionId ? newQuestion : q) || []
+        : [...(prev.questions || []), newQuestion]
     }));
 
     setCurrentQuestion({
       text: '',
-      type: 'multiple',
+      type: 'single',
       options: ['', '', '', ''],
       correctAnswer: 0,
       timeLimit: 30,
-      points: 100
+      points: 100,
+      hint: ''
     });
+    setEditingQuestionId(null);
+    setIsQuestionFormOpen(true);
 
     addNotification({
-      message: 'Question added successfully!',
+      message: editingQuestionId ? 'Question updated successfully!' : 'Question added successfully!',
       type: 'success'
     });
   };
@@ -291,6 +334,23 @@ const QuizCreationPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    const category = mockCategories.find(c => c.id === categoryId);
+    if (category) {
+      setQuizData(prev => ({
+        ...prev,
+        category: category.name
+      }));
+    }
+  };
+
+  const handleCategoryAdded = (category: Category) => {
+    setQuizData(prev => ({
+      ...prev,
+      category: category.name
+    }));
   };
 
   return (
@@ -429,17 +489,35 @@ const QuizCreationPage: React.FC = () => {
                     <GlobeIcon className="text-[#6366f1]" />
                     Category
                   </label>
-                  <motion.input
-                    type="text"
-                    name="category"
-                    value={quizData.category}
-                    onChange={handleQuizInfoChange}
-                    className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
-                      validationErrors.category ? 'border-red-500' : 'border-white/10'
-                    } rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]`}
-                    placeholder="Enter quiz category"
-                    whileHover={{ scale: 1.01 }}
-                  />
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <select
+                        value={quizData.category}
+                        onChange={(e) => handleCategorySelect(e.target.value)}
+                        className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
+                          validationErrors.category ? 'border-red-500' : 'border-white/10'
+                        } rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white appearance-none`}
+                      >
+                        <option value="">Select a category</option>
+                        {mockCategories.map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <CaretDownIcon className="text-gray-400" />
+                      </div>
+                    </div>
+                    <motion.button
+                      onClick={() => setShowCategoryModal(true)}
+                      className="px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)]"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <PlusIcon />
+                    </motion.button>
+                  </div>
                   {validationErrors.category && (
                     <p className="text-red-500 text-sm mt-1">{validationErrors.category}</p>
                   )}
@@ -453,26 +531,10 @@ const QuizCreationPage: React.FC = () => {
                     <BrainIcon className="text-[#6366f1]" />
                     Difficulty
                   </label>
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
-                    {(['easy', 'medium', 'hard'] as const).map((level) => (
-                      <motion.button
-                        key={level}
-                        className={`flex-1 px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-                          quizData.difficulty === level
-                            ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white shadow-[0_0_10px_rgba(99,102,241,0.3)]'
-                            : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
-                        }`}
-                        onClick={() => setQuizData(prev => ({ ...prev, difficulty: level }))}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {level === 'easy' && <SatelliteIcon className="text-lg" />}
-                        {level === 'medium' && <SpaceShuttleIcon className="text-lg" />}
-                        {level === 'hard' && <MeteorIcon className="text-lg" />}
-                        {level.charAt(0).toUpperCase() + level.slice(1)}
-                      </motion.button>
-                    ))}
-                  </div>
+                  <DifficultySlider
+                    value={quizData.difficulty || 'medium'}
+                    onChange={(value) => setQuizData(prev => ({ ...prev, difficulty: value }))}
+                  />
                 </motion.div>
 
                 <motion.div
@@ -595,25 +657,31 @@ const QuizCreationPage: React.FC = () => {
                     >
                       <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-2">
-                          <QuestionIcon className="text-[#6366f1]" />
+                          {questionTypes.find(t => t.value === question.type)?.icon({
+                            className: "text-[#6366f1]"
+                          })}
                           <h3 className="font-medium text-gray-300">Question {index + 1}</h3>
+                          <span className="text-sm text-gray-400">({question.type})</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <motion.button
+                            onClick={() => handleEditQuestion(question.id)}
+                            className="text-[#6366f1] hover:text-[#8b5cf6]"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <EditIcon />
+                          </motion.button>
+                          <motion.button
                             onClick={() => setExpandedQuestion(expandedQuestion === question.id ? null : question.id)}
-                            className="text-[#6366f1] hover:text-[#8b5cf6] transition-colors"
+                            className="text-[#6366f1] hover:text-[#8b5cf6]"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >
                             {expandedQuestion === question.id ? <ChevronUpIcon /> : <ChevronDownIcon />}
                           </motion.button>
                           <motion.button
-                            onClick={() => {
-                              setQuizData(prev => ({
-                                ...prev,
-                                questions: prev.questions?.filter((_, i) => i !== index)
-                              }));
-                            }}
+                            onClick={() => handleDeleteQuestion(question.id)}
                             className="text-red-500 hover:text-red-400"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -633,6 +701,12 @@ const QuizCreationPage: React.FC = () => {
                             className="overflow-hidden"
                           >
                             <p className="text-gray-400 mb-4">{question.text}</p>
+                            {question.hint && (
+                              <div className="flex items-center gap-2 text-sm text-yellow-400 mb-4">
+                                <LightbulbIcon />
+                                <span>Hint: {question.hint}</span>
+                              </div>
+                            )}
                             <div className="space-y-2">
                               {question.options.map((option, i) => (
                                 <div key={i} className="flex items-center gap-2">
@@ -752,6 +826,22 @@ const QuizCreationPage: React.FC = () => {
                       </div>
                     </div>
 
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <LightbulbIcon className="text-[#6366f1]" />
+                        Hint (Optional)
+                      </label>
+                      <motion.textarea
+                        name="hint"
+                        value={currentQuestion.hint}
+                        onChange={handleQuestionChange}
+                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                        rows={2}
+                        placeholder="Enter a hint for this question (optional)"
+                        whileHover={{ scale: 1.01 }}
+                      />
+                    </div>
+
                     <motion.button
                       onClick={handleAddQuestion}
                       className="w-full px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2"
@@ -842,6 +932,13 @@ const QuizCreationPage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Category Modal */}
+      <CategoryModal
+        isOpen={showCategoryModal}
+        onClose={() => setShowCategoryModal(false)}
+        onCategoryAdded={handleCategoryAdded}
+      />
     </div>
   );
 };
