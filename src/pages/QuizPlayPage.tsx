@@ -97,12 +97,18 @@ const QuizPlayPage: React.FC = () => {
     }
   }, [isAnswerRevealed, timeLeft, currentQuestionData]);
 
-  // Reset timer when question changes
-  useEffect(() => {
-    if (currentQuestionData) {
-      setTimeLeft(currentQuestionData.timeLimit);
+  const handleNextQuestion = () => {
+    if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
+      setShowCompletionScreen(true);
+      return;
     }
-  }, [currentQuestionData]);
+
+    setSelectedAnswer(null);
+    setIsAnswerRevealed(false);
+    setTimeLeft(currentQuiz?.questions[currentQuestion + 1]?.timeLimit || 30);
+    setShowHint(false);
+    nextQuestion();
+  };
 
   const handleTimeUp = useCallback(() => {
     setIsAnswerRevealed(true);
@@ -111,7 +117,24 @@ const QuizPlayPage: React.FC = () => {
       message: 'Time\'s up!',
       type: 'info'
     });
-  }, [playSound, addNotification]);
+
+    setTimeout(() => {
+      handleNextQuestion();
+    }, 2000);
+  }, [playSound, addNotification, handleNextQuestion]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && !isAnswerRevealed) {
+      handleTimeUp();
+    }
+  }, [timeLeft, isAnswerRevealed, handleTimeUp]);
+
+  // Reset timer when question changes
+  useEffect(() => {
+    if (currentQuestionData) {
+      setTimeLeft(currentQuestionData.timeLimit);
+    }
+  }, [currentQuestionData]);
 
   const calculateScore = useCallback(() => {
     if (!currentQuestionData) return 0;
@@ -135,19 +158,6 @@ const QuizPlayPage: React.FC = () => {
       setStreak(0);
     }
   }, [isAnswerRevealed, currentQuestionData, playSound, updateScore, calculateScore]);
-
-  const handleNextQuestion = () => {
-    if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
-      setShowCompletionScreen(true);
-      return;
-    }
-
-    setSelectedAnswer(null);
-    setIsAnswerRevealed(false);
-    setTimeLeft(currentQuiz?.questions[currentQuestion + 1]?.timeLimit || 30);
-    setShowHint(false);
-    nextQuestion();
-  };
 
   const handleSkipQuestion = () => {
     if (powerUps.skip > 0) {
