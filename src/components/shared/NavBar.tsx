@@ -159,14 +159,14 @@ const NavBar: React.FC = () => {
                 ) : (
                   <>
                     <Link 
-                      to="/login"
+                      to="/auth"
                       className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 hover:scale-105 transition-all duration-200 shadow-[0_0_10px_#a855f7] hover:shadow-[0_0_15px_#a855f7]"
                     >
                       <FaSignInAlt1 className="text-lg" />
                       <span>Login</span>
                     </Link>
                     <Link 
-                      to="/register"
+                      to="/auth"
                       className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-primary-500 hover:bg-primary-500/10 hover:scale-105 transition-all duration-200"
                     >
                       <FaUserPlus1 className="text-lg" />
