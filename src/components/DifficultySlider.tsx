@@ -30,7 +30,7 @@ const DifficultySlider: React.FC<DifficultySliderProps> = ({ value, onChange }) 
   return (
     <div className="relative w-full py-8">
       {/* Track */}
-      <div className="absolute h-2 w-full bg-[#2d2f3d] rounded-full overflow-hidden">
+      <div className="absolute h-2 w-[calc(100%-4rem)] left-8 bg-[#2d2f3d] rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-[#10B981] via-[#6366F1] to-[#EF4444]"
           initial={{ width: '0%' }}
@@ -41,7 +41,7 @@ const DifficultySlider: React.FC<DifficultySliderProps> = ({ value, onChange }) 
 
       {/* Difficulty Markers */}
       <div className="relative flex justify-between px-4">
-        {difficulties.map(({ value: val, icon: Icon , color }) => (
+        {difficulties.map(({ value: val, icon: Icon, color }) => (
           <motion.button
             key={val}
             onClick={() => onChange(val)}

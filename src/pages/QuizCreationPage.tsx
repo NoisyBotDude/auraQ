@@ -42,6 +42,7 @@ import {
   FaSortAmountDown,
   FaLink,
   FaImage,
+  FaMinus,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 import BackButton from '../components/shared/BackButton';
@@ -77,6 +78,7 @@ const CheckSquareIcon = FaCheckSquare as React.FC<React.SVGProps<SVGSVGElement>>
 const RulerIcon = FaRuler as React.FC<React.SVGProps<SVGSVGElement>>;
 const SortAmountDownIcon = FaSortAmountDown as React.FC<React.SVGProps<SVGSVGElement>>;
 const LinkIcon = FaLink as React.FC<React.SVGProps<SVGSVGElement>>;
+const MinusIcon = FaMinus as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface QuestionForm {
   id?: string;
@@ -709,39 +711,6 @@ const QuizCreationPage: React.FC = () => {
                   </div>
                 </motion.div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                      <ClockIcon className="text-[#6366f1]" />
-                      Time Limit (seconds)
-                    </label>
-                    <motion.input
-                      type="text"
-                      name="timeLimit"
-                      value={currentQuestion.timeLimit}
-                      onChange={handleQuestionChange}
-                      className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
-                      whileHover={{ scale: 1.01 }}
-                      whileFocus={{ scale: 1.02 }}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                      <StarIcon className="text-[#6366f1]" />
-                      Points
-                    </label>
-                    <motion.input
-                      type="text"
-                      name="points"
-                      value={currentQuestion.points}
-                      onChange={handleQuestionChange}
-                      className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
-                      whileHover={{ scale: 1.01 }}
-                      whileFocus={{ scale: 1.02 }}
-                    />
-                  </div>
-                </div>
-
                 <div className="flex justify-end">
                   <motion.button
                     onClick={() => {
@@ -895,29 +864,68 @@ const QuizCreationPage: React.FC = () => {
                                       <ListIcon className="text-[#6366f1]" />
                                       Options
                                     </label>
-                                    {currentQuestion.options.map((option, index) => (
-                                      <div key={index} className="flex gap-2 mb-2">
-                                        <motion.input
-                                          type="radio"
-                                          name="correctAnswer"
-                                          checked={currentQuestion.correctAnswer === index}
-                                          onChange={() => setCurrentQuestion(prev => ({
-                                            ...prev,
-                                            correctAnswer: index
-                                          }))}
-                                          className="mt-3 accent-[#6366f1]"
-                                          whileHover={{ scale: 1.1 }}
-                                        />
-                                        <motion.input
-                                          type="text"
-                                          value={option}
-                                          onChange={(e) => handleOptionChange(index, e.target.value)}
-                                          className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
-                                          placeholder={`Option ${index + 1}`}
+                                    <div className="space-y-3">
+                                      {currentQuestion.options.map((option, index) => (
+                                        <motion.div
+                                          key={index}
+                                          className="relative group"
                                           whileHover={{ scale: 1.01 }}
-                                        />
-                                      </div>
-                                    ))}
+                                        >
+                                          <div className="flex items-center gap-3">
+                                            <motion.div
+                                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                                                currentQuestion.correctAnswer === index
+                                                  ? 'border-[#6366f1] bg-[#6366f1]'
+                                                  : 'border-white/20 group-hover:border-[#6366f1]/50'
+                                              }`}
+                                              whileHover={{ scale: 1.1 }}
+                                              whileTap={{ scale: 0.9 }}
+                                            >
+                                              {currentQuestion.correctAnswer === index && (
+                                                <motion.div
+                                                  initial={{ scale: 0 }}
+                                                  animate={{ scale: 1 }}
+                                                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                                >
+                                                  <CheckIcon className="text-white text-sm" />
+                                                </motion.div>
+                                              )}
+                                            </motion.div>
+                                            
+                                            <motion.input
+                                              type="text"
+                                              value={option}
+                                              onChange={(e) => handleOptionChange(index, e.target.value)}
+                                              className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 group-hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                                              placeholder={`Option ${index + 1}`}
+                                              whileFocus={{ scale: 1.02 }}
+                                            />
+
+                                            <motion.button
+                                              onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: index }))}
+                                              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                                                currentQuestion.correctAnswer === index
+                                                  ? 'bg-[#6366f1] text-white'
+                                                  : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
+                                              }`}
+                                              whileHover={{ scale: 1.05 }}
+                                              whileTap={{ scale: 0.95 }}
+                                            >
+                                              Correct
+                                            </motion.button>
+                                          </div>
+
+                                          {currentQuestion.correctAnswer === index && (
+                                            <motion.div
+                                              className="absolute -right-2 -top-2 w-4 h-4 rounded-full bg-[#6366f1] shadow-lg"
+                                              initial={{ scale: 0 }}
+                                              animate={{ scale: 1 }}
+                                              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                            />
+                                          )}
+                                        </motion.div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
 
@@ -927,26 +935,26 @@ const QuizCreationPage: React.FC = () => {
                                       <ListIcon className="text-[#6366f1]" />
                                       Options (Select all correct answers)
                                     </label>
-                                    {currentQuestion.options.map((option, index) => (
+                                      {currentQuestion.options.map((option, index) => (
                                       <div key={index} className="flex gap-2 mb-2">
-                                        <motion.input
+                                            <motion.input
                                           type="checkbox"
                                           checked={Array.isArray(currentQuestion.correctAnswer) && (currentQuestion.correctAnswer as number[]).includes(index)}
                                           onChange={(e) => {
                                             const currentIndex = index;
-                                            const currentAnswers = Array.isArray(currentQuestion.correctAnswer) 
-                                              ? currentQuestion.correctAnswer as number[]
-                                              : [];
-                                            
+                                                const currentAnswers = Array.isArray(currentQuestion.correctAnswer) 
+                                                  ? currentQuestion.correctAnswer as number[]
+                                                  : [];
+                                                
                                             const newCorrectAnswers = e.target.checked
                                               ? [...currentAnswers, currentIndex]
                                               : currentAnswers.filter(i => i !== currentIndex);
-                                            
-                                            setCurrentQuestion(prev => ({
-                                              ...prev,
-                                              correctAnswer: newCorrectAnswers
-                                            }));
-                                          }}
+                                                
+                                                setCurrentQuestion(prev => ({
+                                                  ...prev,
+                                                  correctAnswer: newCorrectAnswers
+                                                }));
+                                              }}
                                           className="mt-3 accent-[#6366f1]"
                                           whileHover={{ scale: 1.1 }}
                                         />
@@ -958,7 +966,7 @@ const QuizCreationPage: React.FC = () => {
                                           placeholder={`Option ${index + 1}`}
                                           whileHover={{ scale: 1.01 }}
                                         />
-                                      </div>
+                                          </div>
                                     ))}
                                   </div>
                                 )}
@@ -1197,17 +1205,58 @@ const QuizCreationPage: React.FC = () => {
                                   <div>
                                     <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                                       <StarIcon className="text-[#6366f1]" />
-                                      Points for this Question
+                                      Points
                                     </label>
                                     <div className="relative">
-                                      <input
-                                        type="number"
-                                        name="points"
-                                        value={currentQuestion.points}
-                                        onChange={handleQuestionChange}
-                                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
-                                        min="0"
-                                      />
+                                      <div className="flex items-center gap-4">
+                                        <motion.button
+                                          onClick={() => setCurrentQuestion(prev => ({ ...prev, points: Math.max(1, prev.points - 10) }))}
+                                          className="p-2 bg-[#2d2f3d] rounded-lg hover:bg-[#6366f1]/20 transition-colors"
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.9 }}
+                                        >
+                                          <MinusIcon className="text-[#6366f1]" />
+                                        </motion.button>
+                                        
+                                        <div className="flex-1">
+                                          <motion.div
+                                            className="h-2 bg-[#2d2f3d] rounded-full overflow-hidden"
+                                            whileHover={{ scale: 1.02 }}
+                                          >
+                                            <motion.div
+                                              className="h-full bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899]"
+                                              style={{ width: `${(currentQuestion.points / 100) * 100}%` }}
+                                              initial={{ width: 0 }}
+                                              animate={{ width: `${(currentQuestion.points / 100) * 100}%` }}
+                                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                            />
+                                          </motion.div>
+                                        </div>
+
+                                        <motion.button
+                                          onClick={() => setCurrentQuestion(prev => ({ ...prev, points: Math.min(100, prev.points + 10) }))}
+                                          className="p-2 bg-[#2d2f3d] rounded-lg hover:bg-[#6366f1]/20 transition-colors"
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.9 }}
+                                        >
+                                          <PlusIcon className="text-[#6366f1]" />
+                                        </motion.button>
+                                      </div>
+
+                                      <motion.div
+                                        className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-[#2d2f3d] rounded-lg text-white text-sm font-medium shadow-lg"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                      >
+                                        {currentQuestion.points} points
+                                      </motion.div>
+
+                                      <div className="flex justify-between mt-2 text-xs text-gray-400">
+                                        <span>1</span>
+                                        <span>50</span>
+                                        <span>100</span>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1337,29 +1386,68 @@ const QuizCreationPage: React.FC = () => {
                           <ListIcon className="text-[#6366f1]" />
                           Options
                         </label>
-                        {currentQuestion.options.map((option, index) => (
-                          <div key={index} className="flex gap-2 mb-2">
-                            <motion.input
-                              type="radio"
-                              name="correctAnswer"
-                              checked={currentQuestion.correctAnswer === index}
-                              onChange={() => setCurrentQuestion(prev => ({
-                                ...prev,
-                                correctAnswer: index
-                              }))}
-                              className="mt-3 accent-[#6366f1]"
-                              whileHover={{ scale: 1.1 }}
-                            />
-                            <motion.input
-                              type="text"
-                              value={option}
-                              onChange={(e) => handleOptionChange(index, e.target.value)}
-                              className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
-                              placeholder={`Option ${index + 1}`}
+                        <div className="space-y-3">
+                          {currentQuestion.options.map((option, index) => (
+                            <motion.div
+                              key={index}
+                              className="relative group"
                               whileHover={{ scale: 1.01 }}
-                            />
-                          </div>
-                        ))}
+                            >
+                              <div className="flex items-center gap-3">
+                                <motion.div
+                                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                                    currentQuestion.correctAnswer === index
+                                      ? 'border-[#6366f1] bg-[#6366f1]'
+                                      : 'border-white/20 group-hover:border-[#6366f1]/50'
+                                  }`}
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                                  {currentQuestion.correctAnswer === index && (
+                                    <motion.div
+                                      initial={{ scale: 0 }}
+                                      animate={{ scale: 1 }}
+                                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                    >
+                                      <CheckIcon className="text-white text-sm" />
+                                    </motion.div>
+                                  )}
+                                </motion.div>
+                                
+                                <motion.input
+                                  type="text"
+                                  value={option}
+                                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                                  className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 group-hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                                  placeholder={`Option ${index + 1}`}
+                                  whileFocus={{ scale: 1.02 }}
+                                />
+
+                                <motion.button
+                                  onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: index }))}
+                                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                                    currentQuestion.correctAnswer === index
+                                      ? 'bg-[#6366f1] text-white'
+                                      : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
+                                  }`}
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  Correct
+                                </motion.button>
+                              </div>
+
+                              {currentQuestion.correctAnswer === index && (
+                                <motion.div
+                                  className="absolute -right-2 -top-2 w-4 h-4 rounded-full bg-[#6366f1] shadow-lg"
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                />
+                              )}
+                            </motion.div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
@@ -1369,7 +1457,7 @@ const QuizCreationPage: React.FC = () => {
                           <ListIcon className="text-[#6366f1]" />
                           Options (Select all correct answers)
                         </label>
-                        {currentQuestion.options.map((option, index) => (
+                          {currentQuestion.options.map((option, index) => (
                           <div key={index} className="flex gap-2 mb-2">
                             <motion.input
                               type="checkbox"
@@ -1629,16 +1717,11 @@ const QuizCreationPage: React.FC = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                           <ClockIcon className="text-[#6366f1]" />
-                          Time Limit (seconds)
+                          Time Limit
                         </label>
-                        <motion.input
-                          type="number"
-                          name="timeLimit"
+                        <TimeLimitSelector
                           value={currentQuestion.timeLimit}
-                          onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
-                          min="5"
-                          whileHover={{ scale: 1.01 }}
+                          onChange={(value) => setCurrentQuestion(prev => ({ ...prev, timeLimit: value }))}
                         />
                       </div>
                       <div>
@@ -1646,15 +1729,57 @@ const QuizCreationPage: React.FC = () => {
                           <StarIcon className="text-[#6366f1]" />
                           Points
                         </label>
-                        <motion.input
-                          type="number"
-                          name="points"
-                          value={currentQuestion.points}
-                          onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
-                          min="1"
-                          whileHover={{ scale: 1.01 }}
-                        />
+                        <div className="relative">
+                          <div className="flex items-center gap-4">
+                            <motion.button
+                              onClick={() => setCurrentQuestion(prev => ({ ...prev, points: Math.max(1, prev.points - 10) }))}
+                              className="p-2 bg-[#2d2f3d] rounded-lg hover:bg-[#6366f1]/20 transition-colors"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                              <MinusIcon className="text-[#6366f1]" />
+                            </motion.button>
+                            
+                            <div className="flex-1">
+                                    <motion.div
+                                className="h-2 bg-[#2d2f3d] rounded-full overflow-hidden"
+                                whileHover={{ scale: 1.02 }}
+                              >
+                                <motion.div
+                                  className="h-full bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899]"
+                                  style={{ width: `${(currentQuestion.points / 100) * 100}%` }}
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${(currentQuestion.points / 100) * 100}%` }}
+                                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                                    </motion.div>
+                            </div>
+
+                            <motion.button
+                              onClick={() => setCurrentQuestion(prev => ({ ...prev, points: Math.min(100, prev.points + 10) }))}
+                              className="p-2 bg-[#2d2f3d] rounded-lg hover:bg-[#6366f1]/20 transition-colors"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <PlusIcon className="text-[#6366f1]" />
+                            </motion.button>
+                          </div>
+
+                          <motion.div
+                            className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-[#2d2f3d] rounded-lg text-white text-sm font-medium shadow-lg"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          >
+                            {currentQuestion.points} points
+                                </motion.div>
+                                
+                          <div className="flex justify-between mt-2 text-xs text-gray-400">
+                            <span>1</span>
+                            <span>50</span>
+                            <span>100</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -1674,7 +1799,7 @@ const QuizCreationPage: React.FC = () => {
                       />
                     </div>
 
-                    <motion.button
+                                <motion.button
                       onClick={handleAddQuestion}
                       className="w-full px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2"
                       whileHover={{ scale: 1.02 }}
@@ -1742,9 +1867,9 @@ const QuizCreationPage: React.FC = () => {
                       navigate(`/quiz/${createdQuizId}`);
                     }}
                     className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg shadow-[0_0_10px_rgba(99,102,241,0.3)] hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
                     Play Quiz
                   </motion.button>
                   <motion.button
@@ -1757,8 +1882,8 @@ const QuizCreationPage: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                   >
                     Explore
-                  </motion.button>
-                </div>
+                                </motion.button>
+                              </div>
               </div>
             </motion.div>
           </motion.div>
