@@ -8,31 +8,13 @@ interface AuthContextType {
   logout: () => void;
   isAuthenticated: boolean;
   updateUser: (userData: Partial<User>) => void;
+  setUser: (user: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>({
-    id: '1',
-    username: 'testuser',
-    avatar: {
-      baseCharacter: 'default',
-      accessories: [],
-      colors: {},
-      unlocks: [],
-    },
-    stats: {
-      totalScore: 0,
-      quizzesTaken: 0,
-      winRate: 0,
-      categoryScores: {},
-      streakDays: 0,
-      achievements: [],
-    },
-    inventory: [],
-    friends: [],
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
@@ -49,7 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, updateUser, setUser }}>
       {children}
     </AuthContext.Provider>
   );
