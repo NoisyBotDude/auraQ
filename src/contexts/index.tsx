@@ -14,7 +14,26 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    id: '1',
+    username: 'testuser',
+    avatar: {
+      baseCharacter: 'default',
+      accessories: [],
+      colors: {},
+      unlocks: [],
+    },
+    stats: {
+      totalScore: 0,
+      quizzesTaken: 0,
+      winRate: 0,
+      categoryScores: {},
+      streakDays: 0,
+      achievements: [],
+    },
+    inventory: [],
+    friends: [],
+  });
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
