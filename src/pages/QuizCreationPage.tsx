@@ -30,7 +30,20 @@ import {
   FaCaretDown,
   FaSort,
   FaLightbulb,
+  FaTimes,
+  FaFilter,
+  FaFont,
+  FaParagraph,
+  FaCalendar,
+  FaUpload,
+  FaTable,
+  FaCheckSquare,
+  FaRuler,
+  FaSortAmountDown,
+  FaLink,
+  FaImage,
 } from 'react-icons/fa';
+import { IconType } from 'react-icons';
 import BackButton from '../components/shared/BackButton';
 
 
@@ -53,6 +66,17 @@ const CheckCircleIcon = FaCheckCircle as React.FC<React.SVGProps<SVGSVGElement>>
 const CaretDownIcon = FaCaretDown as React.FC<React.SVGProps<SVGSVGElement>>; 
 const EditIcon = FaEdit as React.FC<React.SVGProps<SVGSVGElement>>;
 const LightbulbIcon = FaLightbulb as React.FC<React.SVGProps<SVGSVGElement>>;
+const FontIcon = FaFont as React.FC<React.SVGProps<SVGSVGElement>>;
+const ParagraphIcon = FaParagraph as React.FC<React.SVGProps<SVGSVGElement>>;
+const CalendarIcon = FaCalendar as React.FC<React.SVGProps<SVGSVGElement>>;
+const UploadIcon = FaUpload as React.FC<React.SVGProps<SVGSVGElement>>;
+const TableIcon = FaTable as React.FC<React.SVGProps<SVGSVGElement>>;
+const TimesIcon = FaTimes as React.FC<React.SVGProps<SVGSVGElement>>;
+const FilterIcon = FaFilter as React.FC<React.SVGProps<SVGSVGElement>>;
+const CheckSquareIcon = FaCheckSquare as React.FC<React.SVGProps<SVGSVGElement>>;
+const RulerIcon = FaRuler as React.FC<React.SVGProps<SVGSVGElement>>;
+const SortAmountDownIcon = FaSortAmountDown as React.FC<React.SVGProps<SVGSVGElement>>;
+const LinkIcon = FaLink as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface QuestionForm extends Omit<Question, 'id'> {
   id?: string;
@@ -92,13 +116,79 @@ const QuizCreationPage: React.FC = () => {
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [isQuestionFormOpen, setIsQuestionFormOpen] = useState(true);
 
-  const questionTypes: { value: QuestionType; label: string; icon: typeof FaCheckCircle }[] = [
-    { value: 'single', label: 'Single Choice', icon: FaCheckCircle },
-    { value: 'multiple', label: 'Multiple Choice', icon: FaList },
-    { value: 'dropdown', label: 'Dropdown', icon: FaCaretDown },
-    { value: 'scale', label: 'Linear Scale', icon: FaChartLine },
-    { value: 'truefalse', label: 'True/False', icon: FaCheck },
-    { value: 'matching', label: 'Matching', icon: FaSort }
+  const questionTypes: { value: QuestionType; label: string; icon: any; description: string }[] = [
+    {
+      value: 'short_answer',
+      label: 'Short Answer',
+      icon: FontIcon,
+      description: 'A brief text response'
+    },
+    {
+      value: 'paragraph',
+      label: 'Paragraph',
+      icon: ParagraphIcon,
+      description: 'A longer text response'
+    },
+    {
+      value: 'multiple',
+      label: 'Multiple Choice',
+      icon: CheckCircleIcon,
+      description: 'Choose one from multiple options'
+    },
+    {
+      value: 'multiple',
+      label: 'Checkbox',
+      icon: CheckSquareIcon,
+      description: 'Allow users to select multiple options'
+    },
+    {
+      value: 'dropdown',
+      label: 'Dropdown',
+      icon: CaretDownIcon,
+      description: 'Select from a dropdown menu'
+    },
+    {
+      value: 'date',
+      label: 'Date',
+      icon: CalendarIcon,
+      description: 'Pick a date'
+    },
+    {
+      value: 'time',
+      label: 'Time',
+      icon: ClockIcon,
+      description: 'Pick a time'
+    },
+    {
+      value: 'file_upload',
+      label: 'File Upload',
+      icon: UploadIcon,
+      description: 'Upload a file'
+    },
+    {
+      value: 'grid',
+      label: 'Grid',
+      icon: TableIcon,
+      description: 'Multiple choice grid'
+    },
+    {
+      value: 'scale',
+      label: 'Linear Scale',
+      icon: RulerIcon,
+      description: 'Rate on a numeric scale'
+    },
+    {
+      value: 'ranking',
+      label: 'Ranking',
+      icon: SortAmountDownIcon,
+      description: 'Rank options in order'
+    },
+    {
+      value: 'matching',
+      label: 'Matching',
+      icon: LinkIcon,
+      description: 'Match items from two columns'
+    },
   ];
 
   const handleQuizInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -146,21 +236,56 @@ const QuizCreationPage: React.FC = () => {
       const newQuestion = { ...prev, type };
       
       switch (type) {
+        case 'short_answer':
+        case 'paragraph':
+          newQuestion.options = [];
+          newQuestion.correctAnswer = '';
+          break;
         case 'truefalse':
           newQuestion.options = ['True', 'False'];
+          newQuestion.correctAnswer = 0;
           break;
         case 'scale':
           newQuestion.options = ['1', '2', '3', '4', '5'];
           newQuestion.scaleRange = { min: 1, max: 5, labels: { start: 'Poor', end: 'Excellent' } };
+          newQuestion.correctAnswer = 0;
+          break;
+        case 'grid':
+          newQuestion.gridOptions = { rows: ['Row 1'], columns: ['Column 1', 'Column 2'] };
+          newQuestion.correctAnswer = [0];
+          break;
+        case 'date':
+          newQuestion.options = [];
+          newQuestion.dateRange = {};
+          newQuestion.correctAnswer = '';
+          break;
+        case 'time':
+          newQuestion.options = [];
+          newQuestion.timeRange = {};
+          newQuestion.correctAnswer = '';
+          break;
+        case 'file_upload':
+          newQuestion.options = [];
+          newQuestion.fileTypes = ['pdf', 'doc', 'docx'];
+          newQuestion.maxFileSize = 5; // 5MB
+          newQuestion.correctAnswer = '';
+          break;
+        case 'ranking':
+          newQuestion.options = ['Option 1', 'Option 2', 'Option 3'];
+          newQuestion.correctAnswer = [0, 1, 2];
           break;
         case 'matching':
           newQuestion.matchingPairs = [{ left: '', right: '' }];
           newQuestion.options = [];
+          newQuestion.correctAnswer = [0];
+          break;
+        case 'multiple':
+          newQuestion.options = ['', '', '', ''];
+          newQuestion.correctAnswer = [];
           break;
         default:
-          if (!newQuestion.options.length) {
-            newQuestion.options = ['', '', '', ''];
-          }
+          newQuestion.options = ['', '', '', ''];
+          newQuestion.correctAnswer = 0;
       }
       
       return newQuestion;
@@ -172,8 +297,7 @@ const QuizCreationPage: React.FC = () => {
     if (question) {
       setCurrentQuestion(question);
       setEditingQuestionId(questionId);
-      setIsQuestionFormOpen(true);
-      setExpandedQuestion(null);
+      setExpandedQuestion(questionId);
     }
   };
 
@@ -341,7 +465,7 @@ const QuizCreationPage: React.FC = () => {
     if (category) {
       setQuizData(prev => ({
         ...prev,
-        category: category.name
+        category: category.id
       }));
     }
   };
@@ -349,7 +473,7 @@ const QuizCreationPage: React.FC = () => {
   const handleCategoryAdded = (category: Category) => {
     setQuizData(prev => ({
       ...prev,
-      category: category.name
+      category: category.id
     }));
   };
 
@@ -492,7 +616,7 @@ const QuizCreationPage: React.FC = () => {
                   <div className="flex gap-2">
                     <div className="relative flex-1">
                       <select
-                        value={quizData.category}
+                        value={quizData.category || ''}
                         onChange={(e) => handleCategorySelect(e.target.value)}
                         className={`w-full px-4 py-2 bg-[#2d2f3d] border ${
                           validationErrors.category ? 'border-red-500' : 'border-white/10'
@@ -664,22 +788,46 @@ const QuizCreationPage: React.FC = () => {
                           <span className="text-sm text-gray-400">({question.type})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <motion.button
-                            onClick={() => handleEditQuestion(question.id)}
-                            className="text-[#6366f1] hover:text-[#8b5cf6]"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <EditIcon />
-                          </motion.button>
-                          <motion.button
-                            onClick={() => setExpandedQuestion(expandedQuestion === question.id ? null : question.id)}
-                            className="text-[#6366f1] hover:text-[#8b5cf6]"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            {expandedQuestion === question.id ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                          </motion.button>
+                          {editingQuestionId === question.id ? (
+                            <motion.button
+                              onClick={() => {
+                                setEditingQuestionId(null);
+                                setCurrentQuestion({
+                                  text: '',
+                                  type: 'single',
+                                  options: ['', '', '', ''],
+                                  correctAnswer: 0,
+                                  timeLimit: 30,
+                                  points: 100,
+                                  hint: ''
+                                });
+                              }}
+                              className="text-yellow-500 hover:text-yellow-400"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <TimesIcon />
+                            </motion.button>
+                          ) : (
+                            <>
+                              <motion.button
+                                onClick={() => handleEditQuestion(question.id)}
+                                className="text-[#6366f1] hover:text-[#8b5cf6]"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
+                                <EditIcon />
+                              </motion.button>
+                              <motion.button
+                                onClick={() => setExpandedQuestion(expandedQuestion === question.id ? null : question.id)}
+                                className="text-[#6366f1] hover:text-[#8b5cf6]"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
+                                {expandedQuestion === question.id ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                              </motion.button>
+                            </>
+                          )}
                           <motion.button
                             onClick={() => handleDeleteQuestion(question.id)}
                             className="text-red-500 hover:text-red-400"
@@ -700,35 +848,167 @@ const QuizCreationPage: React.FC = () => {
                             transition={{ duration: 0.3 }}
                             className="overflow-hidden"
                           >
-                            <p className="text-gray-400 mb-4">{question.text}</p>
-                            {question.hint && (
-                              <div className="flex items-center gap-2 text-sm text-yellow-400 mb-4">
-                                <LightbulbIcon />
-                                <span>Hint: {question.hint}</span>
-                              </div>
-                            )}
-                            <div className="space-y-2">
-                              {question.options.map((option, i) => (
-                                <div key={i} className="flex items-center gap-2">
-                                  {i === question.correctAnswer ? (
-                                    <CheckIcon className="text-green-500" />
-                                  ) : (
-                                    <TimesCircleIcon className="text-red-500" />
-                                  )}
-                                  <span className="text-gray-300">{option}</span>
+                            {editingQuestionId === question.id ? (
+                              <div className="space-y-4">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                    < FilterIcon className="text-[#6366f1]" />
+                                    Question Type
+                                  </label>
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    {questionTypes.map(({ value, label, icon: Icon }) => (
+                                      <motion.button
+                                        key={value}
+                                        onClick={() => handleQuestionTypeChange(value)}
+                                        className={`px-3 py-2 rounded-lg flex items-center gap-2 ${
+                                          currentQuestion.type === value
+                                            ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                            : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
+                                        }`}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                      >
+                                        <Icon />
+                                        <span className="text-sm">{label}</span>
+                                      </motion.button>
+                                    ))}
+                                  </div>
                                 </div>
-                              ))}
-                            </div>
-                            <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
-                              <div className="flex items-center gap-2">
-                                <ClockIcon className="text-[#6366f1]" />
-                                <span>{question.timeLimit}s</span>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                    <QuestionIcon className="text-[#6366f1]" />
+                                    Question Text
+                                  </label>
+                                  <motion.textarea
+                                    name="text"
+                                    value={currentQuestion.text}
+                                    onChange={handleQuestionChange}
+                                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                                    rows={3}
+                                    placeholder="Enter question text"
+                                    whileHover={{ scale: 1.01 }}
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                    <ListIcon className="text-[#6366f1]" />
+                                    Options
+                                  </label>
+                                  {currentQuestion.options.map((option, index) => (
+                                    <div key={index} className="flex gap-2 mb-2">
+                                      <motion.input
+                                        type="radio"
+                                        name="correctAnswer"
+                                        checked={currentQuestion.correctAnswer === index}
+                                        onChange={() => setCurrentQuestion(prev => ({
+                                          ...prev,
+                                          correctAnswer: index
+                                        }))}
+                                        className="mt-3 accent-[#6366f1]"
+                                        whileHover={{ scale: 1.1 }}
+                                      />
+                                      <motion.input
+                                        type="text"
+                                        value={option}
+                                        onChange={(e) => handleOptionChange(index, e.target.value)}
+                                        className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                                        placeholder={`Option ${index + 1}`}
+                                        whileHover={{ scale: 1.01 }}
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ClockIcon className="text-[#6366f1]" />
+                                      Time Limit
+                                    </label>
+                                    <TimeLimitSelector
+                                      value={currentQuestion.timeLimit}
+                                      onChange={(value) => setCurrentQuestion(prev => ({ ...prev, timeLimit: value }))}
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <StarIcon className="text-[#6366f1]" />
+                                      Points for this Question
+                                    </label>
+                                    <div className="relative">
+                                      <input
+                                        type="number"
+                                        name="points"
+                                        value={currentQuestion.points}
+                                        onChange={handleQuestionChange}
+                                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                        min="0"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                    <LightbulbIcon className="text-[#6366f1]" />
+                                    Hint (Optional)
+                                  </label>
+                                  <motion.textarea
+                                    name="hint"
+                                    value={currentQuestion.hint}
+                                    onChange={handleQuestionChange}
+                                    className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                                    rows={2}
+                                    placeholder="Enter a hint for this question (optional)"
+                                    whileHover={{ scale: 1.01 }}
+                                  />
+                                </div>
+
+                                <motion.button
+                                  onClick={handleAddQuestion}
+                                  className="w-full px-4 py-2 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-lg flex items-center justify-center gap-2"
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <EditIcon />
+                                  Update Question
+                                </motion.button>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <StarIcon className="text-[#6366f1]" />
-                                <span>{question.points} points</span>
-                              </div>
-                            </div>
+                            ) : (
+                              <>
+                                <p className="text-gray-400 mb-4">{question.text}</p>
+                                {question.hint && (
+                                  <div className="flex items-center gap-2 text-sm text-yellow-400 mb-4">
+                                    <LightbulbIcon />
+                                    <span>Hint: {question.hint}</span>
+                                  </div>
+                                )}
+                                <div className="space-y-2">
+                                  {question.options.map((option, i) => (
+                                    <div key={i} className="flex items-center gap-2">
+                                      {i === question.correctAnswer ? (
+                                        <CheckIcon className="text-green-500" />
+                                      ) : (
+                                        <TimesCircleIcon className="text-red-500" />
+                                      )}
+                                      <span className="text-gray-300">{option}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className="flex items-center gap-4 mt-4 text-sm text-gray-400">
+                                  <div className="flex items-center gap-2">
+                                    <ClockIcon className="text-[#6366f1]" />
+                                    <span>{question.timeLimit}s</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <StarIcon className="text-[#6366f1]" />
+                                    <span>{question.points} points</span>
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </motion.div>
                         )}
                       </AnimatePresence>

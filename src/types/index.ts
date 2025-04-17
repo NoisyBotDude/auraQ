@@ -40,20 +40,39 @@ export interface Achievement {
   unlockedAt: Date;
 }
 
-export type QuestionType = 'single' | 'multiple' | 'dropdown' | 'scale' | 'truefalse' | 'matching';
+export type QuestionType = 
+  | 'short_answer'
+  | 'paragraph'
+  | 'single'
+  | 'multiple'
+  | 'dropdown'
+  | 'scale'
+  | 'grid'
+  | 'date'
+  | 'time'
+  | 'file_upload'
+  | 'ranking'
+  | 'matching'
+  | 'truefalse';
 
 export interface Question {
   id: string;
   text: string;
   type: QuestionType;
   options: string[];
-  correctAnswer: number | number[];
+  correctAnswer: number | number[] | string | string[];
   timeLimit: number;
   points: number;
   explanation?: string;
   hint?: string;
   matchingPairs?: { left: string; right: string }[];
   scaleRange?: { min: number; max: number; labels?: { start: string; end: string } };
+  gridOptions?: { rows: string[]; columns: string[] };
+  dateRange?: { min?: string; max?: string };
+  timeRange?: { min?: string; max?: string };
+  fileTypes?: string[];
+  maxFileSize?: number;
+  required?: boolean;
 }
 
 export interface Quiz {
