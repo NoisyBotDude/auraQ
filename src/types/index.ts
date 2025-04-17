@@ -53,7 +53,9 @@ export type QuestionType =
   | 'file_upload'
   | 'ranking'
   | 'matching'
-  | 'truefalse';
+  | 'truefalse'
+  | 'checkbox'
+  | 'image';
 
 export interface Question {
   id: string;

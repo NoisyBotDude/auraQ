@@ -78,8 +78,31 @@ const RulerIcon = FaRuler as React.FC<React.SVGProps<SVGSVGElement>>;
 const SortAmountDownIcon = FaSortAmountDown as React.FC<React.SVGProps<SVGSVGElement>>;
 const LinkIcon = FaLink as React.FC<React.SVGProps<SVGSVGElement>>;
 
-interface QuestionForm extends Omit<Question, 'id'> {
+interface QuestionForm {
   id?: string;
+  text: string;
+  type: QuestionType;
+  options: string[];
+  correctAnswer: number | number[] | string | string[];
+  timeLimit: number;
+  points: number;
+  explanation?: string;
+  hint?: string;
+  matchingPairs?: { left: string; right: string }[];
+  scaleRange?: {
+    min: number;
+    max: number;
+    labels?: {
+      start: string;
+      end: string;
+    };
+  };
+  gridOptions?: { rows: string[]; columns: string[] };
+  dateRange?: { min?: string; max?: string };
+  timeRange?: { min?: string; max?: string };
+  fileTypes?: string[];
+  maxFileSize?: number;
+  required?: boolean;
 }
 
 const QuizCreationPage: React.FC = () => {
@@ -118,58 +141,22 @@ const QuizCreationPage: React.FC = () => {
 
   const questionTypes: { value: QuestionType; label: string; icon: any; description: string }[] = [
     {
-      value: 'short_answer',
-      label: 'Short Answer',
-      icon: FontIcon,
-      description: 'A brief text response'
-    },
-    {
-      value: 'paragraph',
-      label: 'Paragraph',
-      icon: ParagraphIcon,
-      description: 'A longer text response'
-    },
-    {
-      value: 'multiple',
-      label: 'Multiple Choice',
+      value: 'single',
+      label: 'Single Choice',
       icon: CheckCircleIcon,
       description: 'Choose one from multiple options'
     },
     {
       value: 'multiple',
-      label: 'Checkbox',
+      label: 'Multiple Choice',
       icon: CheckSquareIcon,
-      description: 'Allow users to select multiple options'
+      description: 'Select multiple correct answers'
     },
     {
-      value: 'dropdown',
-      label: 'Dropdown',
-      icon: CaretDownIcon,
-      description: 'Select from a dropdown menu'
-    },
-    {
-      value: 'date',
-      label: 'Date',
-      icon: CalendarIcon,
-      description: 'Pick a date'
-    },
-    {
-      value: 'time',
-      label: 'Time',
-      icon: ClockIcon,
-      description: 'Pick a time'
-    },
-    {
-      value: 'file_upload',
-      label: 'File Upload',
-      icon: UploadIcon,
-      description: 'Upload a file'
-    },
-    {
-      value: 'grid',
-      label: 'Grid',
-      icon: TableIcon,
-      description: 'Multiple choice grid'
+      value: 'short_answer',
+      label: 'Short Answer',
+      icon: FontIcon,
+      description: 'A brief text response'
     },
     {
       value: 'scale',
@@ -178,17 +165,17 @@ const QuizCreationPage: React.FC = () => {
       description: 'Rate on a numeric scale'
     },
     {
-      value: 'ranking',
-      label: 'Ranking',
-      icon: SortAmountDownIcon,
-      description: 'Rank options in order'
+      value: 'truefalse',
+      label: 'True/False',
+      icon: CheckIcon,
+      description: 'Simple true or false question'
     },
     {
-      value: 'matching',
-      label: 'Matching',
-      icon: LinkIcon,
-      description: 'Match items from two columns'
-    },
+      value: 'date',
+      label: 'Date',
+      icon: CalendarIcon,
+      description: 'Pick a date'
+    }
   ];
 
   const handleQuizInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -233,62 +220,34 @@ const QuizCreationPage: React.FC = () => {
 
   const handleQuestionTypeChange = (type: QuestionType) => {
     setCurrentQuestion(prev => {
-      const newQuestion = { ...prev, type };
-      
+      let options = ['', '', '', ''];
+      let correctAnswer: number | number[] = 0;
+      let scaleRange = undefined;
+
       switch (type) {
-        case 'short_answer':
-        case 'paragraph':
-          newQuestion.options = [];
-          newQuestion.correctAnswer = '';
-          break;
         case 'truefalse':
-          newQuestion.options = ['True', 'False'];
-          newQuestion.correctAnswer = 0;
-          break;
-        case 'scale':
-          newQuestion.options = ['1', '2', '3', '4', '5'];
-          newQuestion.scaleRange = { min: 1, max: 5, labels: { start: 'Poor', end: 'Excellent' } };
-          newQuestion.correctAnswer = 0;
-          break;
-        case 'grid':
-          newQuestion.gridOptions = { rows: ['Row 1'], columns: ['Column 1', 'Column 2'] };
-          newQuestion.correctAnswer = [0];
-          break;
-        case 'date':
-          newQuestion.options = [];
-          newQuestion.dateRange = {};
-          newQuestion.correctAnswer = '';
-          break;
-        case 'time':
-          newQuestion.options = [];
-          newQuestion.timeRange = {};
-          newQuestion.correctAnswer = '';
-          break;
-        case 'file_upload':
-          newQuestion.options = [];
-          newQuestion.fileTypes = ['pdf', 'doc', 'docx'];
-          newQuestion.maxFileSize = 5; // 5MB
-          newQuestion.correctAnswer = '';
-          break;
-        case 'ranking':
-          newQuestion.options = ['Option 1', 'Option 2', 'Option 3'];
-          newQuestion.correctAnswer = [0, 1, 2];
-          break;
-        case 'matching':
-          newQuestion.matchingPairs = [{ left: '', right: '' }];
-          newQuestion.options = [];
-          newQuestion.correctAnswer = [0];
+          options = ['True', 'False'];
+          correctAnswer = 0;
           break;
         case 'multiple':
-          newQuestion.options = ['', '', '', ''];
-          newQuestion.correctAnswer = [];
+          correctAnswer = [];
           break;
-        default:
-          newQuestion.options = ['', '', '', ''];
-          newQuestion.correctAnswer = 0;
+        case 'scale':
+          scaleRange = {
+            min: 1,
+            max: 5,
+            labels: { start: '', end: '' }
+          };
+          break;
       }
-      
-      return newQuestion;
+
+      return {
+        ...prev,
+        type,
+        options,
+        correctAnswer,
+        scaleRange
+      };
     });
   };
 
@@ -330,12 +289,34 @@ const QuizCreationPage: React.FC = () => {
       return;
     }
 
-    if (currentQuestion.type !== 'matching' && currentQuestion.options.some(opt => !opt.trim())) {
-      addNotification({
-        message: 'Please fill in all options',
-        type: 'error'
-      });
-      return;
+    // Validate based on question type
+    switch (currentQuestion.type) {
+      case 'single':
+      case 'multiple':
+        if (currentQuestion.options.some(opt => !opt.trim())) {
+          addNotification({
+            message: 'Please fill in all options',
+            type: 'error'
+          });
+          return;
+        }
+        if (currentQuestion.type === 'multiple' && !Array.isArray(currentQuestion.correctAnswer)) {
+          setCurrentQuestion(prev => ({
+            ...prev,
+            correctAnswer: []
+          }));
+        }
+        break;
+      case 'short_answer':
+      case 'paragraph':
+        if (!currentQuestion.correctAnswer || (typeof currentQuestion.correctAnswer === 'string' && !currentQuestion.correctAnswer.trim())) {
+          addNotification({
+            message: 'Please provide a correct answer',
+            type: 'error'
+          });
+          return;
+        }
+        break;
     }
 
     if (currentQuestion.timeLimit <= 0) {
@@ -354,9 +335,24 @@ const QuizCreationPage: React.FC = () => {
       return;
     }
 
-    const newQuestion = {
-      ...currentQuestion,
-      id: editingQuestionId || Math.random().toString(36).substr(2, 9)
+    const newQuestion: Question = {
+      id: editingQuestionId || Math.random().toString(36).substr(2, 9),
+      text: currentQuestion.text,
+      type: currentQuestion.type,
+      options: currentQuestion.type === 'truefalse' ? ['True', 'False'] : currentQuestion.options,
+      correctAnswer: currentQuestion.correctAnswer,
+      timeLimit: currentQuestion.timeLimit,
+      points: currentQuestion.points,
+      explanation: currentQuestion.explanation,
+      hint: currentQuestion.hint,
+      matchingPairs: currentQuestion.matchingPairs,
+      scaleRange: currentQuestion.scaleRange,
+      gridOptions: currentQuestion.gridOptions,
+      dateRange: currentQuestion.dateRange,
+      timeRange: currentQuestion.timeRange,
+      fileTypes: currentQuestion.fileTypes,
+      maxFileSize: currentQuestion.maxFileSize,
+      required: currentQuestion.required
     };
 
     setQuizData(prev => ({
@@ -366,6 +362,7 @@ const QuizCreationPage: React.FC = () => {
         : [...(prev.questions || []), newQuestion]
     }));
 
+    // Reset form after adding question
     setCurrentQuestion({
       text: '',
       type: 'single',
@@ -891,35 +888,300 @@ const QuizCreationPage: React.FC = () => {
                                   />
                                 </div>
 
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                                    <ListIcon className="text-[#6366f1]" />
-                                    Options
-                                  </label>
-                                  {currentQuestion.options.map((option, index) => (
-                                    <div key={index} className="flex gap-2 mb-2">
+                                {/* Dynamic Question Options Based on Type */}
+                                {currentQuestion.type === 'single' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Options
+                                    </label>
+                                    {currentQuestion.options.map((option, index) => (
+                                      <div key={index} className="flex gap-2 mb-2">
+                                        <motion.input
+                                          type="radio"
+                                          name="correctAnswer"
+                                          checked={currentQuestion.correctAnswer === index}
+                                          onChange={() => setCurrentQuestion(prev => ({
+                                            ...prev,
+                                            correctAnswer: index
+                                          }))}
+                                          className="mt-3 accent-[#6366f1]"
+                                          whileHover={{ scale: 1.1 }}
+                                        />
+                                        <motion.input
+                                          type="text"
+                                          value={option}
+                                          onChange={(e) => handleOptionChange(index, e.target.value)}
+                                          className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                                          placeholder={`Option ${index + 1}`}
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {currentQuestion.type === 'multiple' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Options (Select all correct answers)
+                                    </label>
+                                    {currentQuestion.options.map((option, index) => (
+                                      <div key={index} className="flex gap-2 mb-2">
+                                        <motion.input
+                                          type="checkbox"
+                                          checked={Array.isArray(currentQuestion.correctAnswer) && (currentQuestion.correctAnswer as number[]).includes(index)}
+                                          onChange={(e) => {
+                                            const currentIndex = index;
+                                            const currentAnswers = Array.isArray(currentQuestion.correctAnswer) 
+                                              ? currentQuestion.correctAnswer as number[]
+                                              : [];
+                                            
+                                            const newCorrectAnswers = e.target.checked
+                                              ? [...currentAnswers, currentIndex]
+                                              : currentAnswers.filter(i => i !== currentIndex);
+                                            
+                                            setCurrentQuestion(prev => ({
+                                              ...prev,
+                                              correctAnswer: newCorrectAnswers
+                                            }));
+                                          }}
+                                          className="mt-3 accent-[#6366f1]"
+                                          whileHover={{ scale: 1.1 }}
+                                        />
+                                        <motion.input
+                                          type="text"
+                                          value={option}
+                                          onChange={(e) => handleOptionChange(index, e.target.value)}
+                                          className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                                          placeholder={`Option ${index + 1}`}
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {currentQuestion.type === 'short_answer' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Correct Answer
+                                    </label>
+                                    <motion.input
+                                      type="text"
+                                      value={typeof currentQuestion.correctAnswer === 'string' ? currentQuestion.correctAnswer : ''}
+                                      onChange={(e) => setCurrentQuestion(prev => ({
+                                        ...prev,
+                                        correctAnswer: e.target.value
+                                      }))}
+                                      className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                                      placeholder="Enter the correct answer"
+                                      whileHover={{ scale: 1.01 }}
+                                    />
+                                  </div>
+                                )}
+
+                                {currentQuestion.type === 'scale' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Scale Settings
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <label className="text-sm text-gray-400">Min Value</label>
+                                        <motion.input
+                                          type="number"
+                                          value={currentQuestion.scaleRange?.min || 1}
+                                          onChange={(e) => {
+                                            const min = parseInt(e.target.value);
+                                            setCurrentQuestion(prev => ({
+                                              ...prev,
+                                              scaleRange: {
+                                                min,
+                                                max: prev.scaleRange?.max || 5,
+                                                labels: {
+                                                  start: prev.scaleRange?.labels?.start || '',
+                                                  end: prev.scaleRange?.labels?.end || ''
+                                                }
+                                              }
+                                            }));
+                                          }}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          min="1"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="text-sm text-gray-400">Max Value</label>
+                                        <motion.input
+                                          type="number"
+                                          value={currentQuestion.scaleRange?.max || 5}
+                                          onChange={(e) => {
+                                            const max = parseInt(e.target.value);
+                                            setCurrentQuestion(prev => ({
+                                              ...prev,
+                                              scaleRange: {
+                                                min: prev.scaleRange?.min || 1,
+                                                max,
+                                                labels: {
+                                                  start: prev.scaleRange?.labels?.start || '',
+                                                  end: prev.scaleRange?.labels?.end || ''
+                                                }
+                                              }
+                                            }));
+                                          }}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          min="2"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                      <div>
+                                        <label className="text-sm text-gray-400">Start Label</label>
+                                        <motion.input
+                                          type="text"
+                                          value={currentQuestion.scaleRange?.labels?.start || ''}
+                                          onChange={(e) => {
+                                            const start = e.target.value;
+                                            setCurrentQuestion(prev => ({
+                                              ...prev,
+                                              scaleRange: {
+                                                min: prev.scaleRange?.min || 1,
+                                                max: prev.scaleRange?.max || 5,
+                                                labels: {
+                                                  start,
+                                                  end: prev.scaleRange?.labels?.end || ''
+                                                }
+                                              }
+                                            }));
+                                          }}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          placeholder="e.g., Poor"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="text-sm text-gray-400">End Label</label>
+                                        <motion.input
+                                          type="text"
+                                          value={currentQuestion.scaleRange?.labels?.end || ''}
+                                          onChange={(e) => {
+                                            const end = e.target.value;
+                                            setCurrentQuestion(prev => ({
+                                              ...prev,
+                                              scaleRange: {
+                                                min: prev.scaleRange?.min || 1,
+                                                max: prev.scaleRange?.max || 5,
+                                                labels: {
+                                                  start: prev.scaleRange?.labels?.start || '',
+                                                  end
+                                                }
+                                              }
+                                            }));
+                                          }}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          placeholder="e.g., Excellent"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {currentQuestion.type === 'truefalse' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Correct Answer
+                                    </label>
+                                    <div className="flex gap-4">
+                                      <motion.button
+                                        onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: 0 }))}
+                                        className={`flex-1 px-4 py-2 rounded-lg ${
+                                          currentQuestion.correctAnswer === 0
+                                            ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                            : 'bg-[#2d2f3d] text-gray-400'
+                                        }`}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                      >
+                                        True
+                                      </motion.button>
+                                      <motion.button
+                                        onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: 1 }))}
+                                        className={`flex-1 px-4 py-2 rounded-lg ${
+                                          currentQuestion.correctAnswer === 1
+                                            ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                            : 'bg-[#2d2f3d] text-gray-400'
+                                        }`}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                      >
+                                        False
+                                      </motion.button>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {currentQuestion.type === 'date' && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                                      <ListIcon className="text-[#6366f1]" />
+                                      Date Range (Optional)
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <label className="text-sm text-gray-400">Min Date</label>
+                                        <motion.input
+                                          type="date"
+                                          value={currentQuestion.dateRange?.min || ''}
+                                          onChange={(e) => setCurrentQuestion(prev => ({
+                                            ...prev,
+                                            dateRange: {
+                                              ...prev.dateRange,
+                                              min: e.target.value
+                                            }
+                                          }))}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="text-sm text-gray-400">Max Date</label>
+                                        <motion.input
+                                          type="date"
+                                          value={currentQuestion.dateRange?.max || ''}
+                                          onChange={(e) => setCurrentQuestion(prev => ({
+                                            ...prev,
+                                            dateRange: {
+                                              ...prev.dateRange,
+                                              max: e.target.value
+                                            }
+                                          }))}
+                                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                                          whileHover={{ scale: 1.01 }}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="mt-4">
+                                      <label className="text-sm text-gray-400">Correct Date</label>
                                       <motion.input
-                                        type="radio"
-                                        name="correctAnswer"
-                                        checked={currentQuestion.correctAnswer === index}
-                                        onChange={() => setCurrentQuestion(prev => ({
+                                        type="date"
+                                        value={typeof currentQuestion.correctAnswer === 'string' ? currentQuestion.correctAnswer : ''}
+                                        onChange={(e) => setCurrentQuestion(prev => ({
                                           ...prev,
-                                          correctAnswer: index
+                                          correctAnswer: e.target.value
                                         }))}
-                                        className="mt-3 accent-[#6366f1]"
-                                        whileHover={{ scale: 1.1 }}
-                                      />
-                                      <motion.input
-                                        type="text"
-                                        value={option}
-                                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                                        className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
-                                        placeholder={`Option ${index + 1}`}
+                                        className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
                                         whileHover={{ scale: 1.01 }}
                                       />
                                     </div>
-                                  ))}
-                                </div>
+                                  </div>
+                                )}
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                   <div>
@@ -1029,6 +1291,31 @@ const QuizCreationPage: React.FC = () => {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                        <FilterIcon className="text-[#6366f1]" />
+                        Question Type
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {questionTypes.map(({ value, label, icon: Icon }) => (
+                          <motion.button
+                            key={value}
+                            onClick={() => handleQuestionTypeChange(value)}
+                            className={`px-3 py-2 rounded-lg flex items-center gap-2 ${
+                              currentQuestion.type === value
+                                ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                : 'bg-[#2d2f3d] text-gray-400 hover:bg-[#6366f1]/20 hover:text-white'
+                            }`}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Icon />
+                            <span className="text-sm">{label}</span>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                         <QuestionIcon className="text-[#6366f1]" />
                         Question Text
                       </label>
@@ -1043,65 +1330,330 @@ const QuizCreationPage: React.FC = () => {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                        <ListIcon className="text-[#6366f1]" />
-                        Options
-                      </label>
-                      {currentQuestion.options.map((option, index) => (
-                        <div key={index} className="flex gap-2 mb-2">
+                    {/* Dynamic Question Options Based on Type */}
+                    {currentQuestion.type === 'single' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Options
+                        </label>
+                        {currentQuestion.options.map((option, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <motion.input
+                              type="radio"
+                              name="correctAnswer"
+                              checked={currentQuestion.correctAnswer === index}
+                              onChange={() => setCurrentQuestion(prev => ({
+                                ...prev,
+                                correctAnswer: index
+                              }))}
+                              className="mt-3 accent-[#6366f1]"
+                              whileHover={{ scale: 1.1 }}
+                            />
+                            <motion.input
+                              type="text"
+                              value={option}
+                              onChange={(e) => handleOptionChange(index, e.target.value)}
+                              className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                              placeholder={`Option ${index + 1}`}
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {currentQuestion.type === 'multiple' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Options (Select all correct answers)
+                        </label>
+                        {currentQuestion.options.map((option, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <motion.input
+                              type="checkbox"
+                              checked={Array.isArray(currentQuestion.correctAnswer) && (currentQuestion.correctAnswer as number[]).includes(index)}
+                              onChange={(e) => {
+                                const currentIndex = index;
+                                const currentAnswers = Array.isArray(currentQuestion.correctAnswer) 
+                                  ? currentQuestion.correctAnswer as number[]
+                                  : [];
+                                
+                                const newCorrectAnswers = e.target.checked
+                                  ? [...currentAnswers, currentIndex]
+                                  : currentAnswers.filter(i => i !== currentIndex);
+                                
+                                setCurrentQuestion(prev => ({
+                                  ...prev,
+                                  correctAnswer: newCorrectAnswers
+                                }));
+                              }}
+                              className="mt-3 accent-[#6366f1]"
+                              whileHover={{ scale: 1.1 }}
+                            />
+                            <motion.input
+                              type="text"
+                              value={option}
+                              onChange={(e) => handleOptionChange(index, e.target.value)}
+                              className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                              placeholder={`Option ${index + 1}`}
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {currentQuestion.type === 'short_answer' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Correct Answer
+                        </label>
+                        <motion.input
+                          type="text"
+                          value={typeof currentQuestion.correctAnswer === 'string' ? currentQuestion.correctAnswer : ''}
+                          onChange={(e) => setCurrentQuestion(prev => ({
+                            ...prev,
+                            correctAnswer: e.target.value
+                          }))}
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400"
+                          placeholder="Enter the correct answer"
+                          whileHover={{ scale: 1.01 }}
+                        />
+                      </div>
+                    )}
+
+                    {currentQuestion.type === 'scale' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Scale Settings
+                        </label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm text-gray-400">Min Value</label>
+                            <motion.input
+                              type="number"
+                              value={currentQuestion.scaleRange?.min || 1}
+                              onChange={(e) => {
+                                const min = parseInt(e.target.value);
+                                setCurrentQuestion(prev => ({
+                                  ...prev,
+                                  scaleRange: {
+                                    min,
+                                    max: prev.scaleRange?.max || 5,
+                                    labels: {
+                                      start: prev.scaleRange?.labels?.start || '',
+                                      end: prev.scaleRange?.labels?.end || ''
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              min="1"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm text-gray-400">Max Value</label>
+                            <motion.input
+                              type="number"
+                              value={currentQuestion.scaleRange?.max || 5}
+                              onChange={(e) => {
+                                const max = parseInt(e.target.value);
+                                setCurrentQuestion(prev => ({
+                                  ...prev,
+                                  scaleRange: {
+                                    min: prev.scaleRange?.min || 1,
+                                    max,
+                                    labels: {
+                                      start: prev.scaleRange?.labels?.start || '',
+                                      end: prev.scaleRange?.labels?.end || ''
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              min="2"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                          <div>
+                            <label className="text-sm text-gray-400">Start Label</label>
+                            <motion.input
+                              type="text"
+                              value={currentQuestion.scaleRange?.labels?.start || ''}
+                              onChange={(e) => {
+                                const start = e.target.value;
+                                setCurrentQuestion(prev => ({
+                                  ...prev,
+                                  scaleRange: {
+                                    min: prev.scaleRange?.min || 1,
+                                    max: prev.scaleRange?.max || 5,
+                                    labels: {
+                                      start,
+                                      end: prev.scaleRange?.labels?.end || ''
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              placeholder="e.g., Poor"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm text-gray-400">End Label</label>
+                            <motion.input
+                              type="text"
+                              value={currentQuestion.scaleRange?.labels?.end || ''}
+                              onChange={(e) => {
+                                const end = e.target.value;
+                                setCurrentQuestion(prev => ({
+                                  ...prev,
+                                  scaleRange: {
+                                    min: prev.scaleRange?.min || 1,
+                                    max: prev.scaleRange?.max || 5,
+                                    labels: {
+                                      start: prev.scaleRange?.labels?.start || '',
+                                      end
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              placeholder="e.g., Excellent"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentQuestion.type === 'truefalse' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Correct Answer
+                        </label>
+                        <div className="flex gap-4">
+                          <motion.button
+                            onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: 0 }))}
+                            className={`flex-1 px-4 py-2 rounded-lg ${
+                              currentQuestion.correctAnswer === 0
+                                ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                : 'bg-[#2d2f3d] text-gray-400'
+                            }`}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            True
+                          </motion.button>
+                          <motion.button
+                            onClick={() => setCurrentQuestion(prev => ({ ...prev, correctAnswer: 1 }))}
+                            className={`flex-1 px-4 py-2 rounded-lg ${
+                              currentQuestion.correctAnswer === 1
+                                ? 'bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white'
+                                : 'bg-[#2d2f3d] text-gray-400'
+                            }`}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            False
+                          </motion.button>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentQuestion.type === 'date' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+                          <ListIcon className="text-[#6366f1]" />
+                          Date Range (Optional)
+                        </label>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm text-gray-400">Min Date</label>
+                            <motion.input
+                              type="date"
+                              value={currentQuestion.dateRange?.min || ''}
+                              onChange={(e) => setCurrentQuestion(prev => ({
+                                ...prev,
+                                dateRange: {
+                                  ...prev.dateRange,
+                                  min: e.target.value
+                                }
+                              }))}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm text-gray-400">Max Date</label>
+                            <motion.input
+                              type="date"
+                              value={currentQuestion.dateRange?.max || ''}
+                              onChange={(e) => setCurrentQuestion(prev => ({
+                                ...prev,
+                                dateRange: {
+                                  ...prev.dateRange,
+                                  max: e.target.value
+                                }
+                              }))}
+                              className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                              whileHover={{ scale: 1.01 }}
+                            />
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <label className="text-sm text-gray-400">Correct Date</label>
                           <motion.input
-                            type="radio"
-                            name="correctAnswer"
-                            checked={currentQuestion.correctAnswer === index}
-                            onChange={() => setCurrentQuestion(prev => ({
+                            type="date"
+                            value={typeof currentQuestion.correctAnswer === 'string' ? currentQuestion.correctAnswer : ''}
+                            onChange={(e) => setCurrentQuestion(prev => ({
                               ...prev,
-                              correctAnswer: index
+                              correctAnswer: e.target.value
                             }))}
-                            className="mt-3 accent-[#6366f1]"
-                            whileHover={{ scale: 1.1 }}
-                          />
-                          <motion.input
-                            type="text"
-                            value={option}
-                            onChange={(e) => handleOptionChange(index, e.target.value)}
-                            className="flex-1 px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white placeholder-gray-400 transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
-                            placeholder={`Option ${index + 1}`}
+                            className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
                             whileHover={{ scale: 1.01 }}
                           />
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    )}
 
-                    <div className="flex gap-4">
-                      <div className="flex-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                           <ClockIcon className="text-[#6366f1]" />
                           Time Limit (seconds)
                         </label>
                         <motion.input
-                          type="text"
+                          type="number"
                           name="timeLimit"
                           value={currentQuestion.timeLimit}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                          min="5"
                           whileHover={{ scale: 1.01 }}
-                          whileFocus={{ scale: 1.02 }}
                         />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                           <StarIcon className="text-[#6366f1]" />
                           Points
                         </label>
                         <motion.input
-                          type="text"
+                          type="number"
                           name="points"
                           value={currentQuestion.points}
                           onChange={handleQuestionChange}
-                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white transition-all duration-200 hover:border-[#6366f1]/50 shadow-[0_0_10px_rgba(99,102,241,0.1)]"
+                          className="w-full px-4 py-2 bg-[#2d2f3d] border border-white/10 rounded-lg focus:ring-2 focus:ring-[#6366f1] text-white"
+                          min="1"
                           whileHover={{ scale: 1.01 }}
-                          whileFocus={{ scale: 1.02 }}
                         />
                       </div>
                     </div>
