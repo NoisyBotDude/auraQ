@@ -11,7 +11,7 @@ import ConfirmationDialog from '../components/shared/ConfirmationDialog';
 const QuizPlayPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const navigate = useNavigate();
-  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore, setQuiz, showCompletionScreen, setShowCompletionScreen } = useQuiz();
+  const { currentQuiz, currentQuestion, score, nextQuestion, updateScore, setQuiz, showCompletionScreen, setShowCompletionScreen, setCurrentQuestion, setScore } = useQuiz();
   const { addNotification } = useNotification();
   const { playSound } = useAudio();
 
@@ -44,8 +44,22 @@ const QuizPlayPage: React.FC = () => {
       try {
         const quiz = mockQuizzes.find(q => q.id === quizId);
         if (quiz) {
+          // Reset all quiz state
           setQuiz(quiz);
+          setCurrentQuestion(0);
+          setScore(0);
           setTimeLeft(quiz.questions[0]?.timeLimit || 30);
+          setSelectedAnswer(null);
+          setIsAnswerRevealed(false);
+          setShowHint(false);
+          setStreak(0);
+          setShowStreak(false);
+          setPowerUps({
+            skip: 1,
+            hint: 2,
+            time: 1
+          });
+          setShowCompletionScreen(false);
           addNotification({
             message: 'Quiz loaded successfully!',
             type: 'success'
@@ -83,12 +97,18 @@ const QuizPlayPage: React.FC = () => {
     }
   }, [isAnswerRevealed, timeLeft, currentQuestionData]);
 
-  // Reset timer when question changes
-  useEffect(() => {
-    if (currentQuestionData) {
-      setTimeLeft(currentQuestionData.timeLimit);
+  const handleNextQuestion = () => {
+    if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
+      setShowCompletionScreen(true);
+      return;
     }
-  }, [currentQuestionData]);
+
+    setSelectedAnswer(null);
+    setIsAnswerRevealed(false);
+    setTimeLeft(currentQuiz?.questions[currentQuestion + 1]?.timeLimit || 30);
+    setShowHint(false);
+    nextQuestion();
+  };
 
   const handleTimeUp = useCallback(() => {
     setIsAnswerRevealed(true);
@@ -97,7 +117,24 @@ const QuizPlayPage: React.FC = () => {
       message: 'Time\'s up!',
       type: 'info'
     });
-  }, [playSound, addNotification]);
+
+    setTimeout(() => {
+      handleNextQuestion();
+    }, 2000);
+  }, [playSound, addNotification, handleNextQuestion]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && !isAnswerRevealed) {
+      handleTimeUp();
+    }
+  }, [timeLeft, isAnswerRevealed, handleTimeUp]);
+
+  // Reset timer when question changes
+  useEffect(() => {
+    if (currentQuestionData) {
+      setTimeLeft(currentQuestionData.timeLimit);
+    }
+  }, [currentQuestionData]);
 
   const calculateScore = useCallback(() => {
     if (!currentQuestionData) return 0;
@@ -121,19 +158,6 @@ const QuizPlayPage: React.FC = () => {
       setStreak(0);
     }
   }, [isAnswerRevealed, currentQuestionData, playSound, updateScore, calculateScore]);
-
-  const handleNextQuestion = () => {
-    if (currentQuestion + 1 >= (currentQuiz?.questions.length || 0)) {
-      setShowCompletionScreen(true);
-      return;
-    }
-
-    setSelectedAnswer(null);
-    setIsAnswerRevealed(false);
-    setTimeLeft(currentQuiz?.questions[currentQuestion + 1]?.timeLimit || 30);
-    setShowHint(false);
-    nextQuestion();
-  };
 
   const handleSkipQuestion = () => {
     if (powerUps.skip > 0) {
