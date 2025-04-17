@@ -75,18 +75,18 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
       <motion.div 
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.2 }}
-        className={`fixed left-0 top-0 h-screen ${openSidebar ? 'w-64' : 'w-20'} bg-[#1a1a2e]/90 backdrop-blur-sm border-r border-[#2a2a3a] z-40 transition-all duration-200`}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className={`fixed left-0 top-0 h-screen ${openSidebar ? 'w-64' : 'w-20'} bg-[#1a1a2e]/90 backdrop-blur-sm border-r border-[#2a2a3a] z-40 transition-[width] duration-150 ease-in-out`}
       >
         <div className="flex flex-col h-full">
           <div className="p-4 flex items-center justify-between">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {openSidebar && (
                 <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.15 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.1, ease: "easeOut" }}
                   className="flex items-center gap-2"
                 >
                   <img 
@@ -102,8 +102,9 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
             </AnimatePresence>
             {!isMobile && (
               <motion.button
-                whileHover={{ scale: 1.05, rotate: 5 }}
-                whileTap={{ scale: 0.95, rotate: -5 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.1 }}
                 onClick={handleToggleSidebar}
                 className={`p-2 rounded-lg hover:bg-[#2a2a3a] transition-colors duration-150 ${!openSidebar ? 'mx-auto' : ''}`}
                 aria-label={openSidebar ? "Collapse sidebar" : "Expand sidebar"}
@@ -127,7 +128,7 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                   >
                     <Link
                       to={item.path}
-                      className={`group flex items-center ${!openSidebar ? 'justify-center' : 'px-4'} py-3 rounded-lg transition-all duration-200 ${
+                      className={`group flex items-center ${!openSidebar ? 'justify-center' : 'px-4'} py-3 rounded-lg transition-all duration-150 ${
                         isActive
                           ? 'bg-gradient-to-r from-[#2a2a3a] to-[#3a3a4a] text-white shadow-lg shadow-[#2a2a3a]/50'
                           : 'text-gray-400 hover:bg-[#2a2a3a] hover:text-white'
@@ -138,6 +139,7 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                       <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        transition={{ duration: 0.1 }}
                         className={`relative ${isActive ? 'text-[#3b82f6]' : ''}`}
                       >
                         <Icon className="w-5 h-5" />
@@ -153,11 +155,11 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                       <AnimatePresence mode="wait">
                         {openSidebar && (
                           <motion.span 
-                            initial={{ opacity: 0, x: -10 }}
+                            initial={{ opacity: 0, x: -5 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -10 }}
-                            transition={{ duration: 0.15 }}
-                            className="ml-3 group-hover:translate-x-1 transition-transform duration-200"
+                            exit={{ opacity: 0, x: -5 }}
+                            transition={{ duration: 0.1, ease: "easeOut" }}
+                            className="ml-3 group-hover:translate-x-1 transition-transform duration-150"
                           >
                             {item.label}
                           </motion.span>
@@ -182,7 +184,7 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
               >
                 <motion.div
                   whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
                   className="relative"
                 >
                   <LogoutIcon className="w-5 h-5" />
@@ -193,11 +195,11 @@ const Sidebar: React.FC<{ openSidebar: boolean, setOpenSidebar: (open: boolean) 
                 <AnimatePresence mode="wait">
                   {openSidebar && (
                     <motion.span 
-                      initial={{ opacity: 0, x: -10 }}
+                      initial={{ opacity: 0, x: -5 }}
                       animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.15 }}
-                      className="ml-3 group-hover:translate-x-1 transition-transform duration-200"
+                      exit={{ opacity: 0, x: -5 }}
+                      transition={{ duration: 0.1, ease: "easeOut" }}
+                      className="ml-3 group-hover:translate-x-1 transition-transform duration-150"
                     >
                       Logout
                     </motion.span>

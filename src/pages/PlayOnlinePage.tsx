@@ -236,9 +236,9 @@ const PlayOnlinePage: React.FC = () => {
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap md:flex-nowrap gap-2">
             {/* Categories Filter */}
-            <div className="relative">
+            <div className="relative flex-1 md:flex-initial min-w-[120px] md:min-w-0">
               <button
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedCategory === 'All'
@@ -294,7 +294,7 @@ const PlayOnlinePage: React.FC = () => {
             </div>
 
             {/* Time Duration Filter */}
-            <div className="relative">
+            <div className="relative flex-1 md:flex-initial min-w-[120px] md:min-w-0">
               <button
                 key={selectedTime}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
@@ -351,7 +351,7 @@ const PlayOnlinePage: React.FC = () => {
             </div>
 
             {/* Rating Filter */}
-            <div className="relative">
+            <div className="relative flex-1 md:flex-initial min-w-[120px] md:min-w-0">
               <button
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedRating === 'Any'
